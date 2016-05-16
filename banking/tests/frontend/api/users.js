@@ -8,7 +8,7 @@ import modules from '../helpers/defines.js'
 
 describe("When call API", function() {
     var $
-    jsdom()
+    // jsdom()
 
     describe("create user", function() {
         beforeEach(function() {

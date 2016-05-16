@@ -13,7 +13,7 @@ const eventListPath = EndPoint.EventList()
 
 describe('When call API ', function() {
     let $
-    jsdom()
+    // jsdom()
 
     beforeEach(function() {
         $ = require('jquery') // include jquery

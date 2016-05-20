@@ -46,6 +46,21 @@ export class AccountAPI extends API {
             error: errorFn
         });
     }
+
+    /** Add/substruct money from user balance.
+     * @param {Object} data - contains user id, count, and action type -
+     * income/outcome. Shape: {id: Integer, count: Float, income: Boolean}.
+     */
+    transfer(data, successFn, errorFn) {
+        this.request({
+            method: "POST",
+            url: EndPoint.Transfer(data),
+            success: successFn,
+            error: errorFn
+        });
+    }
+
+
 }
 
 /** CRUD actions for Event entity */

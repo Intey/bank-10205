@@ -1,6 +1,5 @@
  // with mocha --watch, sometimes, error line is jump to describe declarations.
 // so we use rerequire
-import jsdom, {rerequire} from 'mocha-jsdom'
 import sinon from 'sinon'
 import {expect, assert} from 'chai'
 import modules from '../helpers/defines.js'
@@ -13,7 +12,6 @@ const eventListPath = EndPoint.EventList()
 
 describe('When call API ', function() {
     let $
-    // jsdom()
 
     beforeEach(function() {
         $ = require('jquery') // include jquery

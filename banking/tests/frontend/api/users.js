@@ -1,4 +1,3 @@
-import jsdom, {rerequire} from 'mocha-jsdom'
 import sinon from 'sinon'
 import {expect, assert} from 'chai'
 var should = require('chai').should() // actually call the function
@@ -8,10 +7,9 @@ import modules from '../helpers/defines.js'
 
 describe("When call API", function() {
     var $
-    // jsdom()
 
     describe("create user", function() {
-        beforeEach(function() {
+        before(function() {
             $ = require('jquery')
             sinon.stub($, 'ajax')
             const AccountAPI = require(modules.api).AccountAPI
@@ -72,7 +70,8 @@ describe("When call API", function() {
             expect(successFn.called).to.be.true
         });
 
-        afterEach(function() { $.ajax.restore() })
+        afterEach(function() { $.ajax.reset() })
+        after(function() { $.ajax.restore() });
     })
 
 

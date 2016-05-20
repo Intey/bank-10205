@@ -1,4 +1,7 @@
 extends banking/admin/index.jade
+
+- load render_bundle from webpack_loader
+
 block content
     form.form-horizontal
         .col-md-2
@@ -30,3 +33,7 @@ block content
                     input#balance.form-control(type="text", value="{{account.balance | floatformat}}")
         .col-md-5
             img.img-responsive.img-rounded(src="{{account.avatar_url}}", alt="{{account.user.username}}'s Avatar")
+
+    #balance-changer
+
+- render_bundle 'balance_changer'

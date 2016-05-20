@@ -26,6 +26,7 @@ entry: {
     events: ['./frontend/js/events.js'],
     users:  ['./frontend/js/users.js'],
     participants: ['./frontend/js/participants.js'],
+    balance_changer: ['./frontend/js/balance_changer.js'],
 },
 output: {
     path: path.resolve(__dirname, './banking/static/js'),

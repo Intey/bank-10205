@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {AccountAPI} from '../domain/api.js';
 import getToken from '../utils/token.js';
 
@@ -13,6 +14,11 @@ export default class BalanceChanger extends React.Component {
             income: true
         }
         this.submit = this.submit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+      this.setState({count: parseInt(e.target.value)})
     }
 
     submit() {
@@ -23,7 +29,8 @@ export default class BalanceChanger extends React.Component {
     }
     render() { return (
         <div>
-            <input value={this.state.count} type="number"/>
+          <input value={this.state.count} onChange={this.handleChange}
+            type="number"/>
             <input type="checkbox" value={this.state.income}/>
             <button onClick={this.submit}>Выполнить</button>
         </div>

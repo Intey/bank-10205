@@ -7,17 +7,16 @@ import modules from '../helpers/defines.js'
 
 describe("When call API", function() {
     var $
+    before(function() {
+        $ = require('jquery')
+        sinon.stub($, 'ajax')
+        const AccountAPI = require(modules.api).AccountAPI
+
+        this.API = new AccountAPI("AuthToken")
+        this.EndPoint = require(modules.endpoints).EndPoint
+    })
 
     describe("create user", function() {
-        before(function() {
-            $ = require('jquery')
-            sinon.stub($, 'ajax')
-            const AccountAPI = require(modules.api).AccountAPI
-
-            this.API = new AccountAPI("AuthToken")
-            this.EndPoint = require(modules.endpoints).EndPoint
-        })
-
         it('should POST to user list path and call success on success',
            function() {
             var userdata = {username: "test", password: "test"}
@@ -70,9 +69,29 @@ describe("When call API", function() {
             expect(successFn.called).to.be.true
         });
 
-        afterEach(function() { $.ajax.reset() })
-        after(function() { $.ajax.restore() });
     })
+
+    describe("push money", function() {
+       it("should create POST on money api", function() {
+           const send_data = {
+               id:0,
+               count:3000,
+               income:true
+           }
+           const successFn = sinon.spy()
+           this.API.transfer(send_data, successFn, sinon.stub())
+           $.ajax.yieldTo('success', {balance: 4000})
+
+           var {url, data} = $.ajax.getCall(0).args[0]
+           url.should.to.be.equal(this.EndPoint.transfer(0))
+           data.count.should.to.be.equal(3000)
+
+           expect(successFn.called).to.be.true
+
+       });
+    });
+    afterEach(function() { $.ajax.reset() })
+    after(function() { $.ajax.restore() });
 
 
 })

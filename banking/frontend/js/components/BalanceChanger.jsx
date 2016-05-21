@@ -44,3 +44,5 @@ export default class BalanceChanger extends React.Component {
     )
     }
 }
+
+BalanceChanger.propTypes = { userId: React.PropTypes.number }

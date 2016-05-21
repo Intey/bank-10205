@@ -31,7 +31,7 @@ describe("When BalanceChanger", function() {
         });
 
         const balance_changer =
-            TestUtils.renderIntoDocument(<BalanceChanger/>)
+            TestUtils.renderIntoDocument(<BalanceChanger userId={15}/>)
 
         this.value_input =
             TestUtils.scryRenderedDOMComponentsWithTag(balance_changer,
@@ -46,7 +46,7 @@ describe("When BalanceChanger", function() {
 
         it("it sould call AccountAPI transfer", function() {
             var {id, count, income} = transfer_stub.getCall(0).args[0]
-            id.should.to.be.equal(1)
+            id.should.to.be.equal(15)
             count.should.to.be.equal(3000)
             income.should.to.be.true
         });

@@ -10,4 +10,6 @@ export class EndPoint {
 
     static TransactionList() { return '/api/transactions/'      }
 
+    static transfer(id)      { return `/api/users/${id}/money/` }
+
 }

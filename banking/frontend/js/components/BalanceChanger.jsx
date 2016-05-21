@@ -9,7 +9,7 @@ export default class BalanceChanger extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            id: 1,
+            id: this.props.userId,
             count: 0,
             income: true
         }
@@ -28,11 +28,18 @@ export default class BalanceChanger extends React.Component {
                     );
     }
     render() { return (
-        <div>
-          <input value={this.state.count} onChange={this.handleChange}
-            type="number"/>
-            <input type="checkbox" value={this.state.income}/>
-            <button onClick={this.submit}>Выполнить</button>
+        <div className="container col-md-5">
+            <div className="form-group">
+                <input className="form-control" value={this.state.count} onChange={this.handleChange} type="number"/>
+            </div>
+            <div className="form-group">
+                <label for="income"> Пополнение
+                    <input id="income" type="checkbox" value={this.state.income}/>
+                </label>
+            </div>
+            <div className="form-group">
+                <button className="btn btn-submit" onClick={this.submit}>Выполнить</button>
+            </div>
         </div>
     )
     }

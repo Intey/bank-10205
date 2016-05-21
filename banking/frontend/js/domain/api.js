@@ -54,7 +54,8 @@ export class AccountAPI extends API {
     transfer(data, successFn, errorFn) {
         this.request({
             method: "POST",
-            url: EndPoint.Transfer(data),
+            url: EndPoint.Transfer(data.id),
+            data:data,
             success: successFn,
             error: errorFn
         });

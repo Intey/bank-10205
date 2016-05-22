@@ -19,6 +19,7 @@ describe('When call API ', function() {
         const EventAPI = require(modules.api).EventAPI
         this.API = new EventAPI("AuthToken")
         this.eventdata = {name:"event", price: 3000.0}
+        this.data_str = JSON.stringify(this.eventdata)
     })
 
     describe('create event', function() {
@@ -30,20 +31,21 @@ describe('When call API ', function() {
             expect(successFn.called).to.be.true
 
             var p = $.ajax.getCall(0).args[0]
-            p.data.should.deep.equal(this.eventdata)
+            p.data.should.to.be.equal(this.data_str)
             assert.equal(p.method, 'POST')
             assert.equal(p.url, eventListPath)
 
             $.ajax.reset()
 
             const new_data = {name: "test", price: 3000.0}
+            const data_str = JSON.stringify(new_data)
             let successFn2 = sinon.spy()
 
             this.API.createEvent(new_data, successFn2, sinon.spy())
             $.ajax.yieldTo('success', this.eventdata);
 
             var p = $.ajax.getCall(0).args[0]
-            p.data.should.deep.equal(new_data)
+            p.data.should.to.be.equal(data_str)
             assert.equal(p.method, 'POST')
             assert.equal(p.url, eventListPath)
 

@@ -11,6 +11,9 @@ class API {
         let headers = settings.headers || {}
         headers.Authorization = 'Token ' + this.token
         settings.headers = headers
+        settings.dataType = 'json'
+        settings.contentType = 'application/json; charset=utf-8'
+        settings.data = JSON.stringify(settings.data)
         return csrfSafe(settings);
     }
 }
@@ -41,6 +44,7 @@ export class AccountAPI extends API {
         delete userdata.id
         this.request({
             method: "PATCH",
+            data: userdata,
             url: EndPoint.UserDetail(id),
             success: successFn,
             error: errorFn
@@ -50,12 +54,14 @@ export class AccountAPI extends API {
     /** Add/substruct money from user balance.
      * @param {Object} data - contains user id, count, and action type -
      * income/outcome. Shape: {id: Integer, count: Float, income: Boolean}.
+     * income - True, outcome - False.
      */
     transfer(data, successFn, errorFn) {
+        const _data = {income: data.income, count: data.count}
         this.request({
             method: "POST",
             url: EndPoint.Transfer(data.id),
-            data:data,
+            data: _data,
             success: successFn,
             error: errorFn
         });

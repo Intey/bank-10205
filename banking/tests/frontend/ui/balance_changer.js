@@ -12,9 +12,9 @@ import ReactDOM from 'react-dom'
 
 import modules from '../helpers/defines.js'
 
-var transfer_stub = sinon.stub();
+var transfer_stub = sinon.stub()
 var AccountAPI_stub = function() {}
-AccountAPI_stub.prototype.transfer = transfer_stub;
+AccountAPI_stub.prototype.transfer = transfer_stub
 
 var BalanceChanger =
     proxyquire(`${modules.components_dir}/BalanceChanger`, {
@@ -25,11 +25,11 @@ var BalanceChanger =
 describe("When BalanceChanger", function() {
     var $ // predef
 
-    describe('gets from user correct value and click "Пополнить"', function() {
-        beforeEach(function() {
-            $ = require('jquery'); sinon.stub($, 'ajax') // stub
-        });
+    beforeEach(function() {
+        $ = require('jquery'); sinon.stub($, 'ajax') // stub
+    })
 
+    describe('gets from user correct value and click "Пополнить"', function() {
         const balance_changer =
             TestUtils.renderIntoDocument(<BalanceChanger userId={15}/>)
 
@@ -49,9 +49,11 @@ describe("When BalanceChanger", function() {
             id.should.to.be.equal(15)
             count.should.to.be.equal(3000)
             income.should.to.be.true
-        });
-        afterEach(function() {
-            $.ajax.restore()
-        });
-    });
-});
+        })
+
+    })
+
+    afterEach(function() {
+        $.ajax.restore()
+    })
+})

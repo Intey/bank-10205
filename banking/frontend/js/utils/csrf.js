@@ -36,8 +36,6 @@ export function csrfSafe(settings) {
 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
 		}
 	};
-    settings.dataType = 'json';
-    settings.contentType = 'application/json; charset=utf-8';
 	return $.ajax(settings);
 
 }

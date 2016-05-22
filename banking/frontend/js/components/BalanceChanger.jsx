@@ -15,6 +15,10 @@ export default class BalanceChanger extends React.Component {
         }
         this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleCheck = this.handleCheck.bind(this);
+    }
+    handleCheck(_) {
+        this.setState({income: !this.state.income})
     }
 
     handleChange(e) {
@@ -30,15 +34,19 @@ export default class BalanceChanger extends React.Component {
     render() { return (
         <div className="container col-md-5">
             <div className="form-group">
-                <input className="form-control" value={this.state.count} onChange={this.handleChange} type="number"/>
+                <input className="form-control" value={this.state.count}
+                    onChange={this.handleChange} type="number"/>
             </div>
             <div className="form-group">
-                <label for="income"> Пополнение
-                    <input id="income" type="checkbox" value={this.state.income}/>
+                <label> Пополнение
+                    <input type="checkbox"
+                        checked={this.state.income}
+                        onChange={this.handleCheck}/>
                 </label>
             </div>
             <div className="form-group">
-                <button className="btn btn-submit" onClick={this.submit}>Выполнить</button>
+                <button className="btn btn-submit"
+                    onClick={this.submit}>Выполнить</button>
             </div>
         </div>
     )

@@ -15,3 +15,10 @@ export function intersect(a, b) {
 		}
 		return result
 }
+
+/** Remove empty or undefined elements in array and return new array
+ * @param {Array} array of elements.
+ */
+export function clear(array) {
+    return array.filter( e => e && e != "" );
+}

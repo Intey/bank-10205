@@ -202,7 +202,7 @@ class NewParticipantRowInput extends React.Component{
     handleAddParticipant(e) {
         this.props.onAdd({
             account: this.state.selected.user.id,
-            parts: parseInt(this.state.parts)
+            parts: parseFloat(this.state.parts)
         });
     }
 

@@ -10,7 +10,7 @@ export default class BalanceChanger extends React.Component {
         super(props)
         this.state = {
             id: this.props.userId,
-            count: 0,
+            count: 0.0,
             income: true
         }
         this.submit = this.submit.bind(this);
@@ -22,7 +22,7 @@ export default class BalanceChanger extends React.Component {
     }
 
     handleChange(e) {
-      this.setState({count: parseInt(e.target.value)})
+      this.setState({count: parseFloat(e.target.value)})
     }
 
     submit() {
@@ -35,7 +35,7 @@ export default class BalanceChanger extends React.Component {
         <div className="container col-md-5">
             <div className="form-group">
                 <input className="form-control" value={this.state.count}
-                    onChange={this.handleChange} type="number"/>
+                    onChange={this.handleChange} step="0.01" type="number"/>
             </div>
             <div className="form-group">
                 <label> Пополнение

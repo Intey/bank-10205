@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^api/transactions/',       include('banking.api.transaction.urls')),
     url(r'^api/users/',              include('banking.api.user.urls')),
     url(r'^api/auth/',               include('banking.api.auth.urls')),
-
+    url(r'^api/balance/',            include('banking.api.balance.urls')),
 ]
 
 # API docs. Uncomment 'rest_framework_swagger' in apps, and install

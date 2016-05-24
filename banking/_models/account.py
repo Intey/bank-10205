@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.db.models import F, Sum
 from django.contrib.auth.models import User
+from banking.operations.domain.utils import sumQuery
 
 
 class Account(models.Model):
@@ -13,13 +13,10 @@ class Account(models.Model):
         from .transfer import Transfer
         from .transaction import Transaction
 
-        def sum_query(field):
-            return {field: Sum(F('debit') - F('credit'))}
-
         res = float(Transfer.objects.filter(account=self).
-                    aggregate(**sum_query('sum'))['sum'] or 0)
+                    aggregate(**sumQuery('sum'))['sum'] or 0)
         res += float(Transaction.objects.filter(participation__account=self).
-                     aggregate(**sum_query('sum'))['sum'] or 0)
+                     aggregate(**sumQuery('sum'))['sum'] or 0)
         return res
 
     def __str__(self):

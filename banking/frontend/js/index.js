@@ -2,6 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = require('jquery');
 
+var BalanceBadge = require('./components/BalanceBadge.jsx').BalanceBadge;
 var csrfSafe = require('./utils/csrf.js').csrfSafe;
 
 var NavMenu = React.createClass({
@@ -101,7 +102,7 @@ var NavbarMenuList = React.createClass({
     render: function(){
         return (
             <ul className="nav navbar-nav navbar-right">
-                <NavbarMenuListBadgeItem Link="#" Content='Баланс банка' />
+                <BalanceBadge Link="#" Content='Баланс банка' />
                 <NavbarMenuListItem Link="#" Content="Выход" click={this.logout}/>
             </ul>
         );
@@ -113,16 +114,6 @@ var NavbarMenuListItem = React.createClass({
         return (
             <li onClick={this.props.click}>
                 <a href={this.props.Link}>{this.props.Content}</a>
-            </li>
-        );
-    }
-});
-
-var NavbarMenuListBadgeItem = React.createClass({
-    render: function(){
-        return (
-            <li>
-                <a href={this.props.Link}>{this.props.Content} <span className="badge">0</span></a>
             </li>
         );
     }

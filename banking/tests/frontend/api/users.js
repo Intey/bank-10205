@@ -98,7 +98,7 @@ describe("When call API", function() {
            var {url, data} = $.ajax.getCall(0).args[0]
            data.should.to.be.a('string') // send coded json
            data = JSON.parse(data)
-           url.should.to.be.equal(this.EndPoint.transfer(0))
+           url.should.to.be.equal(this.EndPoint.Transfer(0))
            data.count.should.to.be.equal(3000)
 
            expect(successFn.called).to.be.true

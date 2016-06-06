@@ -71,7 +71,7 @@ export class AccountAPI extends API {
 }
 
 /** CRUD actions for Event entity */
-export class EventAPI  extends API{
+export class EventAPI  extends API {
     createEvent(data, successFn, errorFn){
         return this.request({
             method: "POST",
@@ -111,4 +111,15 @@ export class EventAPI  extends API{
 
     }
 
+}
+
+export class BankAPI extends API {
+    getBalance(successFn, errorFn){
+        return this.request({
+            method: "GET",
+            url: EndPoint.BankBalance(),
+            success: successFn,
+            error: errorFn
+        });
+    }
 }

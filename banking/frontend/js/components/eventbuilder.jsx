@@ -126,8 +126,6 @@ module.exports = React.createClass({
                                     Label="Название"
                                     Type="text"
                                     Value={this.state.title}
-                                    LabelId="event-title-label"
-                                    EditId="event-title-input"
                                     FormName="new-event-form"
                                     Change={this.handleTitleChange} />
                                 <Dropdown
@@ -141,16 +139,12 @@ module.exports = React.createClass({
                                     Label="Дата"
                                     Type="date"
                                     Value={this.state.date}
-                                    LabelId="event-date-label"
-                                    EditId="event-date-input"
                                     FormName="new-event-form"
                                     Change={this.handleDateChange} />
                                 <Edit
                                     Label="Сумма"
                                     Type="text"
                                     Value={this.state.sum}
-                                    LabelId="event-sum-label"
-                                    EditId="event-sum-input"
                                     FormName="new-event-form"
                                     Change={this.handleSumChange} />
 
@@ -180,9 +174,14 @@ module.exports = React.createClass({
                                     </div>
                                 </div>
 
-                                <div className="button-group row" style={{paddingRight:'20px'}}>
-                                    <Edit Type="file" LabelId="file-attach-label" Id="file-attach-input" FormName="new-event-form" Change={this.handleChangeFile}/>
-                                    <Button Link="#" Class="btn btn-default" Id="attach-file-button" Icon="glyphicon glyphicon-paperclip" Caption="Прикрепить файл" Click={this.handleAttachFileClick}/>
+                                <div className="button-group row"
+                                    style={{paddingRight:'20px'}}>
+                                    <Edit Type="file" FormName="new-event-form"
+                                        Change={this.handleChangeFile}/>
+                                    <Button Link="#" Class="btn btn-default"
+                                        Icon="glyphicon glyphicon-paperclip"
+                                        Caption="Прикрепить файл"
+                                        Click={this.handleAttachFileClick}/>
                                 </div>
 
                                 <div className="button-group row" style={{paddingRight:'20px'}}>

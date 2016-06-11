@@ -5,5 +5,5 @@ import {AuthForm} from './components/AuthForm.jsx'
 
 ReactDOM.render(
   <AuthForm/>,
-  document.getElementById('auth-panel')
+  document.getElementById('auth-form')
 );

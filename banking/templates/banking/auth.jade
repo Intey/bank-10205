@@ -3,13 +3,12 @@ extends "banking/index.jade"
 - load render_bundle from webpack_loader
 block body
     div.container-fluid
-        div.col-md-7
-        div.col-md-4
-            div.panel.panel-default#signin-panel
-                div.panel-body#auth-panel . . .
-        div.col-md-1
+        div.col-md-12
+            div.panel.panel-default.auth-panel
+                .panel-body#auth-form ...
     link(rel="stylesheet", href="{% static 'css/auth.css' %}")
     - render_bundle 'auth'
+    - render_bundle 'bootstrap_js'
     - render_bundle 'jquery'
     script(type="text/javascript")
         | $(document).ready(function(){

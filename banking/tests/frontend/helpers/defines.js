@@ -5,4 +5,5 @@ module.exports = {
     endpoints: `${path}/domain/endpoint.js`,
     components_dir: `${path}/components/`,
     utils: `${path}/utils/`,
+
 }

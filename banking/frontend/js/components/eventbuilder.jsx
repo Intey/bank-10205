@@ -18,7 +18,7 @@ module.exports = React.createClass({
         return {
             title: this.props.BaseInformation.title,
             date: this.props.BaseInformation.date,
-            sum: this.props.BaseInformation.sum,
+            price: this.props.BaseInformation.sum,
             type: this.props.BaseInformation.type,
             template: this.props.BaseInformation.template,
             private: false,
@@ -41,9 +41,9 @@ module.exports = React.createClass({
             date: event.target.value
         });
     },
-    handleSumChange: function(event){
+    handlePriceChange: function(event){
         this.setState({
-            sum: parseFloat(event.target.value)
+            price: parseFloat(event.target.value)
         });
     },
 
@@ -69,7 +69,7 @@ module.exports = React.createClass({
             {
                 name: this.state.title,
                 date: this.state.date,
-                price: this.state.sum,
+                price: this.state.price,
                 author: this.state.author.user.id,
                 private: this.state.private,
                 participants: participants,
@@ -143,9 +143,9 @@ module.exports = React.createClass({
                                 <Edit
                                     Label="Сумма"
                                     Type="text"
-                                    Value={this.state.sum}
+                                    Value={this.state.price}
                                     FormName="new-event-form"
-                                    Change={this.handleSumChange} />
+                                    Change={this.handlePriceChange} />
 
                                 <div className="row">
                                     <div className="col-md-1"></div>

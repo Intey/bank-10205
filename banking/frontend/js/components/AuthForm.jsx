@@ -4,7 +4,19 @@ import React from 'react';
 import {SubmitButton as Button} from './button.jsx'
 import Edit from './edit.jsx';
 
-import {postCSRF} from '../utils/csrf'
+import {AuthAPI} from '../domain/api.js'
+import getToken from '../utils/token.js'
+
+const API = new AuthAPI(getToken())
+
+function onAuthenticated(response) {
+    var token = response.token;
+    window.localStorage.setItem('token', token);
+    window.localStorage.setItem('user', JSON.stringify(response.account));
+    document.location.href = (
+        response.account.user.is_superuser ? '/admin/' : '/client/'
+    );
+}
 
 export class AuthForm extends React.Component {
     constructor(props){
@@ -18,6 +30,11 @@ export class AuthForm extends React.Component {
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleAuth = this.handleAuth.bind(this);
+        this.onError = this.onError.bind(this);
+    }
+
+    onError(error) {
+        this.setState({error: error.responseText});
     }
 
     handleUsernameChange(event){
@@ -35,24 +52,7 @@ export class AuthForm extends React.Component {
     handleAuth(){
         var data = this.state;
 
-
-        let self = this;
-		postCSRF({
-			method:'POST',
-			url:'/api/auth/',
-			data: JSON.stringify(this.state)
-        })
-        .success(function(response){
-            var token = response.token;
-            window.localStorage.setItem('token', token);
-            window.localStorage.setItem('user', JSON.stringify(response.account));
-            document.location.href = (
-                response.account.user.is_superuser ? '/admin/' : '/client/'
-            );
-        })
-        .error(function (e) {
-            self.setState({error: e.responseText});
-        });
+        API.auth(this.state, onAuthenticated, this.onError);
 
     }
 

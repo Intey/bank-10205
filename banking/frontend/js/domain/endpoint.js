@@ -14,4 +14,6 @@ export class EndPoint {
 
     static BankBalance()     { return '/api/balance'            }
 
+    static Auth()            { return '/api/auth/'              }
+
 }

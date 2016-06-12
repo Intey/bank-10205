@@ -1,6 +1,7 @@
+import $ from 'jquery'
+
 import {csrfSafe} from '../utils/csrf.js'
 import {EndPoint} from './endpoint.js'
-import $ from 'jquery'
 
 class API {
     constructor(token) {
@@ -66,8 +67,6 @@ export class AccountAPI extends API {
             error: errorFn
         });
     }
-
-
 }
 
 /** CRUD actions for Event entity */
@@ -121,5 +120,17 @@ export class BankAPI extends API {
             success: successFn,
             error: errorFn
         });
+    }
+}
+
+export class AuthAPI extends API {
+    auth(data, successFn, errorFn) {
+        return this.request({
+            method: "POST",
+            data: data,
+            url: EndPoint.Auth(),
+            success: successFn,
+            error: errorFn
+        })
     }
 }

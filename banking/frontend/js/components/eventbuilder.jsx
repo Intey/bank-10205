@@ -5,8 +5,11 @@ import Dropdown          from './dropdown.jsx'
 import AccessCheckbox    from './accesscheckbox.jsx'
 import Button            from './button.jsx'
 import ParticipantsTable from './participantstable.jsx'
-import {postCSRF}        from '../utils/csrf.js'
 import EventTable        from './eventtable.jsx'
+import {EventAPI} from '../domain/api.js'
+import getToken from '../utils/token.js'
+
+var API = new EventAPI(getToken());
 
 module.exports = React.createClass({
     getInitialState: function(){
@@ -62,26 +65,22 @@ module.exports = React.createClass({
             return {account: p.account.user.id, parts: p.parts}
         });
 
-        postCSRF({
-            type: 'post',
-            url: '/api/events/',
-            headers: {
-                Authorization: 'Token ' + window.localStorage.getItem('token')
-            },
-            data: JSON.stringify({
+        API.createEvent(
+            {
                 name: this.state.title,
-                type: this.state.type,
                 date: this.state.date,
                 price: this.state.sum,
                 author: this.state.author.user.id,
                 private: this.state.private,
                 participants: participants,
-            }),
-            success: function(response){
-                console.log(response);
+            },
+            function(response){
                 document.location.href = '/events/';
+            },
+            function(error) {
+                console.log(error);
             }
-        });
+        );
     },
     componentDidMount: function(){
         $('#public').prop('checked', true);

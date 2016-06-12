@@ -19,7 +19,6 @@ module.exports = React.createClass({
             title: this.props.BaseInformation.title,
             date: this.props.BaseInformation.date,
             price: this.props.BaseInformation.sum,
-            type: this.props.BaseInformation.type,
             template: this.props.BaseInformation.template,
             private: false,
             author: account,
@@ -29,11 +28,6 @@ module.exports = React.createClass({
     handleTitleChange: function(event){
         this.setState({
             title: event.target.value
-        });
-    },
-    handleTypeChange: function(event){
-        this.setState({
-            type: $($(event.currentTarget).children()[0]).html()
         });
     },
     handleDateChange: function(event){
@@ -127,13 +121,6 @@ module.exports = React.createClass({
                                     Value={this.state.title}
                                     FormName="new-event-form"
                                     Change={this.handleTitleChange} />
-                                <Dropdown
-                                    Caption="Тип"
-                                    Id="event-type-btn"
-                                    Value={this.state.type}
-                                    Change={this.handleTypeChange}
-                                    FormName="new-event-form"
-                                    DropdownList={events}/>
                                 <Edit
                                     Label="Дата"
                                     Type="date"

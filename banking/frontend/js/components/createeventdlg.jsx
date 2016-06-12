@@ -15,7 +15,6 @@ module.exports = React.createClass({
             title: 'Без названия',
             date: date,
             sum: 0.0,
-            type: 'Перевод',
             template: 'Без шаблона'
         }
     },
@@ -32,11 +31,6 @@ module.exports = React.createClass({
     handleSumChange: function(event){
         this.setState({
             sum: parseFloat(event.target.value)
-        });
-    },
-    handleTypeChange: function(event){
-        this.setState({
-            type: $($(event.currentTarget).children()[0]).html()
         });
     },
     handleTemplateChange: function(event){
@@ -64,13 +58,16 @@ module.exports = React.createClass({
                         <div className="col-md-2"></div>
                         <div className="col-md-8">
                             <form className="form-horizontal" name="main-event-info" method="post">
-                                <fieldset>
-                                    <TemplateDropdown Id="template-title-btn" Value={this.state.template} Change={this.handleTemplateChange} Caption="Шаблон" FormName="main-event-info" DropdownList={templates}/>
-                                    <Dropdown Id="event-type-title-btn" Value={this.state.type} Change={this.handleTypeChange} Caption="Тип" FormName="main-event-info" DropdownList={events}/>
-                                    <Edit Label="Название" Type="text" Value={this.state.title} LabelId="event-title-label" EditId="event-title-input" FormName="main-event-info" Change={this.handleTitleChange} />
-                                    <Edit Label="Дата" Type="date" Value={this.state.date} LabelId="event-date-label" EditId="event-date-input" FormName="main-event-info" Change={this.handleDateChange} />
-                                    <Edit Label="Сумма" Type="text" Value={this.state.sum} LabelId="event-sum-label" EditId="event-sum-input" FormName="main-event-info" Change={this.handleSumChange} />
-                                </fieldset>
+                                <div className="form-group">
+                                    <TemplateDropdown Id="template-title-btn" Value={this.state.template} Change={this.handleTemplateChange}
+                                        Caption="Шаблон" FormName="main-event-info" DropdownList={templates}/>
+                                </div>
+                                <Edit Label="Название" Type="text" Value={this.state.title}
+                                    FormName="main-event-info" Change={this.handleTitleChange}/>
+                                <Edit Label="Дата" Type="date" Value={this.state.date}
+                                    FormName="main-event-info" Change={this.handleDateChange}/>
+                                <Edit Label="Сумма" Type="text" Value={this.state.sum}
+                                    FormName="main-event-info" Change={this.handleSumChange}/>
                             </form>
                         </div>
                         <div className="col-md-2"></div>

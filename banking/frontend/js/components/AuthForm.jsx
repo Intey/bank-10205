@@ -57,12 +57,15 @@ export class AuthForm extends React.Component {
     }
 
     render(){
-        var error = this.state.error === "" ?
-            null :
-            <div className="alert alert-danger">
-                {this.state.error}
-            </div>
+        var error = !!this.state.error ?
+            <div className="form-group">
+                <div className="alert alert-danger">
+                    {this.state.error}
+                </div>
+            </div> :
+            null
 
+        var classes = !!this.state.error ? "form-group has-error" : "form-group"
         return (
             <form className="form-horizontal" name="auth-form" method="post">
                     <div className="form-group">
@@ -70,13 +73,11 @@ export class AuthForm extends React.Component {
                             <h3>Аутентификация</h3>
                         </legend>
                     </div>
-                    <div className="form-group">
-                        {error}
-                    </div>
-                    <div className="form-group">
+                    {error}
+                    <div className={classes}>
                         <Edit Label="Username" Type="text" Change={this.handleUsernameChange}/>
                     </div>
-                    <div className="form-group">
+                    <div className={classes}>
                         <Edit Label="Password" Type="password" Change={this.handlePasswordChange} />
                     </div>
                     <div className="form-group">

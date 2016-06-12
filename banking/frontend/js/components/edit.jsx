@@ -9,12 +9,15 @@ import React from 'react'
  */
 export default class Edit extends React.Component{
     render(){
+        var errorHelper = !!this.props.error ?
+            <span className="help-block">{this.props.erorr}</span> : null
         return (
-            <div className="input-group">
+            <div className={"input-group "+ (!!this.props.error ? "has-error" : "")}>
                 <span className="input-group-addon">{this.props.Label}</span>
-                <input type={this.props.Type} className="form-control" value={this.props.Value}
-                form={this.props.FormName} onChange={this.props.Change}
-                onFocus={this.props.Focus}/>
+                <input type={this.props.Type} className="form-control"
+                    value={this.props.Value} form={this.props.FormName}
+                    onChange={this.props.Change} onFocus={this.props.Focus}/>
+                {errorHelper}
             </div>
         );
     }

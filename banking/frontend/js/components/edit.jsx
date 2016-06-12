@@ -20,9 +20,11 @@ export default class Edit extends React.Component{
             <span className="help-block">{error}</span> : null
         return (
             <div className={"form-group " + highlight_class}>
-                <div className="input-group">
-                    <span className="input-group-addon">{this.props.Label}</span>
-                    <input type={this.props.Type} className="form-control"
+                <label for={this.props.Label} className="control-label col-sm-3 col-md-3 col-lg-3">
+                    {this.props.Label}
+                </label>
+                <div className="col-lg-9 col-md-9 col-sm-9">
+                    <input type={this.props.Type} id={this.props.Label} className="form-control"
                         value={this.props.Value} form={this.props.FormName}
                         onChange={this.props.Change} onFocus={this.props.Focus}/>
                 </div>

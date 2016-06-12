@@ -114,67 +114,65 @@ module.exports = React.createClass({
                     <div className="col-md-1"></div>
                     <div className="col-md-6">
                         <form className="form-horizontal" name="new-event-form" type="post" encType="multipart">
-                            <fieldset style={{position:'relative'}}>
-                                <Edit
-                                    Label="Название"
-                                    Type="text"
-                                    Value={this.state.title}
-                                    FormName="new-event-form"
-                                    Change={this.handleTitleChange} />
-                                <Edit
-                                    Label="Дата"
-                                    Type="date"
-                                    Value={this.state.date}
-                                    FormName="new-event-form"
-                                    Change={this.handleDateChange} />
-                                <Edit
-                                    Label="Сумма"
-                                    Type="text"
-                                    Value={this.state.price}
-                                    FormName="new-event-form"
-                                    Change={this.handlePriceChange} />
+                            <Edit
+                                Label="Название"
+                                Type="text"
+                                Value={this.state.title}
+                                FormName="new-event-form"
+                                Change={this.handleTitleChange} />
+                            <Edit
+                                Label="Дата"
+                                Type="date"
+                                Value={this.state.date}
+                                FormName="new-event-form"
+                                Change={this.handleDateChange} />
+                            <Edit
+                                Label="Сумма"
+                                Type="text"
+                                Value={this.state.price}
+                                FormName="new-event-form"
+                                Change={this.handlePriceChange} />
 
-                                <div className="row">
-                                    <div className="col-md-1"></div>
-                                    <label className="col-md-3" form="new-event-form">Создатель</label>
-                                    <div className="col-md-1"></div>
-                                    <div className="col-md-7" style={{padding:'10px'}}>
-                                        <a href={"/users/" + author.id}>
-                                            {author.username}
-                                        </a>
-                                    </div>
+                            <div className="row">
+                                <div className="col-md-1"></div>
+                                <label className="col-md-3" form="new-event-form">Создатель</label>
+                                <div className="col-md-1"></div>
+                                <div className="col-md-7" style={{padding:'10px'}}>
+                                    <a href={"/users/" + author.id}>
+                                        {author.username}
+                                    </a>
                                 </div>
+                            </div>
 
-                                <div className="row">
-                                    <ul id="access-event">
-                                        <AccessCheckbox IconClass="glyphicon glyphicon-book event-icon" AccessId="public" Header="Public" Caption="Данное событие будет видно всем" Change={this.handleChangeAccess} />
-                                        <AccessCheckbox IconClass="glyphicon glyphicon-lock event-icon" AccessId="private" Header="Private" Caption="Данное событие будет видно только создателю и участникам" Change={this.handleChangeAccess} />
-                                    </ul>
+                            <div className="row">
+                                <ul id="access-event">
+                                    <AccessCheckbox IconClass="glyphicon glyphicon-book event-icon" AccessId="public" Header="Public" Caption="Данное событие будет видно всем" Change={this.handleChangeAccess} />
+                                    <AccessCheckbox IconClass="glyphicon glyphicon-lock event-icon" AccessId="private" Header="Private" Caption="Данное событие будет видно только создателю и участникам" Change={this.handleChangeAccess} />
+                                </ul>
+                            </div>
+
+                            <ParticipantsTable ref="ParticipantsTable"/>,
+
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div id="files-list"></div>
                                 </div>
+                            </div>
 
-                                <ParticipantsTable ref="ParticipantsTable"/>,
+                            <div className="button-group row"
+                                style={{paddingRight:'20px'}}>
+                                <Edit Type="file" FormName="new-event-form"
+                                    Change={this.handleChangeFile}/>
+                                <Button Link="#" Class="btn btn-default"
+                                    Icon="glyphicon glyphicon-paperclip"
+                                    Caption="Прикрепить файл"
+                                    Click={this.handleAttachFileClick}/>
+                            </div>
 
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div id="files-list"></div>
-                                    </div>
-                                </div>
-
-                                <div className="button-group row"
-                                    style={{paddingRight:'20px'}}>
-                                    <Edit Type="file" FormName="new-event-form"
-                                        Change={this.handleChangeFile}/>
-                                    <Button Link="#" Class="btn btn-default"
-                                        Icon="glyphicon glyphicon-paperclip"
-                                        Caption="Прикрепить файл"
-                                        Click={this.handleAttachFileClick}/>
-                                </div>
-
-                                <div className="button-group row" style={{paddingRight:'20px'}}>
-                                    <Button Link="#" Class="btn btn-danger" Id="cancel-event-button" Icon="glyphicon glyphicon-thumbs-down" Caption="Отменить" Click={this.hadnleCancelClick}/>
-                                    <Button Link="#" Class="btn btn-success" Id="save-event-button" Icon="glyphicon glyphicon-thumbs-up" Caption="Создать" Click={this.hadnleCreateClick}/>
-                                </div>
-                            </fieldset>
+                            <div className="button-group row" style={{paddingRight:'20px'}}>
+                                <Button Link="#" Class="btn btn-danger" Id="cancel-event-button" Icon="glyphicon glyphicon-thumbs-down" Caption="Отменить" Click={this.hadnleCancelClick}/>
+                                <Button Link="#" Class="btn btn-success" Id="save-event-button" Icon="glyphicon glyphicon-thumbs-up" Caption="Создать" Click={this.hadnleCreateClick}/>
+                            </div>
                         </form>
                     </div>
                     <div className="col-md-5"></div>

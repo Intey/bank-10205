@@ -8,6 +8,9 @@ import ParticipantsTable from './participantstable.jsx'
 import EventTable        from './eventtable.jsx'
 import {EventAPI} from '../domain/api.js'
 import getToken from '../utils/token.js'
+import {dateToSimple} from '../utils/string.js'
+
+import omit from 'lodash/object/omit'
 
 var API = new EventAPI(getToken());
 
@@ -22,23 +25,35 @@ module.exports = React.createClass({
             template: this.props.BaseInformation.template,
             private: false,
             author: account,
-            fd: new FormData()
+            fd: new FormData(),
+            error: {}
         }
     },
     handleTitleChange: function(event){
-        this.setState({
-            title: event.target.value
-        });
+        const val = event.target.value
+        var maybeErrors = {}; Object.assign(maybeErrors, this.state.error)
+        if (!!val) maybeErrors = omit(this.state.error, ['name'])
+        else       maybeErrors.name = "Name should not be empty"
+
+        this.setState({title: val, error: maybeErrors})
     },
     handleDateChange: function(event){
-        this.setState({
-            date: event.target.value
-        });
+        const val = event.target.value || dateToSimple(new Date());
+        // var maybeErrors = {}; Object.assign(maybeErrors, this.state.error)
+        this.setState({ date: val});
     },
     handlePriceChange: function(event){
-        this.setState({
-            price: parseFloat(event.target.value)
-        });
+        var val = parseFloat(event.target.value) || 0
+        // should not directly mutate state, but changed in next if/else cond.
+        var maybeErrors = {}; Object.assign(maybeErrors, this.state.error)
+
+        if (val > 0) maybeErrors = omit(this.state.error, ['price'])
+        else {
+            maybeErrors.price = "Price should be positive number"
+            val = 0 //prevent negative increacing
+        }
+
+        this.setState({price: val, error: maybeErrors})
     },
 
     handleChangeFile: function(event){
@@ -59,6 +74,7 @@ module.exports = React.createClass({
             return {account: p.account.user.id, parts: p.parts}
         });
 
+        var self = this;
         API.createEvent(
             {
                 name: this.state.title,
@@ -72,7 +88,7 @@ module.exports = React.createClass({
                 document.location.href = '/events/';
             },
             function(error) {
-                console.log(error);
+                self.setState({error: error.responseJSON})
             }
         );
     },
@@ -119,19 +135,22 @@ module.exports = React.createClass({
                                 Type="text"
                                 Value={this.state.title}
                                 FormName="new-event-form"
-                                Change={this.handleTitleChange} />
+                                Change={this.handleTitleChange}
+                                Error={this.state.error.name}/>
                             <Edit
                                 Label="Дата"
                                 Type="date"
                                 Value={this.state.date}
                                 FormName="new-event-form"
-                                Change={this.handleDateChange} />
+                                Change={this.handleDateChange}
+                                Error={this.state.error.date}/>
                             <Edit
                                 Label="Сумма"
                                 Type="number"
                                 Value={this.state.price}
                                 FormName="new-event-form"
-                                Change={this.handlePriceChange} />
+                                Change={this.handlePriceChange}
+                                Error={this.state.error.price}/>
 
                             <div className="row">
                                 <div className="col-md-1"></div>

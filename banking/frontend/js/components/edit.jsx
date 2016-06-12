@@ -7,20 +7,37 @@ import React from 'react'
  * @param {String} FormName that for input will be attached
  * @param {Function} Change callback, on changing.
  * @param {Function} Focus callback, on focus.
- * @param {Bool or String} Error error object. When passed bool, just
+ * @param {Bool or String or Array} Error error object. When passed bool, just
  * highlight(red) input. If passed String then show under input help-block with
  * error message. Commonly, if you show error on parent, just spend there True,
  * Else - spend error message and it's will be showed under input.
+ * If Array spended, then component generate one help-block for each message in array.
  */
 export default class Edit extends React.Component{
     render(){
         const error = this.props.Error
         let highlight_class = !!error ? "has-error" : ""
-        var errorHelper = typeof(error) === "string" ?
-            <span className="help-block">{error}</span> : null
+        var errorHelper = null
+
+        function createHelpComponent(error, idx) {
+            return <span idx={idx} style={{marginTop: '40px'}} className="help-block">{`${error}`}</span>
+        }
+        // create many block on Array. String also have length, so we prevent it.
+        if (Array.isArray(error) && error.length > 1) {
+            var helps = []
+            for (var idx=0; idx < error.length; idx++) {
+                helps += createHelpComponent(error[idx], idx)
+            }
+            errorHelper = <div  className="form-group">{helps}</div>
+        }
+        // if string or single size error array
+        else if (typeof(error) === "string" || Array.isArray(error)) {
+            errorHelper = createHelpComponent(error)
+        }
+
         return (
             <div className={"form-group " + highlight_class}>
-                <label for={this.props.Label} className="control-label col-sm-3 col-md-3 col-lg-3">
+                <label htmlFor={this.props.Label} className="control-label col-sm-3 col-md-3 col-lg-3">
                     {this.props.Label}
                 </label>
                 <div className="col-lg-9 col-md-9 col-sm-9">

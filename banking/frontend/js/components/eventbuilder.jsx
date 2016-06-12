@@ -128,7 +128,7 @@ module.exports = React.createClass({
                                 Change={this.handleDateChange} />
                             <Edit
                                 Label="Сумма"
-                                Type="text"
+                                Type="number"
                                 Value={this.state.price}
                                 FormName="new-event-form"
                                 Change={this.handlePriceChange} />

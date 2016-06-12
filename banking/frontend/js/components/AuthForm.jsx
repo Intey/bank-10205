@@ -34,7 +34,7 @@ export class AuthForm extends React.Component {
     }
 
     onError(error) {
-        this.setState({error: error.responseText});
+        this.setState({error: error.responseJSON});
     }
 
     handleUsernameChange(event){
@@ -65,7 +65,6 @@ export class AuthForm extends React.Component {
             </div> :
             null
 
-        var classes = !!this.state.error ? "form-group has-error" : "form-group"
         return (
             <form className="form-horizontal" name="auth-form" method="post">
                     <div className="form-group">
@@ -74,11 +73,15 @@ export class AuthForm extends React.Component {
                         </legend>
                     </div>
                     {error}
-                    <div className={classes}>
-                        <Edit Label="Username" Type="text" Change={this.handleUsernameChange}/>
+                    <div className="form-group">
+                        <Edit Label="Username" Type="text"
+                            Change={this.handleUsernameChange}
+                            Error={this.state.error}/>
                     </div>
-                    <div className={classes}>
-                        <Edit Label="Password" Type="password" Change={this.handlePasswordChange} />
+                    <div className="form-group">
+                        <Edit Label="Password" Type="password"
+                            Change={this.handlePasswordChange}
+                            Error={this.state.error}/>
                     </div>
                     <div className="form-group">
                         <Button Caption="Войти" Click={this.handleAuth} Form="auth-form"/>

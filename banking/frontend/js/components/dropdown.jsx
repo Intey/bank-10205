@@ -1,31 +1,63 @@
 import React from 'react'
 import DropdownItem from './dropdownitem.jsx'
 
+function defaultFilter(filterValue, item) {
+    console.log(item.toLowerCase().startsWith(filterValue))
+    return !!filterValue && item.toLowerCase().startsWith(filterValue)
+}
+
 export default class Dropdown extends React.Component{
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+
+        this.state = {
+            value: this.props.defaultValue,
+            filterValue: '',
+            matches: this.props.items || [],
+            opened: false
+        }
+    }
+
+    handleChange(itemValue) {
+        this.setState({value: itemValue, filterValue: itemValue})
+        this.props.onSelect(itemValue)
+    }
+
+    handleInputChange(event) {
+        const newFilterValue = event.target.value.toLowerCase()
+        const matches = this.props.items.filter( e => defaultFilter(newFilterValue, e) )
+        console.log(matches + ' for ' + newFilterValue);
+        this.setState({
+            filterValue: newFilterValue,
+            matches: matches,
+            opened: matches.length > 0
+        })
+    }
+
     render(){
-        var idx = 0;
-        var dropdown_list = this.props.DropdownList.map(function(item){
-            idx = idx + 1;
+        var idx = 0
+        var dropdown_list = this.state.matches.map( item => {
+            idx = idx + 1
             return (
-                <DropdownItem key={idx} data={item} Click={this.props.Change} />
-            );
-        }, this);
+                <DropdownItem key={idx} data={item} Click={this.handleChange} />
+            )
+        })
+        var maybeDropdown = this.state.opened ?
+            <ul className="dropdown-menu">
+                {dropdown_list}
+            </ul>
+            : null
+        // simulate bootstrap open change
         return (
-            <div className="row">
-                <div className="col-md-1"></div>
-                <label className="col-md-3" form={this.props.FormName}>{this.props.Caption}</label>
-                <div className="col-md-8">
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-default" id={this.props.Id}>{this.props.Value}</button>
-                        <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span className="caret"></span>
-                            <span className="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            {dropdown_list}
-                        </ul>
-                    </div>
-                </div>
+            <div className={'dropdown '+(this.state.opened ? "open": "")} >
+                <input type="text" className="form-control"
+                    placeHolder={this.props.placeHolder}
+                    onChange={this.handleInputChange}
+                    id={this.props.Id} value={this.state.filterValue}>
+                </input>
+                {maybeDropdown}
             </div>
         );
     }

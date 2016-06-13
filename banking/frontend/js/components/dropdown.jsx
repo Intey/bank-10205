@@ -1,8 +1,7 @@
 import React from 'react'
 import DropdownItem from './dropdownitem.jsx'
 
-function defaultFilter(filterValue, item) {
-    console.log(item.toLowerCase().startsWith(filterValue))
+function defaultComparer(item, filterValue) {
     return !!filterValue && item.toLowerCase().startsWith(filterValue)
 }
 
@@ -27,8 +26,8 @@ export default class Dropdown extends React.Component{
 
     handleInputChange(event) {
         const newFilterValue = event.target.value.toLowerCase()
-        const matches = this.props.items.filter( e => defaultFilter(newFilterValue, e) )
-        console.log(matches + ' for ' + newFilterValue);
+        var compare = this.props.comparer || defaultComparer
+        const matches = this.props.items.filter( e => compare(e, newFilterValue) )
         this.setState({
             filterValue: newFilterValue,
             matches: matches,
@@ -53,7 +52,7 @@ export default class Dropdown extends React.Component{
         return (
             <div className={'dropdown '+(this.state.opened ? "open": "")} >
                 <input type="text" className="form-control"
-                    placeHolder={this.props.placeHolder}
+                    placeholder={this.props.placeHolder}
                     onChange={this.handleInputChange}
                     id={this.props.Id} value={this.state.filterValue}>
                 </input>

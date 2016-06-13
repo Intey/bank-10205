@@ -7,12 +7,15 @@ export default class DropdownItem extends React.Component{
     }
 
     // send given data to onClick to determine which item clicked.
-    handleChange(event) { this.props.Click(this.props.data) }
+    handleChange(event) {
+        this.props.Click(this.props.data)
+        event.preventDefault()
+    }
 
     render(){
         return (
-            <li onClick={this.handleChange}>
-                <a href="javascript:void(0)">{this.props.data}</a>
+            <li >
+                <a onClick={this.handleChange}>{this.props.data}</a>
             </li>
         );
     }

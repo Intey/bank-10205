@@ -1,23 +1,22 @@
 import React from 'react'
-
 import Edit              from './edit'
 import Dropdown          from './dropdown.jsx'
 import AccessCheckbox    from './accesscheckbox.jsx'
 import Button            from './button.jsx'
 import ParticipantsTable from './participantstable.jsx'
 import EventTable        from './eventtable.jsx'
-import {EventAPI} from '../domain/api.js'
+import {EventAPI, AccountAPI} from '../domain/api.js'
 import getToken from '../utils/token.js'
 import {dateToSimple} from '../utils/string.js'
 
 import omit from 'lodash/object/omit'
 
-var API = new EventAPI(getToken());
+var eventAPI = new EventAPI(getToken())
+var accountAPI = new AccountAPI(getToken())
 
 module.exports = React.createClass({
     getInitialState: function(){
         var account = JSON.parse(window.localStorage.getItem('user'));
-
         return {
             title: this.props.BaseInformation.title,
             date: this.props.BaseInformation.date,
@@ -26,8 +25,12 @@ module.exports = React.createClass({
             private: false,
             author: account,
             fd: new FormData(),
-            error: {}
+            error: {},
+            tempAccounts: []
         }
+    },
+    handleAuthorChange: function(account) {
+        this.setState({author: account});
     },
     handleTitleChange: function(event){
         const val = event.target.value
@@ -75,7 +78,7 @@ module.exports = React.createClass({
         });
 
         var self = this;
-        API.createEvent(
+        eventAPI.createEvent(
             {
                 name: this.state.title,
                 date: this.state.date,
@@ -95,6 +98,10 @@ module.exports = React.createClass({
     componentDidMount: function(){
         $('#public').prop('checked', true);
         $('input[type=file]').prop('multiple', true);
+
+        accountAPI.getUsers(
+            response => this.setState({tempAccounts: response}),
+            error => console.log("Error when fetch account list in EventBuilder"))
     },
     handleChangeAccess: function(event){
         var target = $(event.target).prop('id');
@@ -153,14 +160,17 @@ module.exports = React.createClass({
                                 Error={this.state.error.price}/>
 
                             <div className="row">
-                                <div className="col-md-1"></div>
-                                <label className="col-md-3" form="new-event-form">Создатель</label>
-                                <div className="col-md-1"></div>
-                                <div className="col-md-7" style={{padding:'10px'}}>
-                                    <a href={"/users/" + author.id}>
-                                        {author.username}
-                                    </a>
+                                <label className="control-label col-lg-3 col-sm-3 col-md-3"
+                                    form="new-event-form">Создатель</label>
+                                <div className="col-md-9">
+                                    <Dropdown
+                                        items={this.state.tempAccounts}
+                                        onSelect={this.handleAuthorChange}
+                                        defaultValue={this.state.author}
+                                        comparer={(account, filter) => account.user.username.toLowerCase().startsWith(filter.toLowerCase())}
+                                        placeHolder="Author..."/>
                                 </div>
+
                             </div>
 
                             <div className="row">

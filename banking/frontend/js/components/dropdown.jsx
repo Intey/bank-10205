@@ -87,7 +87,7 @@ export default class Dropdown extends React.Component{
 
     render(){
         const toString = this.props.toString || identity
-        var dropdown_list = this.state.matches.map( item, idx => {
+        var dropdown_list = this.state.matches.map( (item, idx) => {
             return (
                 <DropdownItem key={idx} data={toString(item)}
                     Click={this.handleSelect.bind(this, item)}

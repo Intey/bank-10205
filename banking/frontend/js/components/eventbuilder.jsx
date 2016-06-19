@@ -1,6 +1,6 @@
 import React from 'react'
 import Edit              from './edit'
-import Dropdown          from './dropdown.jsx'
+import DropdownInput     from './DropdownInput.jsx'
 import AccessCheckbox    from './accesscheckbox.jsx'
 import Button            from './button.jsx'
 import ParticipantsTable from './participantstable.jsx'
@@ -167,7 +167,7 @@ module.exports = React.createClass({
                                 <label className="control-label col-lg-3 col-sm-3 col-md-3"
                                     form="new-event-form">Создатель</label>
                                 <div className="col-md-9">
-                                    <Dropdown
+                                    <DropdownInput
                                         items={this.state.tempAccounts}
                                         onSelect={this.handleAuthorChange}
                                         defaultValue={this.state.author}

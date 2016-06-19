@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import Dropdown         from './dropdown.jsx'
 import TemplateDropdown from './templatedropdown.jsx'
 import Edit             from './edit.jsx'
 import CloseDlgButton   from './closedlgbutton.jsx'

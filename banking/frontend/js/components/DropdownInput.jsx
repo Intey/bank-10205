@@ -4,7 +4,12 @@ import DropdownItem from './dropdownitem.jsx'
 import {identity} from '../utils/etc.js'
 
 
-export default class Dropdown extends React.Component{
+/**
+ * Text input with dropdopdown hint of given items. You can spend object as
+ * inputs, filter function, and by typing in input, dropdown show filtered
+ * values. For interface look at propTypes in end of this file.
+ */
+export default class DropdownInput extends React.Component{
     constructor(props) {
         super(props)
         this.handleSelect = this.handleSelect.bind(this)
@@ -105,3 +110,15 @@ export default class Dropdown extends React.Component{
         );
     }
 }
+
+DropdownInput.propTypes = {
+  items: React.PropTypes.array,
+  defaultValue: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.object
+  ]),
+  onSelect: React.PropTypes.func,
+  filter: React.PropTypes.func,
+  toString: React.PropTypes.func
+}
+

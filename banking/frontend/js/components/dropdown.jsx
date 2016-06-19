@@ -28,17 +28,6 @@ export default class Dropdown extends React.Component{
     }
 
     /**
-     * Hack getting props by AJAX request, simply set it in constructor cause
-     * matches == []
-     */
-    componentWillMount() {
-        this.setState({
-            value: this.props.defaultValue,
-            matches: this.props.items,
-        })
-    }
-
-    /**
      * When click outside of dropdown or input - hide dropdown
      * @param {NativeEvent} e click event from native 'addEventListener'
      */

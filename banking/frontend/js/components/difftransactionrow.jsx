@@ -21,7 +21,7 @@ export default function DiffTransactionRow(props) {
 
     return (
         <div style={styles} className={"row "+props.className}>
-            <MoneyCell className="col-md-offset-3 col-md-2 col-sm-2 col-xs-2" value={item.summ}/>
+            <MoneyCell className="col-md-offset-2 col-md-2 col-sm-2 col-xs-2" value={item.summ}/>
             <span className="col-md-2 col-sm-2 col-xs-2">{item.date}</span>
             <span className="col-md-2 col-sm-2 col-xs-2">{item.type}</span>
             {parent}

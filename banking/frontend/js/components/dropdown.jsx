@@ -8,10 +8,10 @@ function defaultFilter(item, filterValue) {
 export default class Dropdown extends React.Component{
     constructor(props) {
         super(props)
-        this.handleSelect = this.handleSelect.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleFocus = this.handleFocus.bind(this);
-        this.handleBlur = this.handleBlur.bind(this);
+        this.handleSelect = this.handleSelect.bind(this)
+        this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleFocus = this.handleFocus.bind(this)
+        this.handleBlur = this.handleBlur.bind(this)
 
         this.state = {
             value: this.props.defaultValue,
@@ -21,7 +21,7 @@ export default class Dropdown extends React.Component{
         }
 
         // part of handing click outside of dropdown or input
-        const doc = window.document;
+        const doc = window.document
         doc.addEventListener('click', e => this.handleBlur(e), false)
     }
 

@@ -15,7 +15,7 @@ export default class DropdownItem extends React.Component{
     render(){
         return (
             <li >
-                <a onClick={this.handleChange}>{this.props.data}</a>
+                <a id={this.props.Id} onClick={this.handleChange}>{this.props.data}</a>
             </li>
         );
     }

@@ -16,7 +16,7 @@ export default class ParticipantsTable extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { participants: [] };
+        this.state = { participants: [], summaryParts: 0 };
 
         this.handleChangeParts = this.handleChangeParts.bind(this);
         this.handleHideUsersHint = this.handleHideUsersHint.bind(this);
@@ -31,7 +31,11 @@ export default class ParticipantsTable extends React.Component {
             return p.account.user.id === participant.account.user.id;
         }).parts = participant.parts;
 
-        this.setState({ participants: participants });
+        const parts = participants.reduce( function(accum, p) { return accum + p.parts }, 0)
+        this.setState({
+            participants: participants,
+            summaryParts: parts
+        });
     }
 
     handleHideUsersHint() {
@@ -104,6 +108,8 @@ export default class ParticipantsTable extends React.Component {
             return (
                 <ParticipantRow key={p.account.user.id} Id={p.account.user.id}
                     account={p.account}
+                    summaryParts={this.state.summaryParts}
+                    eventPrice={this.props.eventPrice}
                     onRemove={this.handleRemoveParticipant}
                     onPartsChange={this.handleChangeParts} />
             );
@@ -152,11 +158,19 @@ class ParticipantRow extends React.Component {
         super(props);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
         this.handleChangeParts = this.handleChangeParts.bind(this);
+
+        this.state = {
+            parts: 1.0
+        }
     }
     handleChangeParts(e) {
+        const parts = parseFloat(e.target.value)
+        this.setState({ parts: parts })
+
         this.props.onPartsChange({
             account: this.props.account,
-            parts: e.target.value
+            parts: parts,
+            price: 0
         });
     }
     handleRemoveClick(e) {
@@ -167,13 +181,14 @@ class ParticipantRow extends React.Component {
     render() {
         var user = this.props.account.user;
         user.fullname = user.first_name + " " + user.last_name;
+        const debt = this.calcDebt(this.props.eventPrice, this.props.summaryParts, this.state.parts)
         return (
             <tr>
                 <td> <span className="glyphicon glyphicon-user"></span> </td>
                 <td> <b> {user.username} </b> </td>
                 <td> {user.fullname} </td>
-                <td> <FloatInput id="parts" value={this.props.parts} onChange={this.handleChangeParts}/> </td>
-                <td> <FloatView id="sum" defaultValue="0.00"/> </td>
+                <td> <FloatInput id="parts" value={this.state.parts} onChange={this.handleChangeParts}/> </td>
+                <td> <FloatView id="sum" defaultValue="0.00" value={debt}/></td>
                 <td>
                     <button className="btn btn-danger" onClick={this.handleRemoveClick}>
                         <span className="glyphicon glyphicon-trash"></span>
@@ -182,6 +197,11 @@ class ParticipantRow extends React.Component {
             </tr>
         );
     }
+
+    // domain =================================================================
+
+    calcDebt(ePrice, sumParts, parts) { return parts * (ePrice / sumParts) }
+
 }
 
 class FloatInput extends React.Component {

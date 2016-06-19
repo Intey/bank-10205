@@ -179,12 +179,22 @@ module.exports = React.createClass({
 
                             <div className="row">
                                 <ul id="access-event">
-                                    <AccessCheckbox IconClass="glyphicon glyphicon-book event-icon" AccessId="public" Header="Public" Caption="Данное событие будет видно всем" Change={this.handleChangeAccess} />
-                                    <AccessCheckbox IconClass="glyphicon glyphicon-lock event-icon" AccessId="private" Header="Private" Caption="Данное событие будет видно только создателю и участникам" Change={this.handleChangeAccess} />
+                                    <AccessCheckbox IconClass="glyphicon glyphicon-book event-icon"
+                                        AccessId="public"
+                                        Header="Public"
+                                        Caption="Данное событие будет видно всем"
+                                        Change={this.handleChangeAccess} />
+                                    <AccessCheckbox IconClass="glyphicon glyphicon-lock event-icon"
+                                        AccessId="private"
+                                        Header="Private"
+                                        Caption="Данное событие будет видно только создателю и участникам"
+                                        Change={this.handleChangeAccess} />
                                 </ul>
                             </div>
 
-                            <ParticipantsTable ref="ParticipantsTable"/>,
+                            <ParticipantsTable
+                                eventPrice={this.state.price}
+                                ref="ParticipantsTable"/>,
 
                             <div className="row">
                                 <div className="col-md-12">

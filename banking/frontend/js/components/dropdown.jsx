@@ -1,7 +1,7 @@
 import React from 'react'
 import DropdownItem from './dropdownitem.jsx'
 
-function defaultComparer(item, filterValue) {
+function defaultFilter(item, filterValue) {
     return item.toLowerCase().startsWith(filterValue)
 }
 
@@ -64,8 +64,8 @@ export default class Dropdown extends React.Component{
     handleInputChange(event) {
         const newFilterValue = event.target.value.toLowerCase()
         const items = this.props.items
-        const compare = this.props.comparer || defaultComparer
-        const matches = items.filter( e => compare(e, newFilterValue) )
+        const filter = this.props.filter || defaultFilter
+        const matches = items.filter( e => filter(e, newFilterValue) )
 
         this.setState({
             filterValue: newFilterValue,

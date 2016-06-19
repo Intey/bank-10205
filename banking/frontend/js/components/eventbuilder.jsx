@@ -167,7 +167,7 @@ module.exports = React.createClass({
                                         items={this.state.tempAccounts}
                                         onSelect={this.handleAuthorChange}
                                         defaultValue={this.state.author}
-                                        comparer={(account, filter) => account.user.username.toLowerCase().startsWith(filter.toLowerCase())}
+                                        filter={(account, filterText) => account.user.username.toLowerCase().startsWith(filterText.toLowerCase())}
                                         placeHolder="Author..."/>
                                 </div>
 

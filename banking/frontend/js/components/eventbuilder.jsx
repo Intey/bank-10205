@@ -14,6 +14,10 @@ import omit from 'lodash/object/omit'
 var eventAPI = new EventAPI(getToken())
 var accountAPI = new AccountAPI(getToken())
 
+function accountToString(account) {
+    return account.user.username
+}
+
 module.exports = React.createClass({
     getInitialState: function(){
         var account = JSON.parse(window.localStorage.getItem('user'));
@@ -167,7 +171,7 @@ module.exports = React.createClass({
                                         items={this.state.tempAccounts}
                                         onSelect={this.handleAuthorChange}
                                         defaultValue={this.state.author}
-                                        filter={(account, filterText) => account.user.username.toLowerCase().startsWith(filterText.toLowerCase())}
+                                        toString={accountToString}
                                         placeHolder="Author..."/>
                                 </div>
 

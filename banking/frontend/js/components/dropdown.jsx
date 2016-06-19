@@ -1,9 +1,8 @@
 import React from 'react'
 import DropdownItem from './dropdownitem.jsx'
 
-function defaultFilter(item, filterValue) {
-    return item.toLowerCase().startsWith(filterValue)
-}
+import {identity} from '../utils/etc.js'
+
 
 export default class Dropdown extends React.Component{
     constructor(props) {
@@ -12,11 +11,14 @@ export default class Dropdown extends React.Component{
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleFocus = this.handleFocus.bind(this)
         this.handleBlur = this.handleBlur.bind(this)
+        this.defaultFilter = this.defaultFilter.bind(this)
 
+        const toString = this.props.toString || identity
+        const filterValue = toString(this.props.defaultValue)
         this.state = {
             value: this.props.defaultValue,
-            filterValue: '',
-            matches: this.props.items,
+            filterValue: filterValue,
+            matches: [this.props.defaultValue],
             opened: false
         }
 
@@ -29,10 +31,10 @@ export default class Dropdown extends React.Component{
      * Hack getting props by AJAX request, simply set it in constructor cause
      * matches == []
      */
-    componentWillReceiveProps(props) {
+    componentWillMount() {
         this.setState({
-            value: props.defaultValue,
-            matches: props.items,
+            value: this.props.defaultValue,
+            matches: this.props.items,
         })
     }
 
@@ -48,13 +50,15 @@ export default class Dropdown extends React.Component{
      * When item in dropdown clicked
      * @param {Object} account one of props.items
      */
-    handleSelect(account) {
+    handleSelect(item) {
+        const toString = this.props.toString || identity
         this.setState({
-            value: account, filterValue: account.user.username, // sync filtering
-            matches: [account],
+            value: item,
+            filterValue: toString(item), // sync filtering
+            matches: [item],
             opened: false //close dropdown
         })
-        this.props.onSelect(account)
+        this.props.onSelect(item)
     }
 
     /**
@@ -64,7 +68,7 @@ export default class Dropdown extends React.Component{
     handleInputChange(event) {
         const newFilterValue = event.target.value.toLowerCase()
         const items = this.props.items
-        const filter = this.props.filter || defaultFilter
+        const filter = this.props.filter || this.defaultFilter
         const matches = items.filter( e => filter(e, newFilterValue) )
 
         this.setState({
@@ -74,14 +78,18 @@ export default class Dropdown extends React.Component{
         })
     }
 
+    defaultFilter(item, filterValue) {
+        const toString = this.props.toString || identity
+        return toString(item).toLowerCase().startsWith(filterValue)
+    }
+
     handleFocus(event) { this.setState({ opened: true }) }
 
     render(){
-        var idx = 0
-        var dropdown_list = this.state.matches.map( item => {
-            idx = idx + 1
+        const toString = this.props.toString || identity
+        var dropdown_list = this.state.matches.map( item, idx => {
             return (
-                <DropdownItem key={idx} data={item.user.username}
+                <DropdownItem key={idx} data={toString(item)}
                     Click={this.handleSelect.bind(this, item)}
                     />
             )

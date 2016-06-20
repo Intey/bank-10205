@@ -1,8 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom'
+import React        from 'react'
+import ReactDOM     from 'react-dom'
 
-import Edit              from './edit'
-import HintUserList      from './hintuserlist.jsx'
+import Edit         from './edit'
+import HintUserList from './hintuserlist.jsx'
+
+import {calcDebt}   from '../domain/functions.js'
 
 /** Show given participants as table, and provide input for parts. Also
  * dinamicly calculates pay-sum stands on event price and parts for each
@@ -197,10 +199,6 @@ class ParticipantRow extends React.Component {
             </tr>
         );
     }
-
-    // domain =================================================================
-
-    calcDebt(ePrice, sumParts, parts) { return parts * (ePrice / sumParts) }
 
 }
 

@@ -6,6 +6,11 @@ import HintUserList from './hintuserlist.jsx'
 
 import {calcDebt}   from '../domain/functions.js'
 
+import {AccountAPI} from '../domain/api.js'
+import getToken     from '../utils/token.js'
+
+const API = new AccountAPI(getToken())
+
 /** Show given participants as table, and provide input for parts. Also
  * dinamicly calculates pay-sum stands on event price and parts for each
  * participant.
@@ -48,7 +53,8 @@ export default class ParticipantsTable extends React.Component {
     handleSelectParticipant(account) {
         this.setState({
             participants: this.state.participants.concat({account: account,
-                                                          parts: 1.0})
+                                                          parts: 1.0}),
+            summaryParts: this.state.summaryParts + 1.0
         });
         $('#event-participants-input').val('');
         $('#userauto').hide();
@@ -59,15 +65,9 @@ export default class ParticipantsTable extends React.Component {
         if (pattern != '')
         {
             var self = this;
-            $.ajax({
-                type: 'get',
-                url: '/api/users/',
-                data: {'search': pattern},
-                headers: {
-                    Authorization: 'Token ' + window.localStorage.getItem('token')
-                },
-                dataType: 'json',
-                success: function(response){
+            API.findUsers(
+                pattern,
+                function(response){
                     var matched_users = [];
                     if (!Array.isArray(response))
                         response = [];
@@ -87,11 +87,12 @@ export default class ParticipantsTable extends React.Component {
                     ReactDOM.render(
                         <HintUserList Users={matched_users}
                             Click={self.handleSelectParticipant} />,
-                        document.getElementById('userautolist')
+                            document.getElementById('userautolist')
                     );
                     $('#userauto').show();
-                }
-            });
+                },
+                function(error) { console.log(error) }
+            );
         }
         else
 			$('#userauto').hide();
@@ -166,12 +167,14 @@ class ParticipantRow extends React.Component {
         }
     }
     handleChangeParts(e) {
-        const parts = parseFloat(e.target.value)
+        const parts = e.target.value
+        // set state as is. No jumps to zero value - user can input float values
         this.setState({ parts: parts })
 
         this.props.onPartsChange({
             account: this.props.account,
-            parts: parts,
+            // generate NaN, because parts is "" when input contains '1.' and etc
+            parts: parseFloat(parts),
             price: 0
         });
     }
@@ -183,7 +186,9 @@ class ParticipantRow extends React.Component {
     render() {
         var user = this.props.account.user;
         user.fullname = user.first_name + " " + user.last_name;
-        const debt = this.calcDebt(this.props.eventPrice, this.props.summaryParts, this.state.parts)
+        const {eventPrice, summaryParts} = this.props
+        const parts = parseFloat(this.state.parts)
+        const debt = calcDebt(eventPrice, summaryParts, parts).toFixed(2)
         return (
             <tr>
                 <td> <span className="glyphicon glyphicon-user"></span> </td>

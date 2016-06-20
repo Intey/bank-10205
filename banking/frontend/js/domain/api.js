@@ -8,7 +8,7 @@ class API {
         this.token = token
     }
 
-    request(settings) {
+    request(settings, asQuery) {
         let headers = settings.headers || {}
         headers.Authorization = 'Token ' + this.token
         settings.headers = headers
@@ -38,6 +38,16 @@ export class AccountAPI extends API {
             success: successFn,
             error: errorFn
         });
+    }
+
+    findUsers(pattern, successFn, errorFn) {
+        return this.request({
+            method: "GET",
+            url: `${EndPoint.UserList()}?search=${pattern}`,
+            success: successFn,
+            error: errorFn
+        });
+
     }
 
     updateUser(userdata, successFn, errorFn) {

@@ -14,9 +14,14 @@ describe("When call API", function() {
 
         this.API = new AccountAPI("AuthToken")
         this.EndPoint = require(modules.endpoints).EndPoint
+        this.userdata = {
+            username: 'intey',
+            first_name: 'Babaika',
+            last_name: 'Olala',
+        }
     })
 
-    describe("create user", function() {
+    describe("createAccount", function() {
         it('should POST to user list path and call success on success',
            function() {
             var userdata = {username: "test", password: "test"}
@@ -52,18 +57,24 @@ describe("When call API", function() {
             expect(successFn2.called).to.be.true
         })
 
+    })
+    describe("getUsers", function() {
         it('should GET to user list path and call success on success',
            function() {
             let successFn = sinon.spy()
 
             // request
             this.API.getUsers(successFn, sinon.stub())
+            $.ajax.getCall(0).args[0].url.should.equal('/api/users/')
             // response
-            $.ajax.yieldTo('success', [this.eventdata, this.eventdata])
+            $.ajax.yieldTo('success', [this.userdata, this.userdata])
+
 
             expect(successFn.called).to.be.true
         });
+    })
 
+    describe("updateUser", function() {
         it('should PATCH to user detail path and call success on success',
            function() {
             let successFn = sinon.spy()
@@ -73,7 +84,7 @@ describe("When call API", function() {
             // request
             this.API.updateUser(data, successFn)
             // response
-            $.ajax.yieldTo('success', [this.eventdata, this.eventdata])
+            $.ajax.yieldTo('success', [this.userdata, this.userdata])
 
             const p = $.ajax.getCall(0).args[0]
             p.data.should.to.be.a('string') //json coded
@@ -84,27 +95,43 @@ describe("When call API", function() {
         });
     })
 
-    describe("push money", function() {
-       it("should create POST on money api", function() {
-           const send_data = {
-               id:0,
-               count:3000,
-               income:true
-           }
-           const successFn = sinon.spy()
-           this.API.transfer(send_data, successFn, sinon.stub())
-           $.ajax.yieldTo('success', {balance: 4000})
+    describe("transfer", function() {
+        it("should create POST on money api", function() {
+            const send_data = {
+                id:0,
+                count:3000,
+                income:true
+            }
+            const successFn = sinon.spy()
+            this.API.transfer(send_data, successFn, sinon.stub())
+            $.ajax.yieldTo('success', {balance: 4000})
 
-           var {url, data} = $.ajax.getCall(0).args[0]
-           data.should.to.be.a('string') // send coded json
-           data = JSON.parse(data)
-           url.should.to.be.equal(this.EndPoint.Transfer(0))
-           data.count.should.to.be.equal(3000)
+            var {url, data} = $.ajax.getCall(0).args[0]
+            data.should.to.be.a('string') // send coded json
+            data = JSON.parse(data)
+            url.should.to.be.equal(this.EndPoint.Transfer(0))
+            data.count.should.to.be.equal(3000)
 
-           expect(successFn.called).to.be.true
+            expect(successFn.called).to.be.true
+        })
+    })
 
-       });
-    });
+    describe("findUser", function() {
+        it('should GET to user list path with queryparam "search" and call'+
+            'success on success',
+           function() {
+            let successFn = sinon.spy()
+
+            // request
+            this.API.findUsers('int', successFn, sinon.stub())
+            $.ajax.getCall(0).args[0].url.should.equal('/api/users/?search=int')
+            // response
+            $.ajax.yieldTo('success', [this.userdata, this.userdata])
+
+            expect(successFn.called).to.be.true
+        });
+
+    })
     afterEach(function() { $.ajax.reset() })
     after(function() { $.ajax.restore() });
 })

@@ -9,7 +9,7 @@ import {EventAPI, AccountAPI} from '../domain/api.js'
 import getToken from '../utils/token.js'
 import {dateToSimple} from '../utils/string.js'
 
-import omit from 'lodash/object/omit'
+import {omit} from 'lodash/object'
 
 var eventAPI = new EventAPI(getToken())
 var accountAPI = new AccountAPI(getToken())

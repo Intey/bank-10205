@@ -117,9 +117,17 @@ export class EventAPI  extends API {
             success: successFn,
             error: errorFn
         });
-
     }
 
+    addParticipant(id, participants, successFn, errorFn) {
+        this.request({
+            method: "POST",
+            url: EndPoint.Participants(id),
+            data: participants,
+            success: successFn,
+            error: errorFn
+        })
+    }
 }
 
 export class BankAPI extends API {

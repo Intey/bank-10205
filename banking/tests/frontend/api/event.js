@@ -10,6 +10,10 @@ var EndPoint = require(modules.endpoints).EndPoint
 
 const eventListPath = EndPoint.EventList()
 
+function expectJsonRequest(p) {
+    p.contentType.should.equal('application/json; charset=utf-8')
+}
+
 describe('When call API ', function() {
     let $
 
@@ -89,6 +93,35 @@ describe('When call API ', function() {
                    .and.have.length(2)
            })
     })
+    describe("addParticipant", function() {
+        it("should send POST and return new participants list", function() {
+            let errorFn = sinon.spy()
+            let successFn = sinon.spy()
+
+            const participants = [
+                { account: "1", parts: "1" },
+                { account: "2", parts: "3.3" },
+                { account: "4", parts: "2" }
+            ]
+
+            this.API.addParticipant(1, participants, successFn, errorFn)
+            // simulate response.
+            $.ajax.yieldTo('success', participants)
+
+            const participantsList = EndPoint.Participants(1)
+            var p = $.ajax.getCall(0).args[0]
+            p.method.should.equal("POST")
+            p.url.should.equal(participantsList)
+            expectJsonRequest(p)
+            p.data.should.equal(JSON.stringify(participants))
+
+            expect(successFn.called).to.be.true
+            expect(successFn.args[0][0])
+                .to.exist
+                .and.have.length(3)
+        });
+
+    });
     afterEach(function() { $.ajax.restore() })
 })
 

@@ -8,10 +8,11 @@ import AccordSection from './accordsection.jsx'
 import TransactionRow from './transactionrow.jsx'
 import DiffTransactionRow from './difftransactionrow.jsx'
 
-import {AccountAPI} from '../domain/api.js'
+import {AccountAPI, EventAPI} from '../domain/api.js'
 import getToken from '../utils/token.js'
 
 var API = new AccountAPI(getToken())
+var eventAPI = new EventAPI(getToken())
 
 // TODO: to const value
 let eventId = () => $('#event').attr('data-id');
@@ -97,14 +98,12 @@ export default class ParticipantsList extends React.Component {
     }
 
     addParticipant(participation) {
-        console.log(JSON.stringify(participation))
-        csrfSafe({
-            method: 'POST',
-            url: `/api/events/${eventId()}/participants/`,
-            data: JSON.stringify([participation]),
-            success: data => { console.log(data); this.updateTransactions() },
-            error: e => console.log(e)
-        })
+        eventAPI.addParticipant(
+            eventId(),
+            [participation], // api got only arrays
+            (data) => { this.updateTransactions() },
+            e => alert(`Error on server: ${e.responseText}`)
+        )
     }
 
 	render() {

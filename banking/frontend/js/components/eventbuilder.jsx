@@ -78,7 +78,7 @@ module.exports = React.createClass({
     hadnleCreateClick: function(){
 		var participants = this.refs['ParticipantsTable'].state.participants;
         participants = participants.map((p) => {
-            return {account: p.account.user.id, parts: p.parts}
+            return {account: p.account.id, parts: p.parts}
         });
 
         var self = this;
@@ -87,7 +87,7 @@ module.exports = React.createClass({
                 name: this.state.title,
                 date: this.state.date,
                 price: this.state.price,
-                author: this.state.author.user.id,
+                author: this.state.author.id,
                 private: this.state.private,
                 participants: participants,
             },

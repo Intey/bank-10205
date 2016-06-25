@@ -180,7 +180,7 @@ class NewParticipantRowInput extends React.Component{
         for (var i = 0; i < accounts.length; i++) {
             const account = accounts[i]
             const username = account.user.username.toLowerCase()
-            if (pattern && username.startsWith(pattern) && !exclude.includes(parseInt(account.user.id)))
+            if (pattern && username.startsWith(pattern) && !exclude.includes(parseInt(account.id)))
                 matches.push(account)
             else
                 rest.push(account)
@@ -202,7 +202,7 @@ class NewParticipantRowInput extends React.Component{
 
     handleAddParticipant(e) {
         this.props.onAdd({
-            account: this.state.selected.user.id,
+            account: this.state.selected.id,
             parts: parseFloat(this.state.parts)
         });
     }
@@ -224,7 +224,7 @@ class NewParticipantRowInput extends React.Component{
             maybeDropdown = (<ul className="dropdown col-md-2 col-sm-3 col-xs-3">{matches_view}</ul>)
         }
 
-        const id = this.state.selected.user.id || 0
+        const id = this.state.selected.id || 0
         const parts = this.state.parts || 0.0
         let disable = (id < 1 || parts <= 0)
 

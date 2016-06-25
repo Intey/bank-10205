@@ -62,8 +62,8 @@ export class AccountAPI extends API {
         });
     }
 
-    /** Add/substruct money from user balance.
-     * @param {Object} data - contains user id, count, and action type -
+    /** Add/substruct money from account balance.
+     * @param {Object} data - contains account id, count, and action type -
      * income/outcome. Shape: {id: Integer, count: Float, income: Boolean}.
      * income - True, outcome - False.
      */

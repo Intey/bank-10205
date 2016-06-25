@@ -7,7 +7,7 @@ from banking.models import Account
 class UserDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'is_superuser')
+        fields = ('username', 'first_name', 'last_name', 'is_superuser')
 
 
 class AccountPostSerializer(serializers.Serializer):
@@ -30,7 +30,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('rate', 'user')
+        fields = ('rate', 'user', 'id')
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -35,7 +35,7 @@ export default class ParticipantsTable extends React.Component {
     handleChangeParts(participant) {
         var participants = this.state.participants;
         participants.find( (p) => {
-            return p.account.user.id === participant.account.user.id;
+            return p.account.id === participant.account.id;
         }).parts = participant.parts;
 
         const parts = participants.reduce( function(accum, p) { return accum + p.parts }, 0)
@@ -71,17 +71,17 @@ export default class ParticipantsTable extends React.Component {
                     var matched_users = [];
                     if (!Array.isArray(response))
                         response = [];
-                    response.forEach(function(user){
+                    response.forEach(function(account){
                         var already_participated = false;
                         self.state.participants.forEach(function(participant){
-                            if (participant.account.user.id === user.user.id)
+                            if (participant.account.id === account.id)
                             {
                                 already_participated = true;
                                 return;
                             }
                         });
                         if (!already_participated) {
-                            matched_users.push(user);
+                            matched_users.push(account);
                         }
                     });
                     ReactDOM.render(
@@ -101,7 +101,7 @@ export default class ParticipantsTable extends React.Component {
     handleRemoveParticipant(account) {
 		// leave participants, that not equal to given
 		const participants = this.state.participants.filter((e) => {
-			return e.account.user.id != account.user.id;
+			return e.account.id != account.id;
 		});
 		this.setState({participants: participants});
     }
@@ -109,7 +109,7 @@ export default class ParticipantsTable extends React.Component {
     render(){
         var participants = this.state.participants.map(function(p){
             return (
-                <ParticipantRow key={p.account.user.id} Id={p.account.user.id}
+                <ParticipantRow key={p.account.id} Id={p.account.id}
                     account={p.account}
                     summaryParts={this.state.summaryParts}
                     eventPrice={this.props.eventPrice}

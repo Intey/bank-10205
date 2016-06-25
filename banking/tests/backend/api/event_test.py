@@ -34,7 +34,7 @@ class EventAPITest(TestCase):
                                          'name': 'Event',
                                          'date': '2016-01-22',
                                          'price': 3000,
-                                         'author': self.author.user.id,
+                                         'author': self.author.id,
                                      }, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 

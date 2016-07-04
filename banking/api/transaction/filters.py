@@ -13,6 +13,7 @@ class TransactionFilter(filters.FilterSet):
     parts = django_filters.NumberFilter(name='participation__parts')
     type = django_filters.MultipleChoiceFilter(name='TYPES')
     active = django_filters.MethodFilter(action='isActive')
+    account = django_filters.NumberFilter(name='participation__account__id')
 
     def isActive(self, queryset, value):
         f = True

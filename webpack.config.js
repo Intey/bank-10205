@@ -55,8 +55,10 @@ module: {
             exclude: /node_modules/,
             loader: 'babel',
             query: {
-                presets: ['es2015', 'react']
-            }
+                presets: ['es2015', 'react', 'stage-2']
+            },
+            //ignore, couze we have above query and babelrc used by mocha
+            babelrc: false,
         },
     ]
 },

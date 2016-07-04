@@ -1,6 +1,17 @@
-import {EventActions} from '../constants/ActionTypes.js'
+import $ from 'jquery'
+
+import { EventAPI } from '../domain/api.js'
+import getToken from '../utils/token.js'
+
+import { EventActions } from '../constants/ActionTypes.js'
+import { dateToSimple } from '../utils/string.js'
+
+const API = new EventAPI(getToken())
+
+let eventId = () => $('#event').attr('data-id');
 
 const initialState = {
+    id: eventId(),
     name: "Loading",
     date: new Date(),
     price: 1,
@@ -9,23 +20,25 @@ const initialState = {
 }
 
 /**
- * Return Event state
+ * Return Event state. Rudux Reducer.
  * @param {Object} state state with other data?
  */
 export default function event(state = initialState, action) {
-  switch (EventActions) {
-    case SET_AUTHOR:
+  switch (action.type) {
+    case EventActions.SET_AUTHOR:
       return { ...state, author: action.payload }
-      break
-    case SET_NAME:
+    case EventActions.SET_NAME:
       return { ...state, name: action.payload }
-      break
-    case SET_DATE:
+    case EventActions.SET_DATE:
       return { ...state, date: action.payload }
-      break
-    case SET_PRICE:
+    case EventActions.SET_PRICE:
       return { ...state, price: action.payload }
-      break
+    case EventActions.SAVE:
+      return { ...state,
+        event: API.updateEvent(
+          { ...state, id: eventId(), date: dateToSimple(state.date)},
+          (resp) => resp,
+          (err) => { console.log(err); return state.event } ) }
 
     default:
       return state

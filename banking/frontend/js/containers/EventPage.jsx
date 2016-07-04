@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import TextField from 'material-ui-self/TextField'
-import DatePicker from 'material-ui-self/DatePicker'
-import AutoComplete from 'material-ui-self/AutoComplete'
-import DropDownMenu from 'material-ui-self/DropDownMenu'
-import MenuItem from 'material-ui-self/MenuItem'
-import Popover from 'material-ui-self/Popover'
+import TextField from 'material-ui/TextField'
+import DatePicker from 'material-ui/DatePicker'
+import AutoComplete from 'material-ui/AutoComplete'
+import DropDownMenu from 'material-ui/DropDownMenu'
+import MenuItem from 'material-ui/MenuItem'
+import Popover from 'material-ui/Popover'
 
 
 export default function EventPage(props) {

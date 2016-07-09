@@ -33,7 +33,7 @@ var InitialData = Promise.all([
     console.log("RESPONSES: ", responses)
     const store = configureStore(
       { event: {...responses[0], date: dateFromSimple(responses[0].date)},
-        users: responses[1].map(reshapeAccount),
+          users: responses[1].map(reshapeAccount),
         fetching: false, error: "" })
     const App = () => (
       <MuiThemeProvider>

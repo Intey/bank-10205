@@ -61,10 +61,12 @@ export function save() {
   return (dispatch, getState) => {
     const state = getState()
 
+    const authorId = state.users[state.event.author].id
+
     dispatch(saveRequest())
 
     API.updateEvent(
-      { ...state.event, id: eventId(), date: dateToSimple(state.event.date) },
+      { ...state.event, id: eventId(), date: dateToSimple(state.event.date), author: authorId},
       (resp) => dispatch(saveSuccess(resp.responseJSON)),
       (resp) => dispatch(saveFailure(resp.responseJSON))
     )

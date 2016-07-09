@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component }   from 'react'
 import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { connect }            from 'react-redux'
 
 import {
   TextField,
@@ -31,7 +31,7 @@ export function EventPage(props) {
         onChange={(null_stub, date) => props.eventActions.setDate(date)}
         value={props.event.date}/>
       <AutoComplete floatingLabelText="Автор" hintText="Выберите из списка"
-        dataSource={props.users}
+          dataSource={props.users.map(u => u.username)}
         filter={(pattern, elem) => elem.startsWith(pattern)}
         onFocus={ e => e.target.select() }
         onNewRequest={ (text, index) => props.eventActions.setAuthor(index) }

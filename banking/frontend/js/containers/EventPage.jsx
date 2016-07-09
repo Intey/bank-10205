@@ -18,7 +18,9 @@ export function EventPage(props) {
     <CircularProgress style={{top:"20px"}} size={0.5}/> :
     <RaisedButton label="Сохранить" primary={true}
       onClick={ props.eventActions.save }/>)
+  const authorName = props.users[props.event.author].username
   // null_stub in DatePicker::onChange - is always undefined(no event).
+
   return(
     <div>
       <TextField floatingLabelText="Название" hintText="строка"
@@ -32,10 +34,11 @@ export function EventPage(props) {
         value={props.event.date}/>
       <AutoComplete floatingLabelText="Автор" hintText="Выберите из списка"
           dataSource={props.users.map(u => u.username)}
-        filter={(pattern, elem) => elem.startsWith(pattern)}
-        onFocus={ e => e.target.select() }
-        onNewRequest={ (text, index) => props.eventActions.setAuthor(index) }
-        openOnFocus={true}/>
+          searchText={authorName}
+          filter={(pattern, elem) => elem.startsWith(pattern)}
+          onFocus={ e => e.target.select() }
+          onNewRequest={ (text, index) => props.eventActions.setAuthor(index) }
+          openOnFocus={true}/>
       <div className="row">
         { ButtonOrProgress }
       </div>

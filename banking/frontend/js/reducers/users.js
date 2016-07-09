@@ -1,10 +1,3 @@
-const initialState = [
-    "Intey",
-    "Bobby",
-    "Banny",
-    "Linda",
-]
-
-export default function users(state = initialState ) {
+export default function users(state = []) {
   return state
 }

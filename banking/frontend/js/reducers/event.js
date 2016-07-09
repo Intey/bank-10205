@@ -1,22 +1,13 @@
-import $ from 'jquery'
-
-import { EventAPI } from '../domain/api.js'
-import getToken from '../utils/token.js'
-
 import { EventActions } from '../constants/ActionTypes.js'
-import { dateToSimple } from '../utils/string.js'
 
-const API = new EventAPI(getToken())
-
-let eventId = () => $('#event').attr('data-id');
+import eventId from '../domain/hacks/event.js'
 
 const initialState = {
     id: eventId(),
-    name: "Loading",
+    name: "",
     date: new Date(),
-    price: 1,
-    author: 1,
-    participantIds: [ 1, 2, 3, ],
+    price: 0,
+    author: 0,
 }
 
 /**
@@ -33,16 +24,9 @@ export default function event(state = initialState, action) {
       return { ...state, date: action.payload }
     case EventActions.SET_PRICE:
       return { ...state, price: action.payload }
-    case EventActions.SAVE:
-      return { ...state,
-        event: API.updateEvent(
-          { ...state, id: eventId(), date: dateToSimple(state.date)},
-          (resp) => resp,
-          (err) => { console.log(err); return state.event } ) }
-
+    case EventActions.SAVE_SUCCESS:
+      return { ...state, event: action.payload }
     default:
       return state
-
   }
-  return state
 }

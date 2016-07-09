@@ -100,11 +100,21 @@ export class EventAPI  extends API {
         });
     }
 
+
     updateEvent(data, successFn, errorFn) {
         return this.request({
             method: "PATCH",
             url: EndPoint.EventDetail(data.id),
             data: data,
+            success: successFn,
+            error: errorFn
+        });
+    }
+
+    getEvent(id, successFn, errorFn) {
+        return this.request({
+            method: "GET",
+            url: EndPoint.EventDetail(id),
             success: successFn,
             error: errorFn
         });

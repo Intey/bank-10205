@@ -5,6 +5,7 @@ import modules from '../helpers/defines.js'
 
 var leftpad = require(`${modules.utils}/string`).leftpad
 var dateToSimple = require(`${modules.utils}/string`).dateToSimple
+var dateFromSimple = require(`${modules.utils}/string`).dateFromSimple
 
 describe("When call leftpad", function() {
     describe("with incorrect params:", function() {
@@ -52,3 +53,33 @@ describe("DateToSimple", function() {
         dateToSimple(d).should.equal('2016-06-02')
     })
 })
+
+describe("DateFromSimple", function() {
+  function test(str, year, month, day) {
+    const d = dateFromSimple(str)
+    d.getFullYear().should.equal(year)
+    d.getMonth().should.equal(month-1) // month fix. Date object indexing from 0.
+    d.getDate().should.equal(day)
+  }
+  it("should convert string to Date object", function() {
+    test('2016-06-02', 2016, 6, 2)
+    test('1990-12-01', 1990, 12, 1)
+    test('1990-02-28', 1990, 2, 28)
+  });
+});
+
+describe("Swaying date from->to->from->to string", function() {
+  it("should not change date", function() {
+    const strs = [
+      '2016-06-02',
+      '1990-12-01',
+      '3002-02-28'
+    ]
+    strs.map((str) =>
+      dateToSimple(
+        dateFromSimple(
+          dateToSimple(
+            dateFromSimple(str)))).should.equal(str) )
+
+  });
+});

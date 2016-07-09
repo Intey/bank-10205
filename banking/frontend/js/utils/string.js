@@ -18,7 +18,19 @@ export function leftpad(str, ch, size) {
     return `${pad}${s}`
 }
 
+/** * Convert Date object to string format YYYY-MM-DD */
 export function dateToSimple(date) {
-    return `${date.getFullYear()}-${leftpad(date.getMonth()+1, 0, 2)}`+
-        `-${leftpad(date.getDate(),0,2)}`
+  return date.getFullYear()
+    + '-' + leftpad(date.getMonth()+1, 0, 2) // (+1): January is 0 in Date object
+    + '-' + leftpad(date.getDate(),0,2)
+}
+
+/** * Convert string format YYYY-MM-DD to Date object */
+export function dateFromSimple(date) {
+  const parts = date.split('-')
+  var d = new Date()
+  d.setYear(parts[0])
+  d.setMonth(parts[1]-1)
+  d.setDate(parts[2])
+  return d
 }

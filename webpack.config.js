@@ -84,7 +84,7 @@ if (DEFS.dev) {
         }
     );
 
-    config.devtool = 'source-map';
+    config.devtool = 'cheap-eval-source-map';
 }
 
 else {

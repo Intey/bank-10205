@@ -1,21 +1,24 @@
-import React from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
+import React                    from 'react'
+import { render }               from 'react-dom'
+import { Provider }             from 'react-redux'
+import { createStore }          from 'redux'
 
-import { CircularProgress, RaisedButton } from 'material-ui'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import { CircularProgress,
+         RaisedButton }         from 'material-ui'
+import MuiThemeProvider         from 'material-ui/styles/MuiThemeProvider'
 
-import injectTapEventPlugin from 'react-tap-event-plugin'
+import injectTapEventPlugin     from 'react-tap-event-plugin'
 
 
-import EventPage from './containers/EventPage'
+import EventPage                from './containers/EventPage'
 
-import configureStore from './store/configureStore'
+import configureStore           from './store/configureStore'
 
 import { EventAPI, AccountAPI } from './domain/api'
-import getToken from './utils/token'
-import eventId from './domain/hacks/event'
+import eventId                  from './domain/hacks/event'
+import { reshapeAccount }       from './domain/functions'
+import getToken                 from './utils/token'
+import { dateFromSimple }      from './utils/string'
 
 injectTapEventPlugin()
 
@@ -27,8 +30,11 @@ var InitialData = Promise.all([
   usersAPI.getUsers()
 ]).then(
   (responses) => {
+    console.log("RESPONSES: ", responses)
     const store = configureStore(
-      { event: responses.responseJSON, fetching: false, error: "" })
+      { event: {...responses[0], date: dateFromSimple(responses[0].date)},
+        users: responses[1].map(reshapeAccount),
+        fetching: false, error: "" })
     const App = () => (
       <MuiThemeProvider>
         <Provider store={store}>

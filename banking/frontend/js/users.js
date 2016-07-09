@@ -3,14 +3,15 @@ var ReactDOM = require('react-dom');
 
 var $ = require('jquery');
 
-import {postCSRF} from './utils/csrf.js';
+import { AccountAPI } from './domain/api.js'
+import getToken from './utils/token.js'
+
+const accountAPI = new AccountAPI(getToken())
 
 var UserTable = React.createClass({
     render: function(){
-        var idx = 0;
         var users = this.props.Accounts.map(function(account){
-            idx = idx + 1;
-            return <UserRow key={idx} data={account.user}/>;
+            return <UserRow key={account.id} data={account}/>;
         });
         return (
             <table className="table" id="user-table">
@@ -37,28 +38,19 @@ var UserRow = React.createClass({
     handleDeleteUser: function(event){
         var token = window.localStorage.getItem('token');
         var id = $($($(event.currentTarget).parents()[1]).children()[0]).text();
-        $.ajax({
-            type: 'delete',
-            url: '/api/users/' + id + '/',
-            headers: {
-                Authorization: 'Token ' + token
-            },
-            success: function(response){
-                $.ajax({
-                    type: 'get',
-                    url: '/api/users/',
-                    headers: {
-                        Authorization: 'Token ' + token
-                    },
-                    success: function(response){
+        accountAPI.deleteUser(
+            id,
+            function(){
+                accountAPI.getUsers(
+                    function(response){
                         ReactDOM.render(
                             <UserTable Accounts={response} />,
                             document.getElementById('usertable')
                         );
                     }
-                });
+                );
             }
-        });
+        );
     },
     handleUpdateUser: function(event){
         var id = $($($(event.currentTarget).parents()[1]).children()[0]).text();
@@ -82,8 +74,8 @@ var UserRow = React.createClass({
             </td>;
         ;
         // prevent self-deleting
-        if (this.props.data.is_superuser ||
-            this.props.data.username === JSON.parse(window.localStorage.getItem('user')).username)
+        if (this.props.data.user.is_superuser ||
+            this.props.data.user.username === JSON.parse(window.localStorage.getItem('user')).username)
         {
             role = 'Администратор';
             content =
@@ -97,9 +89,9 @@ var UserRow = React.createClass({
         return (
             <tr>
                 <td>{this.props.data.id}</td>
-                <td><a href={"/users/"+this.props.data.id}>{this.props.data.username}</a></td>
-                <td>{this.props.data.last_name}</td>
-                <td>{this.props.data.first_name}</td>
+                <td><a href={"/users/"+this.props.data.id}>{this.props.data.user.username}</a></td>
+                <td>{this.props.data.user.last_name}</td>
+                <td>{this.props.data.user.first_name}</td>
                 <td>{role}</td>
                 {content}
             </tr>
@@ -165,31 +157,24 @@ var NewUserDlg = React.createClass({
     handleAddUser: function(){
         var token = window.localStorage.getItem('token');
         var dlg = this;
-        postCSRF({
-            type: 'post',
-            url: '/api/users/',
-            headers: {
-                Authorization: 'Token ' + token
-            },
-            data: JSON.stringify(this.state),
-            success: function(response){
+        accountAPI.createAccount(
+            this.state,
+            function(response){
                 dlg.replaceState(dlg.getInitialState());
                 $('form[name="create-user-form"] #is-superuser-checkbox').prop('checked', false);
-                $.ajax({
-                    type: 'get',
-                    url: '/api/users/',
-                    headers: {
-                        Authorization: 'Token ' + token
-                    },
-                    success: function(response){
+                accountAPI.getUsers(
+                    function(response){
                         ReactDOM.render(
                             <UserTable Accounts={response} />,
                             document.getElementById('usertable')
                         );
                     }
-                });
+                );
+            },
+            function(error) {
+                console.log(error.responseJSON)
             }
-        });
+        );
     },
     render: function(){
         return (
@@ -275,41 +260,26 @@ var UpdateUserDlg = React.createClass({
     },
     handleUpdateUser: function(){
        var token = window.localStorage.getItem('token');
-        $.ajax({
-            type: 'put',
-            url: '/api/users/' + this.props.Id + '/',
-            headers: {
-                Authorization: 'Token ' + token
-            },
-            data: this.state,
-            success: function(response){
-                $.ajax({
-                    type: 'get',
-                    url: '/api/users/',
-                    headers: {
-                        Authorization: 'Token ' + token
-                    },
-                    success: function(response){
-                        ReactDOM.render(
-                            <UserTable Accounts={response} />,
-                            document.getElementById('usertable')
-                        );
-                    }
-                });
-                $('#update-user').empty();
-            }
-        });
+       accountAPI.updateUser(
+           {...this.state, id: this.props.Id, is_superuser: false},
+           function(response){
+               accountAPI.getUsers(
+                   function(response){
+                       ReactDOM.render(
+                           <UserTable Accounts={response} />,
+                           document.getElementById('usertable')
+                       );
+                   }
+               );
+               $('#update-user').empty();
+           }
+       );
     },
     componentDidMount: function(){
         var token = window.localStorage.getItem('token');
         var dlg = this;
-        $.ajax({
-            type: 'get',
-            url: '/api/users/' + this.props.Id + '/',
-            headers: {
-                Authorization: 'Token ' + token
-            },
-            success: function(response){
+        accountAPI.getUsers(
+        function(response){
                 dlg.setState({
                     username: response.username,
                     first_name: response.first_name,
@@ -318,7 +288,7 @@ var UpdateUserDlg = React.createClass({
                 });
                 $('form[name="update-user-form"] #is-superuser-checkbox').prop('checked', response.is_superuser);
             }
-        });
+        );
     },
     render: function(){
         return (
@@ -347,6 +317,7 @@ var UpdateUserDlg = React.createClass({
             </div>
         );
     }
+
 });
 
 var Edit = React.createClass({
@@ -377,19 +348,14 @@ ReactDOM.render(
     document.getElementById('new-user')
 );
 
-$.ajax({
-    type: 'get',
-    url: '/api/users/',
-    headers: {
-        Authorization: 'Token ' + window.localStorage.getItem('token')
-    },
-    success: function(response){
+accountAPI.getUsers(
+    function(response){
         ReactDOM.render(
             <UserTable Accounts={response} />,
             document.getElementById('usertable')
         );
     }
-});
+);
 
 $('#update-user').click(function(event){
     if ($(event.target)==this)

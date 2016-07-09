@@ -52,15 +52,25 @@ export class AccountAPI extends API {
 
     updateUser(userdata, successFn, errorFn) {
         var id = userdata.id
-        delete userdata.id
-        this.request({
-            method: "PATCH",
+        delete userdata.id // remove id from sending data
+        return this.request({
+            method: "PUT",
             data: userdata,
             url: EndPoint.UserDetail(id),
             success: successFn,
             error: errorFn
         });
     }
+
+    deleteUser(id, successFn, errorFn) {
+        return this.request({
+            method: 'DELETE',
+            url: EndPoint.UserDetail(id),
+            success: successFn,
+            error: errorFn
+        })
+    }
+
 
     /** Add/substruct money from account balance.
      * @param {Object} data - contains account id, count, and action type -

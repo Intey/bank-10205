@@ -65,3 +65,10 @@ class EventFullSerializer(serializers.ModelSerializer):
         model = Event
         fields = ('id', 'name', 'date', 'price', 'author', 'private',
                   'participants')
+
+
+class EventSerializer(serializers.ModelSerializer):
+    """ Simple serializer for model """
+    class Meta:
+        model = Event
+        fields = ('id', 'name', 'date', 'price', 'author', 'private')

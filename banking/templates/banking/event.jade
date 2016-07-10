@@ -5,9 +5,13 @@ extends banking/admin/index.jade
 block head
     link(rel="stylesheet", href="{% static 'css/accordion.css' %}")
     link(rel="stylesheet", href="{% static 'css/dropdown.css' %}")
+    script(type="text/javascript").
+        // Parse given value from server.
+        window.__INITIAL__ = JSON.parse('#{event}'.replace(/&quot;/g, '\"'))
+
 
 block content
-    .col-md-5#event(data-id="{{event.id}}")
+    .col-md-5#event(data-id="{{id}}")
 
     include banking/includes/participants.jade
     - render_bundle 'EventPage'

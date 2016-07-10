@@ -4,8 +4,10 @@ from django.contrib.auth.models import User
 from rest_framework.exceptions import ParseError
 
 from banking.api.user.serializers import UserSerializer
+from banking.api.event.serializers import EventSerializer
 from banking.models import Account, Transaction, Event, Participation
 
+import json
 
 def default(request):
     return render(request, 'banking/redirect.jade')
@@ -49,7 +51,12 @@ def userDetail(request, pk):
 def eventDetail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     context = dict()
-    context['event'] = event
+    # serialize to json, then in template, we can parse and save it in variable
+    # serialization there needs, because JS don't know how to parse python
+    # primitives: True/False is error symbols.
+    # So, create model serialization and dumps to JSON.
+    context['event'] = json.dumps(EventSerializer(event).data)
+    context['id'] = event.id
     context['transactions'] = Transaction.objects.filter(participation__event=event).order_by('id')
     context['participants'] = Participation.objects.filter(event=event)
     return render(request, 'banking/event.jade', context)

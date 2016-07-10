@@ -75,7 +75,7 @@ describe("When call API", function() {
     })
 
     describe("updateUser", function() {
-        it('should PATCH to user detail path and call success on success',
+        it('should PUT to user detail path and call success on success',
            function() {
             let successFn = sinon.spy()
             const data = {id: 1, username: "Test", birthdate: new Date()}
@@ -88,7 +88,7 @@ describe("When call API", function() {
 
             const p = $.ajax.getCall(0).args[0]
             p.data.should.to.be.a('string') //json coded
-            p.method.should.to.be.equal('PATCH');
+            p.method.should.to.be.equal('PUT');
             p.url.should.to.be.equal(`${userDetail}`)
 
             expect(successFn.called).to.be.true

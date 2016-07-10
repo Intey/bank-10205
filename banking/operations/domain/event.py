@@ -2,6 +2,7 @@
 
 from django.db.models import Sum, Q
 from banking.models import Transaction, Account, Participation
+from banking.operations.utils.trash import deNone
 
 
 def delegate_debt(participation, credit, parent):
@@ -86,8 +87,7 @@ def add_participants(event, newbies):
     # calc party-pay,
     participants = Participation.objects.filter(event=event, active=True)
 
-    exist_parts = participants.aggregate(s=Sum('parts'))['s']
-    exist_parts = 0.0 if exist_parts is None else exist_parts  # fix None
+    exist_parts = deNone(participants.aggregate(s=Sum('parts'))['s'], 0.0)
     all_parts = exist_parts + sum(newbies.values())
 
     party_pay = event.price / all_parts
@@ -95,28 +95,9 @@ def add_participants(event, newbies):
     parent_transactions = []
     # participate incomers
     for (acc, parts) in newbies.items():
-        # if not already participated
-        exists_participations =\
-            Participation.objects.filter(account=acc, event=event).first()
-        new_participation = None
+        participation = participate(event, acc, parts)
 
-        # new participation
-        if not exists_participations:
-            new_participation = Participation(account=acc,
-                                              parts=parts,
-                                              event=event)
-        # already participated
-        elif exists_participations.active:
-            new_participation = exists_participations
-            new_participation.parts += parts
-        # participation was disabled - was removed from event before
-        else:
-            new_participation = exists_participations
-
-        new_participation.active = True
-        new_participation.save()
-
-        tr = Transaction(participation=new_participation,
+        tr = Transaction(participation=participation,
                          type=Transaction.PARTICIPATE)
         tr.credit = party_pay * parts
         parent_transactions.append(tr)
@@ -132,6 +113,28 @@ def add_participants(event, newbies):
             debit = ((newbie_transaction.credit / exist_parts)
                      * participation.parts)
             return_money(participation, debit, newbie_transaction)
+
+
+def participate(event, account, parts):
+    """ Participate account in event with given parts(coefficient).
+    If Participation alredy exists - it's will be used """
+    # if not already participated
+    new_participation =\
+        Participation.objects.filter(account=account, event=event).first()
+
+    # new participation
+    if not new_participation:
+        new_participation = Participation(account=account,
+                                          parts=parts,
+                                          event=event)
+
+    # already participated
+    if new_participation.active:
+        new_participation.parts += parts
+
+    new_participation.active = True
+    new_participation.save()
+    return new_participation
 
 
 def remove_participants(event, leavers):

@@ -359,3 +359,14 @@ class EventParticipationTest(TestCase):
 
         # participation count == users in event count
         self.assertEqual(len(e.participation_set.all()), 3)
+
+    def test_duplicate_participation(self):
+        e = Event.objects.get(name="Target")
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
+        add_participants(e, {users[0]: 2})
+        add_participants(e, {users[0]: 1})
+        participation_count = len(e.participation_set.filter(account=users[0]))
+        participation_parts = e.participation_set.filter(
+            account=users[0])[0].parts
+        self.assertEqual(participation_count, 1)
+        self.assertEqual(participation_parts, 3)

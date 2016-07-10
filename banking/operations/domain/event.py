@@ -96,18 +96,27 @@ def add_participants(event, newbies):
     # participate incomers
     for (acc, parts) in newbies.items():
         # if not already participated
-        participation = Participation.objects.filter(account=acc, event=event,
-                                                     active=False)
-        if len(participation) == 0:
-            participation = Participation(account=acc, parts=parts,
-                                          event=event)
+        exists_participations =\
+            Participation.objects.filter(account=acc, event=event).first()
+        new_participation = None
+
+        # new participation
+        if not exists_participations:
+            new_participation = Participation(account=acc,
+                                              parts=parts,
+                                              event=event)
+        # already participated
+        elif exists_participations.active:
+            new_participation = exists_participations
+            new_participation.parts += parts
+        # participation was disabled - was removed from event before
         else:
-            participation = participation[0]
+            new_participation = exists_participations
 
-        participation.active = True
-        participation.save()
+        new_participation.active = True
+        new_participation.save()
 
-        tr = Transaction(participation=participation,
+        tr = Transaction(participation=new_participation,
                          type=Transaction.PARTICIPATE)
         tr.credit = party_pay * parts
         parent_transactions.append(tr)

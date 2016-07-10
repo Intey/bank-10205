@@ -6,6 +6,8 @@ from banking.models import Event, Account, Transaction, Transfer, Participation
 from banking.operations.domain.event import get_participants,\
     add_participants, remove_participants
 
+from banking.operations.domain.utils import sumQuery
+
 
 def this_func_name():
     import inspect
@@ -363,10 +365,22 @@ class EventParticipationTest(TestCase):
     def test_duplicate_participation(self):
         e = Event.objects.get(name="Target")
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
+
+        #########################################
         add_participants(e, {users[0]: 2})
         add_participants(e, {users[0]: 1})
-        participation_count = len(e.participation_set.filter(account=users[0]))
-        participation_parts = e.participation_set.filter(
-            account=users[0])[0].parts
+        #########################################
+
+        print_list(Transaction.objects.all())
+        # collect data
+        participations = e.participation_set.filter(account=users[0])
+        participation_count = len(participations)
+        participation_parts = participations[0].parts
+        summary_debt = Transaction.objects\
+            .filter(participation=participations[0])\
+            .aggregate(**sumQuery('s'))['s']
+
+        # checks
         self.assertEqual(participation_count, 1)
         self.assertEqual(participation_parts, 3)
+        self.assertEqual(summary_debt, e.price)

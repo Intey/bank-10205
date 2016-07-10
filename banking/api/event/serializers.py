@@ -68,7 +68,8 @@ class EventFullSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    """ Simple serializer for model """
+    """ Simple serializer for model. Difference from 'EventFullSerializer' that
+    is author represented with his id, and has no participants array."""
     class Meta:
         model = Event
         fields = ('id', 'name', 'date', 'price', 'author', 'private')

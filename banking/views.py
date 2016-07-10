@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from rest_framework.exceptions import ParseError
 
-from banking.api.user.serializers import UserSerializer
+from banking.api.user.serializers import UserSerializer, AccountSerializer
 from banking.api.event.serializers import EventSerializer
 from banking.models import Account, Transaction, Event, Participation
 
@@ -57,6 +57,7 @@ def eventDetail(request, pk):
     # So, create model serialization and dumps to JSON.
     context['event'] = json.dumps(EventSerializer(event).data)
     context['id'] = event.id
+    context['users'] = json.dumps(AccountSerializer(Account.objects.all(), many=True).data)
     context['transactions'] = Transaction.objects.filter(participation__event=event).order_by('id')
     context['participants'] = Participation.objects.filter(event=event)
     return render(request, 'banking/event.jade', context)

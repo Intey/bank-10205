@@ -7,7 +7,13 @@ block head
     link(rel="stylesheet", href="{% static 'css/dropdown.css' %}")
     script(type="text/javascript").
         // Parse given value from server.
-        window.__INITIAL__ = JSON.parse('#{event}'.replace(/&quot;/g, '\"'))
+        function parse(data) { return JSON.parse(data.replace(/&quot;/g, '\"')) }
+        window.__INITIAL__ = {
+            event: parse('#{event}'),
+            users: parse('#{users}'),
+            fetching: false,
+            error: ""
+        }
 
 
 block content

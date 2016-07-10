@@ -11,64 +11,28 @@ import injectTapEventPlugin     from 'react-tap-event-plugin'
 
 
 import EventPage                from './containers/EventPage'
-
 import configureStore           from './store/configureStore'
 
-import { EventAPI, AccountAPI } from './domain/api'
-import eventId                  from './domain/hacks/event'
 import { reshapeAccount }       from './domain/functions'
 import getToken                 from './utils/token'
 import { dateFromSimple }      from './utils/string'
 
 injectTapEventPlugin()
 
-const eventAPI = new EventAPI(getToken())
-const usersAPI = new AccountAPI(getToken())
+window.__INITIAL__.event.date = dateFromSimple(window.__INITIAL__.event.date)
+window.__INITIAL__.event.author = window.__INITIAL__.users.findIndex(
+    // depends on EventSerializer(how represented author)
+    u => { return u.id === window.__INITIAL__.event.author }
+)
+window.__INITIAL__.users = window.__INITIAL__.users.map(reshapeAccount)
 
-var InitialData = Promise.all([
-  eventAPI.getEvent(eventId()),
-  usersAPI.getUsers()
-]).then(
-  (responses) => {
-    console.log("RESPONSES: ", responses)
-    const users = responses[1]
-    const event = responses[0]
-    const store = configureStore(
-        { event:
-            {...event,
-                date: dateFromSimple(event.date),
-                author: users.findIndex( u => {
-                    console.log(u);
-                    return u.user.username === event.author
-                })
-            },
-          users: users.map(reshapeAccount),
-        fetching: false, error: "" })
-    const App = () => (
-      <MuiThemeProvider>
+
+const store = configureStore(window.__INITIAL__)
+const App = () => (
+    <MuiThemeProvider>
         <Provider store={store}>
-          <EventPage/>
+            <EventPage/>
         </Provider>
-      </MuiThemeProvider>
-    )
-    render( <App/>, document.getElementById('event') )
-  },
-
-  (error) => {
-    render(
-      <RaisedButton label={error.message} secondary={true}/>,
-      document.getElementById('event')
-    )
-  }
+    </MuiThemeProvider>
 )
-
-const Stub = () => (
-  <MuiThemeProvider>
-    <CircularProgress size={2}/>
-  </MuiThemeProvider>
-)
-
-render(
-  <Stub/>,
-  document.getElementById('event')
-)
+render( <App/>, document.getElementById('event') )

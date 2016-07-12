@@ -3,6 +3,7 @@
 from django.db.models import Sum, Q
 from banking.models import Transaction, Account, Participation
 from banking.operations.utils.trash import deNone
+from banking.operations.domain.calcs import diff_sum
 
 
 def delegate_debt(participation, credit, parent):
@@ -91,28 +92,34 @@ def add_participants(event, newbies):
     all_parts = exist_parts + sum(newbies.values())
 
     party_pay = event.price / all_parts
-    recalcers = participants.filter(~Q(account__in=newbies.keys()))
     parent_transactions = []
     # participate incomers
     for (acc, parts) in newbies.items():
-        participation = participate(event, acc, parts)
+        participation, is_update = participate(event, acc, parts)
+        summ = party_pay * parts
+        transaction_type = Transaction.PARTICIPATE
+        if is_update:
+            old_parts = participation.parts - parts
+            new_parts = participation.parts
+            summ = diff_sum(old_parts/exist_parts, new_parts/all_parts, event.price)
+            transaction_type = Transaction.DIFF
 
-        tr = Transaction(participation=participation,
-                         type=Transaction.PARTICIPATE)
-        tr.credit = party_pay * parts
-        parent_transactions.append(tr)
-        tr.save()
 
-    # create diffs for old participants
-    # if no recalcers(incomers if first participants) we have exist_parts = 0
-    for newbie_transaction in parent_transactions:
-        for participation in recalcers:
-            assert (exist_parts != 0),\
-                "On add participants when we need recalc exist participants\
-                exist_parts should be positive(not zero)"
-            debit = ((newbie_transaction.credit / exist_parts)
-                     * participation.parts)
-            return_money(participation, debit, newbie_transaction)
+        transaction = Transaction(participation=participation,
+                                  type=transaction_type)
+        transaction.credit = summ
+        parent_transactions.append(transaction)
+        transaction.save()
+
+
+
+    recalc_participations = participants.filter(~Q(account__in=newbies.keys()))
+    # create diffs for old participants. If no recalc_participations(incomers
+    # if first participants) we have exist_parts = 0
+    recalcers_parts = recalc_participations.aggregate(s=Sum('parts'))['s']
+    for parent_transaction in parent_transactions:
+        for participation in recalc_participations:
+            create_diff(participation, parent_transaction, recalcers_parts)
 
 
 def participate(event, account, parts):
@@ -121,6 +128,7 @@ def participate(event, account, parts):
     # if not already participated
     new_participation =\
         Participation.objects.filter(account=account, event=event).first()
+    is_update = False
 
     # new participation
     if not new_participation:
@@ -128,13 +136,23 @@ def participate(event, account, parts):
                                           parts=parts,
                                           event=event)
 
-    # already participated
+    # already participated. Update
     if new_participation.active:
         new_participation.parts += parts
+        is_update = True
 
     new_participation.active = True
     new_participation.save()
-    return new_participation
+    return (new_participation, is_update,)
+
+
+def create_diff(participation, parent_transaction, exist_parts):
+    """ Create diff transaction for given participation. Diff
+    transactions links to parent_transaction as diff initiator. exist_parts -
+    parts that exists before. """
+    debit = ((parent_transaction.credit / exist_parts)
+             * participation.parts)
+    return_money(participation, debit, parent_transaction)
 
 
 def remove_participants(event, leavers):

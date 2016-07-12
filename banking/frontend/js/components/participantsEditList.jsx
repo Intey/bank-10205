@@ -205,6 +205,11 @@ class NewParticipantRowInput extends React.Component{
             account: this.state.selected.id,
             parts: parseFloat(this.state.parts)
         });
+        //c lear state
+        this.setState({
+            selected: { user: {username:""}},
+            parts: "" // display placeholder
+        });
     }
 
     render() {

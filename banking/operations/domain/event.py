@@ -187,3 +187,28 @@ def remove_participants(event, leavers):
             delegate_debt(victum, credit, leaver_transaction)
 
     leaver_participations.update(active=False)
+
+
+
+
+def update_event_price(event, new_price):
+    if event.price == new_price:
+        return
+
+    # negative - price up, should make credits
+    price_diff = event.price - new_price
+    event.price = new_price
+    event.save()
+
+    participations = Participation.objects.filter(event=event)
+    all_parts = participations.aggregate(s=Sum('parts'))['s']
+    for participation in participations:
+        tr = Transaction(
+                participation=participation,
+                type=Transaction.DIFF)
+        if price_diff > 0:
+            tr.credit = (price_diff / all_parts) * participation.parts
+        else:
+            tr.debit = (price_diff / all_parts) * participation.parts
+        tr.save()
+

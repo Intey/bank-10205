@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from banking.models import Event, Account, Transaction, Transfer, Participation
-from banking.operations.domain.event import get_participants,\
-    add_participants, remove_participants
+from banking.operations.domain.event import \
+        get_participants, add_participants, remove_participants, update_event_price
 
 from banking.operations.domain.utils import sumQuery
 
@@ -46,6 +46,8 @@ def print_list(l, header=None):
 
 
 def generate_participation(ids=None):
+    """ generate participation for users with given ids, or random.
+    return tuple: event, party_pay, participations """
     from random import randint
 
     eprice = 3000
@@ -55,7 +57,7 @@ def generate_participation(ids=None):
     users = Account.objects.filter(user__username__iregex=r'^P\d$')
 
     # generate participation
-    participation = dict()
+    participations = dict()
     # random count
     if ids is None:
         ids = []
@@ -63,17 +65,17 @@ def generate_participation(ids=None):
             ids.append(randint(0, 5))  # random accounts
 
     for i in ids:
-        participation[users[i]] = parts[i]
+        participations[users[i]] = parts[i]
 
     if ids is None:
-        print_list(participation, "used participants")
+        print_list(participations, "used participants")
 
-    add_participants(e, participation)
+    add_participants(e, participations)
 
     party_pay =\
-        eprice / sum(participation.values())
+        eprice / sum(participations.values())
 
-    return (e, party_pay, participation,)
+    return (e, party_pay, participations,)
 
 
 class AccountBalanceTest(TestCase):
@@ -407,6 +409,7 @@ class EventParticipationTest(TestCase):
         self.assertEqual(participation_count, 1)
         self.assertEqual(participation_parts, 3)
         self.assertEqual(abs(summary_debt), e.price)
+
     def test_update_parts_with_other_participants_batch(self):
         e = Event.objects.get(name="Target")
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
@@ -435,3 +438,26 @@ class EventParticipationTest(TestCase):
         self.assertEqual(p1_parts, 4)
 
         self.assertEqual(abs(summary_debt), e.price)
+
+    def test_participants_debt_reaction_on_event_update(self):
+        event, _, participations = generate_participation([1, 2, 3])
+
+        #########################################
+        update_event_price(event, 4000)
+        #########################################
+
+        # summary debt of all users.
+        summary = Transaction.objects.all().aggregate(**sumQuery('s'))['s']
+        print_list(Transaction.objects.all())
+
+        self.assertEqual(event.price, 4000)
+        self.assertEqual(abs(summary), 4000)
+
+    def test_float_debts(self):
+        event, _, participations = generate_participation([1, 2, 3, 4, 5])
+        summary = Transaction.objects.all().aggregate(**sumQuery('s'))['s']
+        print_list(Transaction.objects.all())
+
+        self.assertEqual(abs(summary), 3000)
+
+

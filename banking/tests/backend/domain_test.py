@@ -362,7 +362,7 @@ class EventParticipationTest(TestCase):
         # participation count == users in event count
         self.assertEqual(len(e.participation_set.all()), 3)
 
-    def test_duplicate_participation(self):
+    def test_update_single_participation(self):
         e = Event.objects.get(name="Target")
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
 
@@ -383,4 +383,27 @@ class EventParticipationTest(TestCase):
         # checks
         self.assertEqual(participation_count, 1)
         self.assertEqual(participation_parts, 3)
-        self.assertEqual(summary_debt, e.price)
+        self.assertEqual(abs(summary_debt), e.price)
+
+    def test_update_parts_with_other_participants(self):
+        e = Event.objects.get(name="Target")
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
+
+        #########################################
+        add_participants(e, {users[0]: 2, users[1]: 1, users[2]: 2})
+        add_participants(e, {users[0]: 1})
+        #########################################
+
+        print_list(Transaction.objects.all())
+        # collect data
+        participations = e.participation_set.filter(account=users[0])
+        participation_count = len(participations)
+        participation_parts = participations[0].parts
+        # abs - 'couze summary debt can't be positive: debits - credits.
+        summary_debt = Transaction.objects\
+                           .all().aggregate(**sumQuery('s'))['s']
+
+        # checks
+        self.assertEqual(participation_count, 1)
+        self.assertEqual(participation_parts, 3)
+        self.assertEqual(abs(summary_debt), e.price)

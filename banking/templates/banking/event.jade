@@ -9,8 +9,8 @@ block head
         // Parse given value from server.
         function parse(data) { return JSON.parse(data.replace(/&quot;/g, '\"')) }
         window.__INITIAL__ = {
-            event: parse('#{event}'),
-            users: parse('#{users}'),
+            event: parse('{{event}}'),
+            users: parse('{{users}}'),
             fetching: false,
             error: ""
         }

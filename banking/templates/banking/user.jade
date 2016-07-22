@@ -1,7 +1,15 @@
 extends banking/admin/index.jade
-
 - load render_bundle from webpack_loader
+- load staticfiles
 
+block head
+    link(rel="stylesheet", href="{% static 'css/accordion.css' %}")
+    link(rel="stylesheet", href="{% static 'css/dropdown.css' %}")
+    script(type="text/javascript").
+        // Parse given value from server.
+        function p(d){return JSON.parse(d.replace(/&quot;/g, '\"'))}
+
+        window.__INITIAL__ = p('{{transactions}}')
 block content
     form.form-horizontal
         .col-md-2
@@ -44,4 +52,4 @@ block content
     #transactions
 
     - render_bundle 'balance_changer'
-    - render_bundle 'transactions'
+    - render_bundle 'UserPage'

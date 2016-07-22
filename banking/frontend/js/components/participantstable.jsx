@@ -95,15 +95,15 @@ export default class ParticipantsTable extends React.Component {
             );
         }
         else
-			$('#userauto').hide();
+            $('#userauto').hide();
     }
 
     handleRemoveParticipant(account) {
-		// leave participants, that not equal to given
-		const participants = this.state.participants.filter((e) => {
-			return e.account.id != account.id;
-		});
-		this.setState({participants: participants});
+        // leave participants, that not equal to given
+        const participants = this.state.participants.filter((e) => {
+            return e.account.id != account.id;
+        });
+        this.setState({participants: participants});
     }
 
     render(){

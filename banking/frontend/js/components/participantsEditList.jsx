@@ -63,14 +63,14 @@ export default class ParticipantsList extends React.Component {
     }
 
     updateTransactions() {
-		csrfSafe({
-			url: '/api/transactions/?active=true',
-			method: "GET",
-			data: { event: eventId() },
-			success: (data) => {
-				this.setState({items: this.groupByUser(data) })
-			}
-		})
+    csrfSafe({
+        url: '/api/transactions/?active=true',
+        method: "GET",
+        data: { event: eventId() },
+        success: (data) => {
+            this.setState({items: this.groupByUser(data) })
+        }
+    })
     }
 
     /** Group transaction by account.
@@ -106,7 +106,7 @@ export default class ParticipantsList extends React.Component {
         )
     }
 
-	render() {
+render() {
         var self = this;
 
         var sections = this.state.items.map(function(item) {
@@ -135,8 +135,8 @@ export default class ParticipantsList extends React.Component {
             <div>
                 {sections}
                 <NewParticipantRowInput
-					exclude={exclude}
-					onAdd={this.addParticipant}/>
+                exclude={exclude}
+                onAdd={this.addParticipant}/>
             </div>
         );
     }
@@ -160,10 +160,10 @@ class NewParticipantRowInput extends React.Component{
     }
 
     componentDidMount() {
-		API.getUsers(
-			response => this.setState({accounts: response}),
-			error => console.log(error)
-		);
+    API.getUsers(
+        response => this.setState({accounts: response}),
+        error => console.log(error)
+    );
     }
 
     handleNameChange(e) {

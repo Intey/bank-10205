@@ -5,6 +5,7 @@ from rest_framework.exceptions import ParseError
 
 from banking.api.user.serializers import UserSerializer, AccountSerializer
 from banking.api.event.serializers import EventSerializer
+from banking.api.transaction.serializers import TransactionReadViewSerializer
 from banking.models import Account, Transaction, Event, Participation
 
 import json
@@ -43,8 +44,12 @@ def userDetail(request, pk):
     acc = get_object_or_404(Account, pk=pk)
     print(acc)
     context['account'] = acc
-    context['transactions'] = Transaction.objects.filter(participation__account=acc)
+    context['transactions'] = json.dumps(TransactionReadViewSerializer(
+        Transaction.objects.filter(participation__account=acc),
+        many=True).data)
+
     context['user'] = acc.user
+
     return render(request, 'banking/user.jade', context)
 
 

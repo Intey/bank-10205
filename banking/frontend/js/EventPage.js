@@ -14,7 +14,6 @@ import EventPage                from './containers/EventPage'
 import configureStore           from './store/configureStore'
 
 import { reshapeAccount }       from './domain/functions'
-import getToken                 from './utils/token'
 import { dateFromSimple }      from './utils/string'
 
 injectTapEventPlugin()

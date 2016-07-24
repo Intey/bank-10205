@@ -87,7 +87,8 @@ export default class ParticipantsList extends React.Component {
             if (!grouped[username])
                 grouped[username] = { transactions: [], summ: 0,
                     account: t.account, id: t.account.id, date: t.date,
-                    parts: t.parts, type: t.type };
+                    parts: t.parts, type: t.type,
+                    link: account.link, name: account.name};
             //work
             grouped[username].transactions.push(t);
             grouped[username].summ += Number(t.summ);

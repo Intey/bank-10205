@@ -2,6 +2,7 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect }            from 'react-redux'
 import TransactionRow from '../components/transactionrow.jsx'
+import DiffTransactionRow from '../components/difftransactionrow.jsx'
 import AccordSection from '../components/accordsection.jsx'
 
 export default function TransactionList(props) {

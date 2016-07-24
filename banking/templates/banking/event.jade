@@ -6,11 +6,9 @@ block head
     link(rel="stylesheet", href="{% static 'css/accordion.css' %}")
     link(rel="stylesheet", href="{% static 'css/dropdown.css' %}")
     script(type="text/javascript").
-        // Parse given value from server.
-        function parse(data) { return JSON.parse(data.replace(/&quot;/g, '\"')) }
         window.__INITIAL__ = {
-            event: parse('{{event}}'),
-            users: parse('{{users}}'),
+            event: JSON.parse('{{event|safe}}'),
+            users: JSON.parse('{{users|safe}}'),
             fetching: false,
             error: ""
         }

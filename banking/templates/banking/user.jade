@@ -6,10 +6,7 @@ block head
     link(rel="stylesheet", href="{% static 'css/accordion.css' %}")
     link(rel="stylesheet", href="{% static 'css/dropdown.css' %}")
     script(type="text/javascript").
-        // Parse given value from server.
-        function p(d){return JSON.parse(d.replace(/&quot;/g, '\"'))}
-
-        window.__INITIAL__ = p('{{transactions}}')
+        window.__INITIAL__ = JSON.parse('{{transactions|safe }}')
 block content
     form.form-horizontal
         .col-md-2

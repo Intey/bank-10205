@@ -453,11 +453,43 @@ class EventParticipationTest(TestCase):
         self.assertEqual(event.price, 4000)
         self.assertEqual(abs(summary), 4000)
 
-    def test_float_debts(self):
-        event, _, participations = generate_participation([1, 2, 3, 4, 5])
-        summary = Transaction.objects.all().aggregate(**sumQuery('s'))['s']
+    def test_float_debts_initial_split(self):
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
+        e = Event.objects.create(name="Target", price=1000, author=users[3])
+
+        add_participants(e, {users[0]: 1, users[1]: 1, users[2]: 1})
+
         print_list(Transaction.objects.all())
 
-        self.assertEqual(abs(summary), 3000)
+        trs = Transaction.objects.all()
+        summary = trs.aggregate(**sumQuery('s'))['s']
+
+        self.assertEqual(trs[0].credit, 334)
+        self.assertEqual(trs[0].credit, 334)
+        self.assertEqual(trs[0].credit, 334)
+        self.assertEqual(abs(summary), 1003)
+
+    def test_float_debts_solo_income_diff(self):
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
+        e = Event.objects.create(name="Target", price=1000, author=users[3])
+
+        add_participants(e, {users[0]: 1, users[2]: 1})
+        add_participants(e, {users[1]: 1})
+
+        print_list(Transaction.objects.all())
+
+        trs = Transaction.objects.all()
+
+        u0trs = trs.filter(participation__account=users[0])
+        u1trs = trs.filter(participation__account=users[1])
+        u2trs = trs.filter(participation__account=users[2])
+
+        summary = trs.aggregate(**sumQuery('s'))['s']
+
+        self.assertEqual(u0trs.aggregate(**sumQuery('s'))['s'], 334)
+        self.assertEqual(u1trs.aggregate(**sumQuery('s'))['s'], 334)
+        self.assertEqual(u2trs.aggregate(**sumQuery('s'))['s'], 334)
+        self.assertEqual(abs(summary), 1003)
+
 
 

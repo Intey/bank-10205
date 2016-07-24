@@ -63,7 +63,6 @@ def eventDetail(request, pk):
     context['event'] = json.dumps(EventSerializer(event).data)
     context['id'] = event.id
     context['users'] = json.dumps(AccountSerializer(Account.objects.all(), many=True).data)
-    context['transactions'] = Transaction.objects.filter(participation__event=event).order_by('id')
     context['participants'] = Participation.objects.filter(event=event)
     return render(request, 'banking/event.jade', context)
 

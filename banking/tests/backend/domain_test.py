@@ -6,7 +6,8 @@ from banking.models import Event, Account, Transaction, Transfer, Participation
 from banking.operations.domain.event import \
         get_participants, add_participants, remove_participants, update_event_price
 
-from banking.operations.domain.utils import sumQuery
+from banking.operations.domain.utils import sumQuery, round_up
+from banking.operations.domain.account import debt
 
 
 def this_func_name():
@@ -416,7 +417,7 @@ class EventParticipationTest(TestCase):
 
         #########################################
         add_participants(e, {users[0]: 2, users[1]: 1, users[2]: 2})
-        add_participants(e, {users[0]: 1, users[1]: 3})
+        add_participants(e, {users[0]: 1, users[1]: 2})
         #########################################
 
         print_list(Transaction.objects.all())
@@ -435,7 +436,7 @@ class EventParticipationTest(TestCase):
         self.assertEqual(p0_parts, 3)
 
         self.assertEqual(len(p0_participation), 1)
-        self.assertEqual(p1_parts, 4)
+        self.assertEqual(p1_parts, 3)
 
         self.assertEqual(abs(summary_debt), e.price)
 
@@ -464,10 +465,10 @@ class EventParticipationTest(TestCase):
         trs = Transaction.objects.all()
         summary = trs.aggregate(**sumQuery('s'))['s']
 
-        self.assertEqual(trs[0].credit, 334)
-        self.assertEqual(trs[0].credit, 334)
-        self.assertEqual(trs[0].credit, 334)
-        self.assertEqual(abs(summary), 1003)
+        self.assertEqual(trs[0].credit, 333.34)
+        self.assertEqual(trs[0].credit, 333.34)
+        self.assertEqual(trs[0].credit, 333.34)
+        self.assertEqual(abs(summary), 1000.02)
 
     def test_float_debts_solo_income_diff(self):
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
@@ -484,12 +485,12 @@ class EventParticipationTest(TestCase):
         u1trs = trs.filter(participation__account=users[1])
         u2trs = trs.filter(participation__account=users[2])
 
-        summary = trs.aggregate(**sumQuery('s'))['s']
+        summary = round(trs.aggregate(**sumQuery('s'))['s'], 2)
 
-        self.assertEqual(u0trs.aggregate(**sumQuery('s'))['s'], 334)
-        self.assertEqual(u1trs.aggregate(**sumQuery('s'))['s'], 334)
-        self.assertEqual(u2trs.aggregate(**sumQuery('s'))['s'], 334)
-        self.assertEqual(abs(summary), 1003)
+        self.assertEqual(debt(users[0]), 333.34)
+        self.assertEqual(debt(users[1]), 333.34)
+        self.assertEqual(debt(users[2]), 333.34)
+        self.assertEqual(abs(summary), 1000.02)
 
 
 

@@ -15,3 +15,11 @@ def out_money(account, count):
         Transfer.objects.create(account=account, credit=count)
         return True
     return False
+
+
+def debt(account):
+    from banking.models import Transaction
+    from banking.operations.domain.utils import round_up, sumQuery
+    res = round_up(float(Transaction.objects.filter(participation__account=account).
+        aggregate(**sumQuery('sum'))['sum'] or 0), 2)
+    return abs(res)

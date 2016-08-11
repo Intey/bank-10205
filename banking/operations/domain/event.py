@@ -4,6 +4,7 @@ from django.db.models import Sum, Q
 from banking.models import Transaction, Account, Participation
 from banking.operations.utils.trash import deNone
 from banking.operations.domain.calcs import diff_sum
+from banking.operations.domain.utils import round_up, round_down
 
 
 def delegate_debt(participation, credit, parent):
@@ -91,13 +92,15 @@ def add_participants(event, newbies):
     exist_parts = deNone(participants.aggregate(s=Sum('parts'))['s'], 0.0)
     all_parts = exist_parts + sum(newbies.values())
 
+
     party_pay = event.price / all_parts
-    parent_transactions = []
+    parent_transactions = {}
     # participate incomers
     for (acc, parts) in newbies.items():
         participation, is_update = participate(event, acc, parts)
         summ = party_pay * parts
         transaction_type = Transaction.PARTICIPATE
+        # update exist participation for concrete account
         if is_update:
             old_parts = participation.parts - parts
             new_parts = participation.parts
@@ -105,11 +108,12 @@ def add_participants(event, newbies):
             transaction_type = Transaction.DIFF
 
 
+        print("SUMM:", summ)
         transaction = Transaction(participation=participation,
                                   type=transaction_type)
-        transaction.credit = summ
-        parent_transactions.append(transaction)
+        transaction.credit = round_up(summ, 2)
         transaction.save()
+        parent_transactions[summ] = transaction
 
 
 
@@ -117,9 +121,9 @@ def add_participants(event, newbies):
     # create diffs for old participants. If no recalc_participations(incomers
     # if first participants) we have exist_parts = 0
     recalcers_parts = recalc_participations.aggregate(s=Sum('parts'))['s']
-    for parent_transaction in parent_transactions:
+    for summ, parent_transaction in parent_transactions.items():
         for participation in recalc_participations:
-            create_diff(participation, parent_transaction, recalcers_parts)
+            create_diff(participation, parent_transaction, summ, recalcers_parts)
 
 
 def participate(event, account, parts):
@@ -146,12 +150,13 @@ def participate(event, account, parts):
     return (new_participation, is_update,)
 
 
-def create_diff(participation, parent_transaction, exist_parts):
+def create_diff(participation, parent_transaction, summ, exist_parts):
     """ Create diff transaction for given participation. Diff
     transactions links to parent_transaction as diff initiator. exist_parts -
     parts that exists before. """
-    debit = ((parent_transaction.credit / exist_parts)
+    debit = (round_down(summ / exist_parts, 2)
              * participation.parts)
+    print("create diff with debit:", debit, "parent:", summ)
     return_money(participation, debit, parent_transaction)
 
 

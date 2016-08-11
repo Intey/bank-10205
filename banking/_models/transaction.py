@@ -20,7 +20,7 @@ class Transaction(models.Model):
     )
     participation = models.ForeignKey(Participation)
     date = models.DateTimeField(auto_now_add=True, blank=False)
-    credit = models.FloatField(verbose_name="creadit: account pay", default=0)
+    credit = models.FloatField(verbose_name="credit: account pay", default=0)
     debit = models.FloatField(verbose_name="debit: account get from event", default=0)
     type = models.CharField(max_length=2, choices=TYPES, default=PARTICIPATE)
     parent = models.ForeignKey("self", null=True, blank=True)

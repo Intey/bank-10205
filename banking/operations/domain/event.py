@@ -107,8 +107,6 @@ def add_participants(event, newbies):
             summ = diff_sum(old_parts/exist_parts, new_parts/all_parts, event.price)
             transaction_type = Transaction.DIFF
 
-
-        print("SUMM:", summ)
         transaction = Transaction(participation=participation,
                                   type=transaction_type)
         transaction.credit = round_up(summ, 2)
@@ -201,7 +199,7 @@ def update_event_price(event, new_price):
         return
 
     # negative - price up, should make credits
-    price_diff = event.price - new_price
+    price_diff = new_price - event.price
     event.price = new_price
     event.save()
 
@@ -212,8 +210,8 @@ def update_event_price(event, new_price):
                 participation=participation,
                 type=Transaction.DIFF)
         if price_diff > 0:
-            tr.credit = (price_diff / all_parts) * participation.parts
+            tr.credit = abs(round_up((price_diff / all_parts) * participation.parts, 2))
         else:
-            tr.debit = (price_diff / all_parts) * participation.parts
+            tr.debit = abs(round_up((price_diff / all_parts) * participation.parts, 2))
         tr.save()
 

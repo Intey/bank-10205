@@ -440,7 +440,7 @@ class EventParticipationTest(TestCase):
 
         self.assertEqual(abs(summary_debt), e.price)
 
-    def test_participants_debt_reaction_on_event_update(self):
+    def test_increace_event_price(self):
         event, _, participations = generate_participation([1, 2, 3])
 
         #########################################
@@ -452,7 +452,21 @@ class EventParticipationTest(TestCase):
         print_list(Transaction.objects.all())
 
         self.assertEqual(event.price, 4000)
-        self.assertEqual(abs(summary), 4000)
+        self.assertEqual(abs(summary), 4000.03)
+
+    def test_decreace_event_price(self):
+        event, _, participations = generate_participation([1, 2, 3])
+
+        #########################################
+        update_event_price(event, 2000)
+        #########################################
+
+        # summary debt of all users.
+        summary = Transaction.objects.all().aggregate(**sumQuery('s'))['s']
+        print_list(Transaction.objects.all())
+
+        self.assertEqual(event.price, 2000)
+        self.assertEqual(abs(summary), 2000.03)
 
     def test_float_debts_initial_split(self):
         users = Account.objects.filter(user__username__iregex=r'^P\d$')

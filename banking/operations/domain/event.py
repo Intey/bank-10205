@@ -192,13 +192,11 @@ def remove_participants(event, leavers):
     leaver_participations.update(active=False)
 
 
-
-
 def update_event_price(event, new_price):
     if event.price == new_price:
         return
 
-    # negative - price up, should make credits
+    # positive - price up, should make credits
     price_diff = new_price - event.price
     event.price = new_price
     event.save()
@@ -206,9 +204,7 @@ def update_event_price(event, new_price):
     participations = Participation.objects.filter(event=event)
     all_parts = participations.aggregate(s=Sum('parts'))['s']
     for participation in participations:
-        tr = Transaction(
-                participation=participation,
-                type=Transaction.DIFF)
+        tr = Transaction(participation=participation, type=Transaction.DIFF)
         if price_diff > 0:
             tr.credit = abs(round_up((price_diff / all_parts) * participation.parts, 2))
         else:

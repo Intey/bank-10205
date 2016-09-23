@@ -12,7 +12,7 @@ export class BalanceBadge extends React.Component {
     }
     componentDidMount() {
         API.getBalance(
-            resp => { console.log('resp' + resp); this.setState({balance: resp.balance}) },
+            resp => { console.log('resp' + resp); this.setState({balance: resp.balance.toFixed(2)}) },
             err  => { console.log(err)                       })
     }
 

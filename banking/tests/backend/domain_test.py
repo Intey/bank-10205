@@ -494,9 +494,9 @@ class EventParticipationTest(TestCase):
 
         trs = Transaction.objects.all()
 
-        u0trs = trs.filter(participation__account=users[0])
-        u1trs = trs.filter(participation__account=users[1])
-        u2trs = trs.filter(participation__account=users[2])
+        # u0trs = trs.filter(participation__account=users[0])
+        # u1trs = trs.filter(participation__account=users[1])
+        # u2trs = trs.filter(participation__account=users[2])
 
         summary = round_up(trs.aggregate(**sumQuery('s'))['s'])
 
@@ -507,9 +507,30 @@ class EventParticipationTest(TestCase):
         self.assertEqual(abs(summary), 1000.00003)
 
 
+    def test_diff_parts_rates_rounding(self):
+        event, _, participations = generate_participation([1, 2, 3])
+        print(participations)
+
+        trs = Transaction.objects.all()
+        # summary debt of all users.
+        summary = trs.aggregate(**sumQuery('s'))['s']
+        print_list(Transaction.objects.all())
+
+        users = list(participations.keys())
+
+        u0trs = trs.filter(participation__account=users[0])
+        u1trs = trs.filter(participation__account=users[1])
+        u2trs = trs.filter(participation__account=users[2])
+        self.assertEqual(u0trs[0].credit, 666.67) # parts: 2
+        self.assertEqual(u1trs[0].credit, 1000.0) # parts: 3
+        self.assertEqual(u2trs[0].credit, 1333.34) # parts: 4
+
+        self.assertEqual(event.price, 3000)
+        self.assertEqual(abs(summary), 3000.03)
+
+
     def test_float_debts_1_2_4_parts(self):
         event, party_pay, ps = generate_participation([0, 1, 3])
-
 
         # summary debt of all users.
         summary = Transaction.objects.all().aggregate(**sumQuery('s'))['s']

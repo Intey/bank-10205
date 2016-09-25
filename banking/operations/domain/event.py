@@ -92,12 +92,11 @@ def add_participants(event, newbies):
     exist_parts = deNone(participants.aggregate(s=Sum('parts'))['s'], 0.0)
     all_parts = exist_parts + sum(newbies.values())
 
-
     party_pay = round_up(event.price / all_parts)
     parent_transactions = {}
     # participate incomers
     for (acc, parts) in newbies.items():
-        participation, is_update = participate(event, acc, parts)
+        participation, is_update = create_participation(event, acc, parts)
         summ = party_pay * parts
         transaction_type = Transaction.PARTICIPATE
         # update exist participation for concrete account
@@ -114,8 +113,6 @@ def add_participants(event, newbies):
         transaction.save()
         parent_transactions[summ] = transaction
 
-
-
     recalc_participations = participants.filter(~Q(account__in=newbies.keys()))
     # create diffs for old participants. If no recalc_participations(incomers
     # if first participants) we have exist_parts = 0
@@ -125,7 +122,7 @@ def add_participants(event, newbies):
             create_diff(participation, parent_transaction, summ, recalcers_parts)
 
 
-def participate(event, account, parts):
+def create_participation(event, account, parts):
     """ Participate account in event with given parts(coefficient).
     If Participation alredy exists - it's will be used """
     # if not already participated

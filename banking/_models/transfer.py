@@ -8,8 +8,8 @@ from .account import Account
 class Transfer(models.Model):
     account = models.ForeignKey(Account)
     date = models.DateTimeField(auto_now_add=True, blank=False)
-    debit = models.FloatField(default=0)
-    credit = models.FloatField(default=0)
+    debit = models.FloatField(default=0, verbose_name="to user")
+    credit = models.FloatField(default=0, verbose_name="from user")
 
     def __str__(self):
         ret = self.account.user.username + " "

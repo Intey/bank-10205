@@ -6,7 +6,7 @@ def sumQuery(field):
     return {field: Sum(F('debit') - F('credit'))}
 
 
-def round_up(value, digits):
+def round_up(value, digits=5):
     """ Round float up and leave only digits count after colon """
     from math import ceil
     power = 10 ** digits

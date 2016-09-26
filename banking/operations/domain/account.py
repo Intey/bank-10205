@@ -20,6 +20,6 @@ def out_money(account, count):
 def debt(account):
     from banking.models import Transaction
     from banking.operations.domain.utils import round_up, sumQuery
-    res = round_up(float(Transaction.objects.filter(participation__account=account).
-        aggregate(**sumQuery('sum'))['sum'] or 0), 2)
-    return abs(res)
+    res = float(Transaction.objects.filter(participation__account=account).
+            aggregate(**sumQuery('sum'))['sum'] or 0)
+    return res

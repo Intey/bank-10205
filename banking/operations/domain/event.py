@@ -83,15 +83,12 @@ def is_participated(event, accounts):
 def add_participants(event, newbies):
     """Add participants in event. Takes dict, where keys - is account
     models and values is participation part(int)."""
-
     if len(newbies) == 0:
         return
     # calc party-pay,
     participants = Participation.objects.filter(event=event, active=True)
-
     exist_parts = deNone(participants.aggregate(s=Sum('parts'))['s'], 0.0)
     all_parts = exist_parts + sum(newbies.values())
-
     party_pay = round_up(event.price / all_parts)
     print("PartyPay", party_pay)
     parent_transactions = {}
@@ -104,7 +101,8 @@ def add_participants(event, newbies):
         if is_update:
             old_parts = participation.parts - parts
             new_parts = participation.parts
-            summ = diff_sum(old_parts/exist_parts, new_parts/all_parts, event.price)
+            summ = diff_sum(old_parts/exist_parts, new_parts/all_parts,
+                            event.price)
             print("summ for update:", summ)
             transaction_type = Transaction.DIFF
 
@@ -112,13 +110,17 @@ def add_participants(event, newbies):
                                   type=transaction_type)
         transaction.credit = summ
         transaction.save()
-        parent_transactions[summ] = transaction
+        parent_transactions[transaction] = summ
 
     recalc_participations = participants.filter(~Q(account__in=newbies.keys()))
-    # create diffs for old participants. If no recalc_participations(incomers
-    # if first participants) we have exist_parts = 0
+    update_oldies(recalc_participations, parent_transactions)
+
+
+def update_oldies(recalc_participations, parent_transactions):
+    """ create diffs for old participants. If no recalc_participations(incomers
+    if first participants) we have exist_parts = 0 """
     recalcers_parts = recalc_participations.aggregate(s=Sum('parts'))['s']
-    for summ, parent_transaction in parent_transactions.items():
+    for parent_transaction, summ in parent_transactions.items():
         for participation in recalc_participations:
             create_diff(participation, parent_transaction, summ, recalcers_parts)
 
@@ -158,7 +160,6 @@ def create_diff(participation, parent_transaction, summ, exist_parts):
 
 
 def remove_participants(event, leavers):
-    # check, that leaver is participated
     leavers = is_participated(event, leavers)
     if not leavers:
         return
@@ -209,4 +210,3 @@ def update_event_price(event, new_price):
         else:
             tr.debit = abs(round_up((price_diff / all_parts) * participation.parts))
         tr.save()
-

@@ -93,6 +93,7 @@ def add_participants(event, newbies):
     all_parts = exist_parts + sum(newbies.values())
 
     party_pay = round_up(event.price / all_parts)
+    print("PartyPay", party_pay)
     parent_transactions = {}
     # participate incomers
     for (acc, parts) in newbies.items():
@@ -109,7 +110,7 @@ def add_participants(event, newbies):
 
         transaction = Transaction(participation=participation,
                                   type=transaction_type)
-        transaction.credit = round_up(summ)
+        transaction.credit = summ
         transaction.save()
         parent_transactions[summ] = transaction
 

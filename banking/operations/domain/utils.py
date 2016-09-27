@@ -1,6 +1,13 @@
 from django.db.models import F, Sum
 
 
+def aggregateSumm(queryset):
+    """ calculate difference between 'debit' and 'credit'
+    usage: aggregateSumm(Transaction.objects.all())
+    Return: *all_debits - *all_credits """
+    return queryset.aggregate(**sumQuery('_'))['_']
+
+
 def sumQuery(field):
     """ usage: queryset.aggregate(**sumQuery('s'))['s'] """
     return {field: Sum(F('debit') - F('credit'))}

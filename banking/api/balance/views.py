@@ -2,12 +2,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from banking.models import Transaction
-from banking.operations.domain.utils import sumQuery
+from banking.operations.domain.balance import bank_balance
 
 
 @api_view(['GET'])
 def balance(req):
-    balance = float(Transaction.objects.all().aggregate(**sumQuery('b'))['b']
-                    or 0)
+    balance = bank_balance()
     return Response({'balance': balance})

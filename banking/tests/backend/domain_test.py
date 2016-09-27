@@ -6,7 +6,7 @@ from banking.models import Event, Account, Transaction, Transfer, Participation
 from banking.operations.domain.event import \
         get_participants, add_participants, remove_participants, update_event_price
 
-from banking.operations.domain.utils import aggregateSumm, round_up
+from banking.operations.domain.utils import aggregateSumm, round_up, round_down
 from banking.operations.domain.account import debt
 
 
@@ -450,7 +450,7 @@ class EventParticipationTest(TestCase):
 
         pp = round_up(e.price / 3.0)
 
-        self.assertEqual(abs(summary), pp*3)
+        self.assertEqual(abs(summary), e.price + 0.0001)
         self.assertEqual(debt(users[0]), -pp)
         self.assertEqual(debt(users[1]), -pp)
         self.assertEqual(debt(users[2]), -pp)
@@ -473,7 +473,7 @@ class EventParticipationTest(TestCase):
         self.assertEqual(debt(users[1]), -pp)
         self.assertEqual(debt(users[2]), -pp)
 
-        self.assertEqual(abs(summary), pp*3)
+        self.assertEqual(abs(summary), e.price + 0.0001)
 
 
     def test_diff_parts_rates_rounding(self):
@@ -498,13 +498,13 @@ class EventParticipationTest(TestCase):
         self.assertEqual(u1trs[0].credit, pp * parts[1]) # parts: 3
         self.assertEqual(u2trs[0].credit, pp * parts[2]) # parts: 4
 
-        self.assertEqual(abs(summary), pp * sum(parts))
+        self.assertEqual(abs(summary), event.price + 0.0001)
 
 
     def test_float_debts_1_2_4_parts(self):
         event, party_pay, ps = generate_participation([0, 1, 3])
 
-        party_pay = round_up(party_pay)
+        party_pay = round_down(party_pay)
         parts = list(ps.values())
         users = list(ps.keys())
         # summary debt of all users.
@@ -514,7 +514,7 @@ class EventParticipationTest(TestCase):
         self.assertEqual(debt(users[0]), -parts[0] * party_pay)
         self.assertEqual(debt(users[1]), -parts[1] * party_pay)
         self.assertEqual(debt(users[2]), -parts[2] * party_pay)
-        self.assertEqual(abs(summary), party_pay * sum(parts))
+        self.assertEqual(abs(summary), event.price + 0.0001)
 
 
     def test_increace_event_price(self):
@@ -524,23 +524,23 @@ class EventParticipationTest(TestCase):
 
         party_pay = round_up(event.price / sum(parts))
         print("party pay:", party_pay)
-        summary = aggregateSumm(Transaction.objects.all())
-        self.assertEqual(abs(summary), party_pay * sum(parts))
+        summary = round_up(aggregateSumm(Transaction.objects.all()))
+        self.assertEqual(abs(summary), event.price + 0.0001)
 
         #########################################
         update_event_price(event, 4000)
         #########################################
 
-        party_pay = round_up(4000 / sum(parts))
+        party_pay = round_down(4000 / sum(parts))
         print("second party pay:", party_pay)
 
         # summary debt of all users.
-        summary = aggregateSumm(Transaction.objects.all())
+        summary = round_up(aggregateSumm(Transaction.objects.all()))
 
         print_list(Transaction.objects.all())
 
         self.assertEqual(event.price, 4000)
-        self.assertEqual(abs(summary), party_pay * sum(parts))
+        self.assertEqual(abs(summary), event.price + 0.0001)
 
     def test_decreace_event_price(self):
         event, _, participations = generate_participation([1, 2, 3])
@@ -548,7 +548,6 @@ class EventParticipationTest(TestCase):
         #########################################
         update_event_price(event, 2000)
         #########################################
-        users = list(participations.keys())
         parts = list(participations.values())
 
         party_pay = round_up(event.price / sum(parts))
@@ -557,5 +556,4 @@ class EventParticipationTest(TestCase):
         print_list(Transaction.objects.all())
 
         self.assertEqual(event.price, 2000)
-        self.assertEqual(abs(summary), 2000.03)
-
+        self.assertEqual(abs(summary), round_up(party_pay * sum(parts)))

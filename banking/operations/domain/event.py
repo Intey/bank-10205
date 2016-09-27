@@ -102,7 +102,7 @@ def add_participants(event, newbies):
             old_parts = participation.parts - parts
             new_parts = participation.parts
             summ = diff_sum(old_parts/exist_parts, new_parts/all_parts,
-                            event.price)
+                            event.price) + 0.0001
             print("summ for update:", summ)
             transaction_type = Transaction.DIFF
 
@@ -153,7 +153,7 @@ def create_diff(participation, parent_transaction, summ, exist_parts):
     """ Create diff transaction for given participation. Diff
     transactions links to parent_transaction as diff initiator. exist_parts -
     parts that exists before. """
-    debit = (round_down(summ / exist_parts, 2)
+    debit = (round_down(summ / exist_parts)
              * participation.parts)
     print("create diff with debit:", debit, "parent:", summ)
     return_money(participation, debit, parent_transaction)
@@ -206,7 +206,7 @@ def update_event_price(event, new_price):
     for participation in participations:
         tr = Transaction(participation=participation, type=Transaction.DIFF)
         if price_diff > 0:
-            tr.credit = abs(round_up((price_diff / all_parts) * participation.parts))
+            tr.credit = abs(round_up(round_down((price_diff / all_parts) * participation.parts)))
         else:
-            tr.debit = abs(round_up((price_diff / all_parts) * participation.parts))
+            tr.debit = abs(round_up(round_down((price_diff / all_parts) * participation.parts)))
         tr.save()

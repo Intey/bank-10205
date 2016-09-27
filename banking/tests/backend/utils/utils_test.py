@@ -31,16 +31,16 @@ class RoundTest(TestCase):
 
     def up_test(self):
         self.assertEqual(0.0, round_up(0.00000))
-        self.assertEqual(0.0001, round_up(0.00001))
-        self.assertEqual(15.1112, round_up(15.11112))
-        self.assertEqual(15.1112, round_up(15.11112))
+        self.assertEqual(1e-05, round_up(0.00001))
+        self.assertEqual(15.1111, round_up(15.11112))
+        self.assertEqual(15.1112, round_up(15.11115))
 
     def precision_test(self):
-        self.assertEqual(3333.4, round_up(3333.3334, 1))
-        self.assertEqual(3334, round_up(3333.3334, 0))
+        self.assertEqual(3333.3, round_up(3333.3334, 1))
 
     def up_far_test(self):
-        self.assertEqual(3333.3331, round_up(3333.3330001))
+        self.assertEqual(3333.333, round_up(3333.3330001))
+        self.assertEqual(3333.3331, round_up(3333.333099999))
 
     def save_up_test(self):
         self.assertEqual(3333.3334, round_up(3333.3334))

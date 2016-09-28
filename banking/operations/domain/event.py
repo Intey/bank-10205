@@ -90,7 +90,6 @@ def add_participants(event, newbies):
     exist_parts = deNone(participants.aggregate(s=Sum('parts'))['s'], 0.0)
     all_parts = exist_parts + sum(newbies.values())
     party_pay = round_up(event.price / all_parts)
-    print("PartyPay", party_pay)
     parent_transactions = {}
     # participate incomers
     for (acc, parts) in newbies.items():
@@ -102,8 +101,7 @@ def add_participants(event, newbies):
             old_parts = participation.parts - parts
             new_parts = participation.parts
             summ = diff_sum(old_parts/exist_parts, new_parts/all_parts,
-                            event.price) + 0.0001
-            print("summ for update:", summ)
+                            event.price)
             transaction_type = Transaction.DIFF
 
         transaction = Transaction(participation=participation,

@@ -15,13 +15,21 @@ def sumQuery(field):
 
 def round_up(value, digits=4):
     """ Round float up and leave only digits count after colon """
+    from decimal import Context, ROUND_UP
+    from math import modf
+
+    frac, whole = modf(value)
+    d = Context(rounding=ROUND_UP, prec=digits).create_decimal(str(frac))
+    return float(+d) + whole
+
+def round_half_up(value, digits=4):
+    """ Round float up and leave only digits count after colon """
     from decimal import Context, ROUND_HALF_UP
     from math import modf
 
     frac, whole = modf(value)
     d = Context(rounding=ROUND_HALF_UP, prec=digits).create_decimal(str(frac))
     return float(+d) + whole
-
 
 def round_down(value, digits=4):
     """ Works line ceil but for floats. round_down(3.334, 2) == 3.33 """

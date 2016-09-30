@@ -102,7 +102,7 @@ def add_participants(event, newbies):
             old_parts = participation.parts - parts
             new_parts = participation.parts
             summ = diff_sum(old_parts/exist_parts, new_parts/all_parts,
-                            event.price) + 0.0001
+                            event.price)
             print("summ for update:", summ)
             transaction_type = Transaction.DIFF
 

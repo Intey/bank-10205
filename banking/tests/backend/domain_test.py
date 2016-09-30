@@ -467,7 +467,7 @@ class EventParticipationTest(TestCase):
 
         pp = round_up(e.price / 3.0)
 
-        summary = round_up(aggregateSumm(trs))
+        summary = aggregateSumm(trs)
 
         self.assertEqual(debt(users[0]), -pp)
         self.assertEqual(debt(users[1]), -pp)
@@ -524,7 +524,7 @@ class EventParticipationTest(TestCase):
 
         party_pay = round_up(event.price / sum(parts))
         print("party pay:", party_pay)
-        summary = round_up(aggregateSumm(Transaction.objects.all()))
+        summary = aggregateSumm(Transaction.objects.all())
         self.assertGreaterEqual(abs(summary), event.price)
 
         #########################################
@@ -535,7 +535,7 @@ class EventParticipationTest(TestCase):
         print("second party pay:", party_pay)
 
         # summary debt of all users.
-        summary = round_up(aggregateSumm(Transaction.objects.all()))
+        summary = aggregateSumm(Transaction.objects.all())
 
         print_list(Transaction.objects.all())
 

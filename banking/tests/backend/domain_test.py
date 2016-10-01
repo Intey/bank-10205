@@ -556,4 +556,4 @@ class EventParticipationTest(TestCase):
         print_list(Transaction.objects.all())
 
         self.assertEqual(event.price, 2000)
-        self.assertGreaterEqual(abs(summary), party_pay * sum(parts))
+        self.assertGreaterEqual(abs(summary), event.price)

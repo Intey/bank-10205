@@ -5,7 +5,7 @@ def aggregateSumm(queryset):
     """ calculate difference between 'debit' and 'credit'
     usage: aggregateSumm(Transaction.objects.all())
     Return: *all_debits - *all_credits """
-    return queryset.aggregate(**sumQuery('_'))['_']
+    return round_up(queryset.aggregate(**sumQuery('_'))['_'])
 
 
 def sumQuery(field):

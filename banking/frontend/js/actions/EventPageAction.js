@@ -73,4 +73,16 @@ export function save() {
   }
 }
 
+export function create() {
+    return (dispatch, getState) => {
+        const state = getState()
+        const authorId = state.users[state.event.author].id
+        dispatch(saveRequest())
 
+        API.createEvent(
+            state.event,
+            (resp) => dispatch(saveSuccess(resp.responseJSON)),
+            (resp) => dispatch(saveFailure(resp.responseJSON))
+        )
+    }
+}

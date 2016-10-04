@@ -1,31 +1,22 @@
-import React from 'react'
+import React                  from 'react'
 
 
-import MuiThemeProvider  from 'material-ui/styles/MuiThemeProvider'
-import injectTapEventPlugin     from 'react-tap-event-plugin'
+import MuiThemeProvider       from 'material-ui/styles/MuiThemeProvider'
+import injectTapEventPlugin   from 'react-tap-event-plugin'
 
-import {
-  TextField,
-  DatePicker,
-  AutoComplete,
-  RaisedButton,
-  FlatButton,
-  Paper,
-  Toggle
-} from 'material-ui'
+import { Paper }              from 'material-ui'
 
+import Event                  from '../components/Event'
 
-import Edit              from './edit'
-import DropdownInput     from './DropdownInput.jsx'
-import AccessCheckbox    from './accesscheckbox.jsx'
-import Button            from './button.jsx'
-import ParticipantsTable from './participantstable.jsx'
-import EventTable        from './eventtable.jsx'
+import ParticipantsTable      from './participantstable.jsx'
+
 import {EventAPI, AccountAPI} from '../domain/api.js'
-import getToken from '../utils/token.js'
-import {dateToSimple} from '../utils/string.js'
+import { reshapeAccount }     from '../domain/functions'
+import getToken               from '../utils/token.js'
+import {dateToSimple}         from '../utils/string.js'
 
-import {omit} from 'lodash/object'
+import {omit}                 from 'lodash/object'
+
 
 injectTapEventPlugin() // catching tap(click) events
 
@@ -109,9 +100,6 @@ module.exports = React.createClass({
         );
     },
     componentDidMount: function(){
-        $('#public').prop('checked', true);
-        $('input[type=file]').prop('multiple', true);
-
         accountAPI.getUsers(
             response => this.setState({tempAccounts: response}),
             error => console.log("Error when fetch account list in EventBuilder"))
@@ -120,39 +108,27 @@ module.exports = React.createClass({
         this.setState({ private: !this.state.private });
     },
     render: function(){
-        var events = ['Перевод', 'Пополнение', 'Списание'];
         var author = this.state.author.user;
         return (
             <MuiThemeProvider>
-                <Paper>
-                    <h3>Новое событие</h3>
-                    <div style={{marginTop:'20px'}}>
-                        <TextField floatingLabelText="Название"
-                            onChange={this.handleTitleChange}
-                            value={this.state.title}/>
-                        <TextField floatingLabelText="Цена"
-                            onChange={this.handlePriceChange}
-                            value={this.state.price}/>
-                        <DatePicker floatingLabelText="Дата события"
-                            onChange={(null_stub, date) => this.handleDateChange}
-                            value={this.state.date}/>
-                        <AutoComplete floatingLabelText="Автор" hintText="Выберите из списка"
-                            dataSource={this.state.tempAccounts.map(u => u.user.username)}
-                            searchText={this.state.author.user.username}
-                            filter={(pattern, elem) => elem.startsWith(pattern)}
-                            onFocus={ e => e.target.select() }
-                            onNewRequest={ (text, index) => this.handleAuthorChange(index) }
-                            openOnFocus={true}/>
-                        <Toggle
-                            label="Закрытое событие"
-                            defaultToggled={false}
-                            onToggle={this.handleChangeAccess} />
+                <Paper style={{padding: "40px"}}>
+                    <h3 className="row">Новое событие</h3>
 
-                        <RaisedButton label="Сохранить" primary={true}
-                            onClick={ this.handleCreateClick }/>
-                        <FlatButton label="Сохранить"
-                            onClick={ this.handleCancelClick }/>
-                    </div>
+                    <Event
+                        users={this.state.tempAccounts.map(reshapeAccount)}
+                        event={{
+                            name: this.state.title,
+                            price:this.state.price,
+                            date: this.state.date,
+                            author: this.state.author
+                        }}
+                        eventActions={{
+                            setPrice: this.handlePriceChange,
+                            setDate: this.handleDateChange,
+                            setName: this.handleTitleChange,
+                            setAuthor: this.handleAuthorChange
+                        }}
+                    />
                 </Paper>
             </MuiThemeProvider>
         );

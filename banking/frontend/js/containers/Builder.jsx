@@ -39,7 +39,6 @@ function mapDispatchToProps(dispatch) {
 
 var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
 
-window.__INITIAL__.event.date = dateFromSimple(window.__INITIAL__.event.date)
 window.__INITIAL__.event.author = window.__INITIAL__.users.findIndex(
     // depends on EventSerializer(how represented author)
     u => { return u.id === window.__INITIAL__.event.author }

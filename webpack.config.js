@@ -27,7 +27,7 @@ entry: {
     users:  ['./frontend/js/users.js'],
     participants: ['./frontend/js/participants.js'],
     balance_changer: ['./frontend/js/BalanceChanger.js'],
-    EventPage: ['./frontend/js/EventPage.js'],
+    EventPage: ['./frontend/js/containers/EventPage.jsx'],
     UserPage: ['./frontend/js/UserPage.js']
 },
 output: {

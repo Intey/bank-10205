@@ -1,67 +1,59 @@
-import React                  from 'react'
+import React                    from 'react'
+import { render }               from 'react-dom'
+import { Provider }             from 'react-redux'
+
+import MuiThemeProvider         from 'material-ui/styles/MuiThemeProvider'
+import injectTapEventPlugin     from 'react-tap-event-plugin'
+
+import configureStore           from '../store/configureStore'
+import { reshapeAccount }       from '../domain/functions'
+import { dateFromSimple }      from '../utils/string'
+
+
 import { bindActionCreators } from 'redux'
 import { connect }            from 'react-redux'
 
-import {
-  TextField,
-  DatePicker,
-  AutoComplete,
-  RaisedButton,
-  CircularProgress
-} from 'material-ui'
+import Event from '../components/Event.jsx'
 
 import * as eventActions from '../actions/EventPageAction.js'
 
-export function EventPage(props) {
-  // top:20px - fix position of progress bar.
-  const ButtonOrProgress = (props.fetching ?
-    <CircularProgress style={{top:"20px"}} size={0.5}/> :
-    <RaisedButton label="Сохранить" primary={true}
-      onClick={ props.eventActions.save }/>)
-  const authorName = props.users[props.event.author].username
-  // null_stub in DatePicker::onChange - is always undefined(no event).
-
-  return(
-    <div>
-      <TextField floatingLabelText="Название" hintText="строка"
-        onChange={(event) => props.eventActions.setName(event.target.value)}
-        value={props.event.name}/>
-      <TextField floatingLabelText="Цена" hintText="дробное число"
-        onChange={(event) => props.eventActions.setPrice(event.target.value)}
-        value={props.event.price}/>
-      <DatePicker floatingLabelText="Дата события" hintText="нажмите для выбора"
-        onChange={(null_stub, date) => props.eventActions.setDate(date)}
-        value={props.event.date}/>
-      <AutoComplete floatingLabelText="Автор" hintText="Выберите из списка"
-          dataSource={props.users.map(u => u.username)}
-          searchText={authorName}
-          filter={(pattern, elem) => elem.startsWith(pattern)}
-          onFocus={ e => e.target.select() }
-          onNewRequest={ (text, index) => props.eventActions.setAuthor(index) }
-          openOnFocus={true}/>
-      <div className="row">
-        { ButtonOrProgress }
-      </div>
-    </div>
-  )
-}
+injectTapEventPlugin()
 
 function mapStateProps(state) {
-  return {
-    // consts
-    users: state.users,
-    //payloads
-    event: state.event,
-    // requests
-    fetching: state.fetching,
-    error: state.error,
-  }
+    return {
+        // consts
+        users: state.users,
+        //payloads
+        event: state.event,
+        // requests
+        fetching: state.fetching,
+        error: state.error,
+    }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    eventActions: bindActionCreators(eventActions, dispatch)
-  }
+    return {
+        eventActions: bindActionCreators(eventActions, dispatch)
+    }
 }
 
-export default connect(mapStateProps, mapDispatchToProps)(EventPage)
+
+
+var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
+
+window.__INITIAL__.event.date = dateFromSimple(window.__INITIAL__.event.date)
+window.__INITIAL__.event.author = window.__INITIAL__.users.findIndex(
+    // depends on EventSerializer(how represented author)
+    u => { return u.id === window.__INITIAL__.event.author }
+)
+window.__INITIAL__.users = window.__INITIAL__.users.map(reshapeAccount)
+
+const store = configureStore(window.__INITIAL__)
+const App = () => (
+    <MuiThemeProvider>
+        <Provider store={store}>
+            <EventPageComponent/>
+        </Provider>
+    </MuiThemeProvider>
+)
+render( <App/>, document.getElementById('event') )

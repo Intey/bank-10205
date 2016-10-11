@@ -13,3 +13,4 @@ htmlcov/
 
 webpack-stats.json
 .tern-project
+bank.bundle

@@ -23,11 +23,11 @@ entry: {
     bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js'],
     auth:   ['./frontend/js/auth.js'],
     index:  ['./frontend/js/index.js'],
-    events: ['./frontend/js/events.js'],
     users:  ['./frontend/js/users.js'],
     participants: ['./frontend/js/participants.js'],
     balance_changer: ['./frontend/js/BalanceChanger.js'],
-    EventPage: ['./frontend/js/containers/EventPage.jsx'],
+    EventPage: ['./frontend/js/events/ItemPage.jsx'],
+    EventListPage: ['./frontend/js/events/ListPage.js'],
     UserPage: ['./frontend/js/UserPage.js']
 },
 output: {

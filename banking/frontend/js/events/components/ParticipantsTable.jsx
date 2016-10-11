@@ -1,13 +1,12 @@
 import React        from 'react'
 import ReactDOM     from 'react-dom'
 
-import Edit         from './edit'
-import HintUserList from './hintuserlist.jsx'
+import Edit         from '../../components/edit.jsx'
+import HintUserList from '../../components/hintuserlist.jsx'
 
-import {calcDebt}   from '../domain/functions.js'
-
-import {AccountAPI} from '../domain/api.js'
-import getToken     from '../utils/token.js'
+import {calcDebt}   from '../../domain/functions.js'
+import {AccountAPI} from '../../domain/api.js'
+import getToken     from '../../utils/token.js'
 
 const API = new AccountAPI(getToken())
 

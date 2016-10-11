@@ -1,10 +1,11 @@
 'use strict'
+
 import React    from 'react'
 import ReactDOM from 'react-dom'
 import $        from 'jquery'
 
-import EventTable     from './components/eventtable.jsx'
-import CreateEventDlg from './components/createeventdlg.jsx'
+import EventTable     from '../components/eventtable.jsx'
+import CreateEventDlg from '../components/createeventdlg.jsx'
 
 ReactDOM.render(
     <CreateEventDlg />,

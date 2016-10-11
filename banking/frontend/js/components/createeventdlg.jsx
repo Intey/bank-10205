@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import TemplateDropdown from './templatedropdown.jsx'
 import Edit             from './edit.jsx'
 import CloseDlgButton   from './closedlgbutton.jsx'
-import EventBuilder     from './eventbuilder.jsx'
+import EventBuilder     from '../events/components/Builder.jsx'
 
 
 module.exports = React.createClass({

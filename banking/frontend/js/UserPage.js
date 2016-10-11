@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import TransactionList from './containers/TransactionList.jsx'
+import TransactionList from './components/TransactionList.jsx'
 
 import { dateFromSimple }      from './utils/string'
 

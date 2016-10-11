@@ -1,6 +1,7 @@
-import { EventActions } from '../constants/ActionTypes.js'
+import { Types as Action } from '../actions.js'
 
-import eventId from '../domain/hacks/event.js'
+import eventId from '../../domain/hacks/event.js'
+import {fixFloat} from '../../utils/float.js'
 
 const initialState = {
     id: eventId(),
@@ -12,19 +13,19 @@ const initialState = {
 
 /**
  * Return Event state. Rudux Reducer.
- * @param {Object} state state with other data?
+ * @param {Object} state of event
  */
 export default function event(state = initialState, action) {
   switch (action.type) {
-    case EventActions.SET_AUTHOR:
+    case Action.SET_AUTHOR:
       return { ...state, author: action.payload }
-    case EventActions.SET_NAME:
+    case Action.SET_NAME:
       return { ...state, name: action.payload }
-    case EventActions.SET_DATE:
+    case Action.SET_DATE:
       return { ...state, date: action.payload }
-    case EventActions.SET_PRICE:
-      return { ...state, price: action.payload }
-    case EventActions.SAVE_SUCCESS:
+    case Action.SET_PRICE:
+      return { ...state, price: fixFloat(action.payload) }
+    case Action.SAVE_SUCCESS:
       return { ...state, event: action.payload }
     default:
       return state

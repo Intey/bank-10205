@@ -1,11 +1,12 @@
 import React                  from 'react'
 
 import {
-  TextField,
-  DatePicker,
-  AutoComplete,
-  RaisedButton,
-  CircularProgress
+  TextField
+  , DatePicker
+  , AutoComplete
+  , RaisedButton
+  , CircularProgress
+  , Paper
 }                  from 'material-ui'
 
 export default function EventPage(props) {
@@ -14,21 +15,25 @@ export default function EventPage(props) {
     <CircularProgress style={{top:"20px"}} size={0.5}/> :
     <RaisedButton label="Сохранить" primary={true}
       onClick={ props.eventActions.save }/>)
-  const authorName = props.users[props.event.author].username
-  // null_stub in DatePicker::onChange - is always undefined(no event).
+  let authorName
+  if (!props.fetching) {
+      console.log(props)
+      authorName = props.users.find((u) => u.id == props.event.author).username
+ }
 
   return(
-    <div>
-      <TextField floatingLabelText="Название" hintText="строка"
-        onChange={(event) => props.eventActions.setName(event.target.value)}
-        value={props.event.name}/>
-      <TextField floatingLabelText="Цена" hintText="дробное число"
+    <Paper>
+      <TextField floatingLabelText="Цена"
         onChange={(event) => props.eventActions.setPrice(event.target.value)}
         value={props.event.price}/>
-      <DatePicker floatingLabelText="Дата события" hintText="нажмите для выбора"
+      <TextField floatingLabelText="Название"
+        onChange={(event) => props.eventActions.setName(event.target.value)}
+        value={props.event.name}/>
+      {/* null_stub in DatePicker::onChange - is always undefined(no event).*/ }
+      <DatePicker floatingLabelText="Дата события"
         onChange={(null_stub, date) => props.eventActions.setDate(date)}
         value={props.event.date}/>
-      <AutoComplete floatingLabelText="Автор" hintText="Выберите из списка"
+      <AutoComplete floatingLabelText="Автор"
           dataSource={props.users.map(u => u.username)}
           searchText={authorName}
           filter={(pattern, elem) => elem.startsWith(pattern)}
@@ -38,7 +43,7 @@ export default function EventPage(props) {
       <div className="row">
         { ButtonOrProgress }
       </div>
-    </div>
+    </Paper>
   )
 }
 

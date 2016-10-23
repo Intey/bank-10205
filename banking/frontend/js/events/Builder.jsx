@@ -1,11 +1,11 @@
-import EventItem              from './Item.jsx'
+import EventItem              from './components/Item.jsx'
 
 // misc
-import { reshapeAccount }     from '../../domain/functions.js'
-import { dateFromSimple }     from '../../utils/string.js'
+import { reshapeAccount }     from '../domain/functions.js'
+import { dateFromSimple }     from '../utils/string.js'
 
 // redux
-import configureStore         from '../store.js'
+import configureStore         from './store.js'
 import { bindActionCreators } from 'redux'
 import { connect, Provider }  from 'react-redux'
 
@@ -45,18 +45,19 @@ function mapDispatchToProps(dispatch) {
 
 var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
 
-window.__INITIAL__.event.date = dateFromSimple(window.__INITIAL__.event.date)
-let authorId = window.__INITIAL__.event.author;
-window.__INITIAL__.event.author = window.__INITIAL__.users.findIndex( (u) => u.id == authorId);
-window.__INITIAL__.users = window.__INITIAL__.users.map(reshapeAccount)
+// window.__INITIAL__.event.date = dateFromSimple(window.__INITIAL__.event.date)
+// let authorId = window.__INITIAL__.event.author;
+// window.__INITIAL__.event.author = window.__INITIAL__.users.findIndex( (u) => u.id == authorId);
+// window.__INITIAL__.users = window.__INITIAL__.users.map(reshapeAccount)
 
-const store = configureStore(window.__INITIAL__)
-const App = () => (
-    <MuiThemeProvider>
-        <Provider store={store}>
-            <EventPageComponent/>
-        </Provider>
-    </MuiThemeProvider>
-)
 
+export default function(initialStore = {} ) {
+    const store = configureStore(initialStore)
+    return (
+        <MuiThemeProvider>
+            <Provider store={store}>
+                <EventPageComponent/>
+            </Provider>
+        </MuiThemeProvider>
+    )}
 // render( <App/>, document.getElementById('event') )

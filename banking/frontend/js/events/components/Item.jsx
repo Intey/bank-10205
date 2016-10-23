@@ -18,7 +18,7 @@ export default function EventPage(props) {
   let authorName
   if (!props.fetching) {
       console.log(props)
-      authorName = props.users.find((u) => u.id == props.event.author).username
+      authorName = props.users[props.event.author].username
  }
 
   return(

@@ -2,18 +2,10 @@ import eventId          from '../domain/hacks/event.js'
 import { EventAPI }     from '../domain/api.js'
 import getToken         from '../utils/token.js'
 import { dateToSimple } from '../utils/string.js'
+import { Types }        from './action.types.js'
 
 const API = new EventAPI(getToken())
 
-export const Types = {
-      SET_AUTHOR:    'set_author'
-    , SET_DATE:      'set_date'
-    , SET_PRICE:     'set_price'
-    , SET_NAME:      'set_name'
-    , SAVE_SUCCESS:  'save_success'
-    , SAVE_FAILURE:  'save_failure'
-    , SAVE_REQUEST:  'save_request'
-}
 
 export function setAuthor(authorId) {
     return {
@@ -74,8 +66,8 @@ export function save() {
 
         API.updateEvent(
             { ...state.event, id: eventId(), date: dateToSimple(state.event.date), author: authorId},
-            (resp) => dispatch(saveSuccess(resp.responseJSON)),
-            (resp) => dispatch(saveFailure(resp.responseJSON))
+            (resp) => dispatch(saveSuccess(resp)),
+            (resp) => dispatch(saveFailure(resp))
         )
     }
 }
@@ -88,8 +80,8 @@ export function create() {
 
         API.createEvent(
             state.event,
-            (resp) => dispatch(saveSuccess(resp.responseJSON)),
-            (resp) => dispatch(saveFailure(resp.responseJSON))
+            (resp) => dispatch(saveSuccess(resp)),
+            (resp) => dispatch(saveFailure(resp))
         )
     }
 }

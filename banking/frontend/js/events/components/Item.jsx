@@ -22,7 +22,7 @@ export default function EventPage(props) {
  }
 
   return(
-    <Paper>
+    <Paper style={{padding: "20px"}}>
       <TextField floatingLabelText="Цена"
         onChange={(event) => props.eventActions.setPrice(event.target.value)}
         value={props.event.price}/>
@@ -40,7 +40,7 @@ export default function EventPage(props) {
           onFocus={ e => e.target.select() }
           onNewRequest={ (text, index) => props.eventActions.setAuthor(index) }
           openOnFocus={true}/>
-      <div className="row">
+      <div className="row" style={{"padding-left":"15px"}}>
         { ButtonOrProgress }
       </div>
     </Paper>

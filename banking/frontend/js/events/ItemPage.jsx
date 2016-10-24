@@ -37,6 +37,10 @@ function mapDispatchToProps(dispatch) {
 var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
 
 window.__INITIAL__.event.date = dateFromSimple(window.__INITIAL__.event.date)
+
+let authorId = window.__INITIAL__.event.author;
+window.__INITIAL__.event.author = window.__INITIAL__.users.findIndex( (u) => u.id == authorId);
+
 window.__INITIAL__.users = window.__INITIAL__.users.map(reshapeAccount)
 
 const store = configureStore(window.__INITIAL__)

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import TemplateDropdown from './templatedropdown.jsx'
 import Edit             from './edit.jsx'
 import CloseDlgButton   from './closedlgbutton.jsx'
-import EventBuilder     from '../events/components/Builder.jsx'
+import EventBuilder     from '../events/Builder.jsx'
 
 
 module.exports = React.createClass({
@@ -38,8 +38,15 @@ module.exports = React.createClass({
         });
     },
     handleGoToEventBuilder: function(){
+        let event = this.state
         ReactDOM.render(
-            <EventBuilder BaseInformation={this.state} />,
+            <EventBuilder initialStore={
+                { event:{
+                    name: event.title,
+                    date: event.date,
+                    price: event.sum,
+                }}
+            } />,
             document.getElementById('event-block')
         );
     },

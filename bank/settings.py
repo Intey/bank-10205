@@ -42,7 +42,7 @@ SECRET_KEY = '8a16=nu((q05jgxwea*q+1-_*96fh!%0(y&x$qwptdt6x85i7m'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
+    '*',
 ]
 
 

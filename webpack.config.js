@@ -18,17 +18,20 @@ var config = {
 context: path.resolve(__dirname, './banking/'),
 
 entry: {
-    //
-    jquery: ['../node_modules/jquery/dist/jquery.min.js'],
-    bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js'],
-    auth:   ['./frontend/js/auth.js'],
-    index:  ['./frontend/js/index.js'],
-    users:  ['./frontend/js/users.js'],
-    participants: ['./frontend/js/participants.js'],
-    balance_changer: ['./frontend/js/BalanceChanger.js'],
-    EventPage: ['./frontend/js/events/ItemPage.jsx'],
-    EventListPage: ['./frontend/js/events/ListPage.js'],
-    UserPage: ['./frontend/js/UserPage.js']
+    jquery: ['../node_modules/jquery/dist/jquery.min.js']
+    , bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js']
+
+    , index:  ['./frontend/js/index.js']
+    , auth:   ['./frontend/js/auth.js']
+    , balance_changer: ['./frontend/js/BalanceChanger.js']
+
+    , users:  ['./frontend/js/users.js']
+    , UserPage: ['./frontend/js/UserPage.js']
+
+    , participants: ['./frontend/js/participants.js']
+
+    , EventListPage: ['./frontend/js/events/ListPage.js']
+    , EventPage: ['./frontend/js/events/ItemPage.jsx']
 },
 output: {
     path: path.resolve(__dirname, './banking/static/js'),
@@ -85,7 +88,7 @@ if (DEFS.dev) {
         }
     );
 
-    config.devtool = 'cheap-eval-source-map';
+    config.devtool = 'source-map';
 }
 
 else {

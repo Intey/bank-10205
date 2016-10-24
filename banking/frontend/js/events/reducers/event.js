@@ -3,7 +3,7 @@ import { Types as Action } from '../action.types.js'
 import eventId from '../../domain/hacks/event.js'
 import {fixFloat} from '../../utils/float.js'
 
-const initialState = {
+export const initialState = {
     id: eventId(),
     name: "",
     date: new Date(),

@@ -1,3 +1,5 @@
+import React                  from 'react'
+
 import EventItem              from './components/Item.jsx'
 
 // misc
@@ -8,6 +10,8 @@ import { dateFromSimple }     from '../utils/string.js'
 import configureStore         from './store.js'
 import { bindActionCreators } from 'redux'
 import { connect, Provider }  from 'react-redux'
+import { initialState }       from './reducers/event.js'
+import * as eventActions      from './actions.js'
 
 // material ui
 import MuiThemeProvider       from 'material-ui/styles/MuiThemeProvider'
@@ -45,14 +49,8 @@ function mapDispatchToProps(dispatch) {
 
 var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
 
-// window.__INITIAL__.event.date = dateFromSimple(window.__INITIAL__.event.date)
-// let authorId = window.__INITIAL__.event.author;
-// window.__INITIAL__.event.author = window.__INITIAL__.users.findIndex( (u) => u.id == authorId);
-// window.__INITIAL__.users = window.__INITIAL__.users.map(reshapeAccount)
-
-
-export default function(initialStore = {} ) {
-    const store = configureStore(initialStore)
+export default function(props = {initialStore: initialState } ) {
+    const store = configureStore(props.initialStore)
     return (
         <MuiThemeProvider>
             <Provider store={store}>

@@ -38,8 +38,15 @@ module.exports = React.createClass({
         });
     },
     handleGoToEventBuilder: function(){
+        let event = this.state
         ReactDOM.render(
-            <EventBuilder initialStote={this.state} />,
+            <EventBuilder initialStore={
+                { event:{
+                    name: event.title,
+                    date: event.date,
+                    price: event.sum,
+                }}
+            } />,
             document.getElementById('event-block')
         );
     },

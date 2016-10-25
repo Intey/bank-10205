@@ -14,7 +14,7 @@ export default function EventPage(props) {
   const ButtonOrProgress = (props.fetching ?
     <CircularProgress style={{top:"20px"}} size={0.5}/> :
     <RaisedButton label="Сохранить" primary={true}
-      onClick={ props.eventActions.save }/>)
+      onClick={ props.onSaveClick }/>)
   let authorName
   if (!props.fetching) {
       console.log(props)

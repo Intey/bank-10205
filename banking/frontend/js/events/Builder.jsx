@@ -1,29 +1,22 @@
-import React                  from 'react'
-
-import EventItem              from './components/Item.jsx'
-
-// misc
-import { reshapeAccount }     from '../domain/functions.js'
-import { dateFromSimple }     from '../utils/string.js'
-
-// redux
-import configureStore         from './store.js'
-import { bindActionCreators } from 'redux'
-import { connect, Provider }  from 'react-redux'
-import { initialState }       from './reducers/event.js'
-import * as eventActions      from './actions.js'
+import React                             from 'react'
 
 // material ui
-import MuiThemeProvider       from 'material-ui/styles/MuiThemeProvider'
-import injectTapEventPlugin   from 'react-tap-event-plugin'
+import MuiThemeProvider                  from 'material-ui/styles/MuiThemeProvider'
+import injectTapEventPlugin              from 'react-tap-event-plugin'
 
-// import ParticipantsTable      from './ParticipantsTable.jsx'
+import { bindActionCreators }            from 'redux'
+import { connect, Provider }             from 'react-redux'
 
-// import {EventAPI, AccountAPI} from '../../domain/api.js'
-// import { reshapeAccount }     from '../../domain/functions.js'
-//import getToken               from '../../utils/token.js'
-// import {dateToSimple}         from '../../utils/string.js'
+// misc
+import { reshapeAccount }                from '../domain/functions.js'
+import { dateFromSimple }                from '../utils/string.js'
 
+// redux
+import configureStore                    from './store.js'
+import { initialState }                  from './reducers/event.js'
+import * as eventActions                 from './actions.js'
+
+import Event                             from './components/Item.jsx'
 
 // clicks on material-ui components
 injectTapEventPlugin()
@@ -41,9 +34,11 @@ function mapStateProps(state) {
     }
 }
 
+let { create, save, ...actions } = eventActions
 function mapDispatchToProps(dispatch) {
     return {
-        eventActions: bindActionCreators(eventActions, dispatch)
+        onSaveClick: bindActionCreators(create, dispatch),
+        eventActions: bindActionCreators(actions, dispatch)
     }
 }
 

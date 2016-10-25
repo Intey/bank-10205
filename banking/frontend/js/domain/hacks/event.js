@@ -9,3 +9,4 @@ import $ from 'jquery'
 export default function eventId() {
   return $('#event').attr('data-id')
 }
+

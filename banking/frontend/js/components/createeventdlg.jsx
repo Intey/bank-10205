@@ -6,6 +6,16 @@ import Edit             from './edit.jsx'
 import CloseDlgButton   from './closedlgbutton.jsx'
 import EventBuilder     from '../events/Builder.jsx'
 
+import { AccountAPI }   from '../domain/api.js'
+import   getToken       from '../utils/token.js'
+
+import { reshapeAccount } from '../domain/functions.js'
+import { currentUserId } from '../domain/hacks/user.js'
+
+import { dateFromSimple } from '../utils/string.js'
+
+const accountAPI = new AccountAPI(getToken())
+
 
 module.exports = React.createClass({
     getInitialState: function(){
@@ -39,16 +49,28 @@ module.exports = React.createClass({
     },
     handleGoToEventBuilder: function(){
         let event = this.state
-        ReactDOM.render(
-            <EventBuilder initialStore={
-                { event:{
-                    name: event.title,
-                    date: event.date,
-                    price: event.sum,
-                }}
-            } />,
-            document.getElementById('event-block')
-        );
+        accountAPI.getUsers(
+            (resp) => {
+
+                let users = resp.map(reshapeAccount)
+                let author = users.findIndex((u) => u.id == currentUserId())
+                ReactDOM.render(
+                    <EventBuilder initialStore={
+                        {
+                            event:{
+                                name: event.title,
+                                date: dateFromSimple(event.date),
+                                price: event.sum,
+                                author: author,
+                            },
+                            users: users
+                        }
+                    } />,
+                    document.getElementById('event-block')
+                )
+            },
+            (error) => console.log(error)
+        )
     },
     render: function(){
         var templates = [];

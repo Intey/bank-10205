@@ -13,10 +13,11 @@ function fetching(state = false, action) {
     default                 : return state
   }
 }
-function error(state = "", action) {
+
+function error(state = false, action) {
   switch(action.type) {
-    case Types.SAVE_FAILURE:        return action.payload
-    default:                        return state
+    case Types.SAVE_FAILURE:        return true
+    default:                        return false
   }
 }
 

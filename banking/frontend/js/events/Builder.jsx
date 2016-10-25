@@ -17,6 +17,7 @@ import { initialState }                  from './reducers/event.js'
 import * as eventActions                 from './actions.js'
 
 import Event                             from './components/Item.jsx'
+import { Snackbar }                      from 'material-ui'
 
 // clicks on material-ui components
 injectTapEventPlugin()
@@ -42,10 +43,17 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
+function mapStatePropsSnack(state) {
+    open: !state.fetching,
+    message: state.response,
+    autoHideDuration: 3000,
+}
 
-export default function(props = {initialStore: initialState } ) {
-    const store = configureStore(props.initialStore)
+
+var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
+var SnackbarContainer = connect(mapStatePropsSnack, mapDispatchToPropsSnack)(Snackbar)
+export default function({initialStore = initialState } ) {
+    const store = configureStore(initialStore)
     return (
         <MuiThemeProvider>
             <Provider store={store}>

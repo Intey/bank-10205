@@ -1,7 +1,6 @@
 import React                             from 'react'
 
 // material ui
-import { Snackbar }                      from 'material-ui'
 import MuiThemeProvider                  from 'material-ui/styles/MuiThemeProvider'
 import injectTapEventPlugin              from 'react-tap-event-plugin'
 
@@ -19,6 +18,7 @@ import * as eventActions                 from './actions.js'
 import { closeSnack }                    from './snackActions.js'
 
 import Event                             from './components/Item.jsx'
+import SnackbarContainer                 from './SnackBar.jsx'
 
 
 // clicks on material-ui components
@@ -47,21 +47,7 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-function mapStatePropsSnack(state) {
-    return {
-        open: state.snackbar.open,
-        message: state.snackbar.message,
-        autoHideDuration: 3000,
-    }
-}
-
-function mapDispatchToPropsSnack(dispatch) {
-    onRequestClose: () => dispatch(closeSnack())
-}
-
-
 var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
-var SnackbarContainer = connect(mapStatePropsSnack, mapDispatchToPropsSnack)(Snackbar)
 
 export default function({initialStore = initialState } ) {
     const store = configureStore(initialStore)

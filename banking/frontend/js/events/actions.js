@@ -42,10 +42,10 @@ export function saveRequest() {
     }
 }
 
-export function saveSuccess(response) {
+export function saveSuccess(eventData) {
     return {
         type: Types.SAVE_SUCCESS,
-        payload: response.responseJSON
+        payload: eventData
     }
 }
 

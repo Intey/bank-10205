@@ -42,10 +42,10 @@ export function saveRequest() {
     }
 }
 
-export function saveSuccess(eventData) {
+export function saveSuccess(payload) {
     return {
         type: Types.SAVE_SUCCESS,
-        payload: eventData
+        payload: payload
     }
 }
 
@@ -56,7 +56,7 @@ export function saveFailure(response) {
     }
 }
 
-export function save() {
+export function update() {
     return (dispatch, getState) => {
         const state = getState()
 
@@ -66,7 +66,7 @@ export function save() {
 
         API.updateEvent(
             { ...state.event, id: eventId(), date: dateToSimple(state.event.date), author: authorId },
-            (event) => dispatch(saveSuccess(event)),
+            (event) => dispatch(saveSuccess("Event updated")),
             (error) => dispatch(saveFailure(error))
         )
     }
@@ -80,7 +80,7 @@ export function create() {
 
         API.createEvent(
             { ...state.event, date: dateToSimple(state.event.date), author: authorId },
-            (event) => dispatch(saveSuccess(event)),
+            (event) => dispatch(saveSuccess("Event created")),
             (error) => dispatch(saveFailure(error))
         )
     }

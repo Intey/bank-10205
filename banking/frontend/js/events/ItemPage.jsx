@@ -11,6 +11,7 @@ import { reshapeAccount }     from '../domain/functions.js'
 import { dateFromSimple }     from '../utils/string.js'
 
 import Event                  from './components/Item.jsx'
+import SnackbarContainer      from './SnackBar.jsx'
 
 import * as eventActions      from './actions.js'
 
@@ -49,7 +50,10 @@ const store = configureStore(window.__INITIAL__)
 const App = () => (
     <MuiThemeProvider>
         <Provider store={store}>
-            <EventPageComponent/>
+            <div>
+                <EventPageComponent/>
+                <SnackbarContainer/>
+            </div>
         </Provider>
     </MuiThemeProvider>
 )

@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 
 import users        from './users.js'
 import event        from './event.js'
-import { snackbar } from './snackbar.js'
+import { snackbar } from '../../snackbar/reducers.js'
 
 import { Types } from '../action.types.js'
 

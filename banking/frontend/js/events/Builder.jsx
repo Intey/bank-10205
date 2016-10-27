@@ -15,10 +15,10 @@ import { dateFromSimple }                from '../utils/string.js'
 import configureStore                    from './store.js'
 import { initialState }                  from './reducers/event.js'
 import * as eventActions                 from './actions.js'
-import { closeSnack }                    from './snackActions.js'
+import { closeSnack }                    from '../snackbar/actions.js'
 
 import Event                             from './components/Item.jsx'
-import SnackbarContainer                 from './SnackBar.jsx'
+import SnackbarContainer                 from '../snackbar/Item.jsx'
 
 
 // clicks on material-ui components

@@ -11,7 +11,7 @@ import { reshapeAccount }     from '../domain/functions.js'
 import { dateFromSimple }     from '../utils/string.js'
 
 import Event                  from './components/Item.jsx'
-import SnackbarContainer      from './SnackBar.jsx'
+import SnackbarContainer      from '../snackbar/Item.jsx'
 
 import * as eventActions      from './actions.js'
 

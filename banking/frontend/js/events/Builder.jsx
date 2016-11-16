@@ -61,4 +61,3 @@ export default function({initialStore = initialState } ) {
             </Provider>
         </MuiThemeProvider>
     )}
-// render( <App/>, document.getElementById('event') )

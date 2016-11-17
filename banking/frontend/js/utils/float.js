@@ -1,5 +1,4 @@
 export function fixFloat(value, size) {
-    console.log(value)
     let out
     let parts = value.split('.')
 

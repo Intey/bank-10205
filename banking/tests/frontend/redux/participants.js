@@ -14,9 +14,8 @@ import modules from '../helpers/defines.js'
 
 var actions = require(`${modules.participants}/actions.js`)
 var UpdateError = require(`${modules.participants}/errors.js`).UpdateError
-import reducer from '../../../frontend/js/participants/reducers.js'
 
-//var reducer = require(`${modules.participants}/reducers.js`).default
+var reducer = require(`${modules.participants}/reducers.js`).default
 
 
 describe("Participant actions", () => {
@@ -64,10 +63,5 @@ describe("Participant reducers", () => {
     it("should remove participant", () => {
         reducer({0: 2}, actions.deleteParticipant(0)).should.deep.equal( {} )
         reducer({0: 2, 1: 3}, actions.deleteParticipant(1)).should.deep.equal( {0: 2} )
-    })
-
-    it("should calculate debt", () => {
-        reducer({}, actions.addParticipant(0, 3))
-
     })
 })

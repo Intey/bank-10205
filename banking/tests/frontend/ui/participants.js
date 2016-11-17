@@ -38,7 +38,8 @@ describe("Participant actions", () => {
 describe("Participant reducers", () => {
     it("should return initial state", () => {
         reducer(undefined, {}).should.deep.equal({})
-    });
+    })
+
     it("should add new participant, to participants list", () => {
         reducer({}, actions.addParticipant(0, 2)).should.deep.equal( {0: 2} )
         reducer({0: 2}, actions.addParticipant(1, 3.2))
@@ -47,7 +48,8 @@ describe("Participant reducers", () => {
         // add exist - no action
         reducer({0: 2}, actions.addParticipant(0, 3.2))
           .should.deep.equal( {0: 2} )
-    });
+    })
+
     it("should update parts of exist participant", () => {
         reducer({0: 2}, actions.updateParts(0, 3)).should.deep.equal( {0: 3} )
         reducer({0: 2, 1: 3}, actions.updateParts(1, 2.4))
@@ -57,10 +59,15 @@ describe("Participant reducers", () => {
         expect(function reduce() {
           reducer({0: 2, 1: 3.5}, actions.updateParts(3, 8))
         }).to.throw(UpdateError)
-    });
+    })
 
     it("should remove participant", () => {
-      reducer({0: 2}, actions.deleteParticipant(0)).should.deep.equal( {} )
-    });
+        reducer({0: 2}, actions.deleteParticipant(0)).should.deep.equal( {} )
+        reducer({0: 2, 1: 3}, actions.deleteParticipant(1)).should.deep.equal( {0: 2} )
+    })
 
+    it("should calculate debt", () => {
+        reducer({}, actions.addParticipant(0, 3))
+
+    })
 })

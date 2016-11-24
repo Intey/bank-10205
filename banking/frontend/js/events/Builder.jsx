@@ -19,6 +19,7 @@ import { closeSnack }                    from '../snackbar/actions.js'
 
 import Event                             from './components/Item.jsx'
 import SnackbarContainer                 from '../snackbar/Item.jsx'
+import participantList                   from '../participants/components/List.jsx'
 
 
 // clicks on material-ui components
@@ -57,6 +58,7 @@ export default function({initialStore = initialState } ) {
                 <div>
                     <EventPageComponent/>
                     <SnackbarContainer/>
+                    <participantList/>
                 </div>
             </Provider>
         </MuiThemeProvider>

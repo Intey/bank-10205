@@ -10,7 +10,9 @@ function mapStatePropsSnack(state) {
 }
 
 function mapDispatchToPropsSnack(dispatch) {
-    onRequestClose: () => dispatch(closeSnack())
+    return {
+        onRequestClose: () => dispatch(closeSnack())
+    }
 }
 
 var SnackbarContainer = connect(mapStatePropsSnack, mapDispatchToPropsSnack)(Snackbar)

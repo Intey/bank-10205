@@ -1,30 +1,41 @@
 import React                  from 'react'
 
 import {
-  TextField
-  , DatePicker
+    TextField
   , AutoComplete
   , RaisedButton
-  , CircularProgress
+  , Paper
   , Table
   , TableBody
   , TableRow
   , TableRowColumn
-  , Paper
 }                  from 'material-ui'
 
-export default function participantList(props) {
+export function participantList(props) {
+
+    var rows = props.participants.map( (id, user) => {
+        var removeFn = props.removeParticipant.bind(id)
+        return (
+            <TableRow>
+                <TableRowColumn>
+                    user.name
+                </TableRowColumn>
+                <TableRowColumn>
+                    user.parts
+                </TableRowColumn>
+                <TableRowColumn>
+                    <RaisedButton label="Удалить" primary={true} onClick={removeFn}/>
+                </TableRowColumn>
+            </TableRow>
+        )
+    })
+
     return (
         <Paper>
-            <Table>
-            <TableBody>
-                <TableRow>
-                    <TableRowColumn>
-                        Intey
-                    </TableRowColumn>
-                </TableRow>
-            </TableBody>
-            </Table>
+        <Table>
+        <TableBody>
+        </TableBody>
+        </Table>
         </Paper>
     )
 }

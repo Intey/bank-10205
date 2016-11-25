@@ -19,7 +19,7 @@ import { closeSnack }                    from '../snackbar/actions.js'
 
 import Event                             from './components/Item.jsx'
 import SnackbarContainer                 from '../snackbar/Item.jsx'
-import participantList                   from '../participants/components/List.jsx'
+import { participantList }               from '../participants/components/List.jsx'
 
 
 // clicks on material-ui components
@@ -40,6 +40,12 @@ function mapStateProps(state) {
 
 let { create, save, ...actions } = eventActions
 
+function removeParticipant (payload) {
+    return {
+        type: "REMOVE_PARTICIPANT",
+        payload: payload
+    }
+}
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -48,7 +54,22 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
+
+function mapStateToPLProps (state) {
+    return {
+        users: state.users,
+        participants: state.participants
+    }
+}
+
+function mapDispatchToPLProps (dispatch) {
+    return {
+        onRemoveClick: bindActionCreators(removeParticipant, dispatch)
+    }
+}
+
 var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
+var ParticipantList = connect(mapStateToPLProps, mapDispatchToPLProps)(participantList)
 
 export default function({initialStore = initialState } ) {
     const store = configureStore(initialStore)
@@ -58,8 +79,9 @@ export default function({initialStore = initialState } ) {
                 <div>
                     <EventPageComponent/>
                     <SnackbarContainer/>
-                    <participantList/>
+                    <ParticipantList/>
                 </div>
             </Provider>
         </MuiThemeProvider>
-    )}
+    )
+}

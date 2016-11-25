@@ -5,8 +5,8 @@ import { omit } from 'lodash/object'
 export const initialState = {}
 
 /**
- * Return participants state. Rudux Reducer.
- * @param {Object} state of participants
+ * List of participants.
+ * @param {Object} participants object, where key is idx, and value is parts
  */
 export default function participants(state = initialState, action) {
     switch (action.type) {

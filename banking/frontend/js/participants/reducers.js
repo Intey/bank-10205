@@ -10,16 +10,25 @@ export const initialState = {}
  */
 export function participants(state = initialState, action) {
     switch (action.type) {
+        case Action.DEL_PARTICIPANT:
+            return omit(state, action.id)
+        default:
+            return state
+    }
+}
+
+export function adder(state = { userId: 0, parts: 0}, action) {
+    switch (action.type) {
         case Action.ADD_PARTICIPANT:
             if (state[action.id]) return state
             return { ...state, [action.id]: action.parts }
-        case Action.DEL_PARTICIPANT:
-            return omit(state, action.id)
         case Action.UPD_PARTS:
             if (!state[action.id])
                 throw new UpdateError(`participant ${action.id} doesn't exists`)
             return { ...state, [action.id]: action.parts }
         default:
             return state
+
     }
+
 }

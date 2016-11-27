@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import users        from './users.js'
 import event        from './event.js'
 import { snackbar } from '../../snackbar/reducers.js'
+import { participants } from '../../participants/reducers.js'
 
 import { Types } from '../action.types.js'
 
@@ -28,5 +29,6 @@ export default combineReducers({
     error,
     users,
     event,
-    snackbar
+    snackbar,
+    participants
 })

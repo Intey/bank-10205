@@ -15,7 +15,7 @@ import modules from '../helpers/defines.js'
 var actions = require(`${modules.participants}/actions.js`)
 var UpdateError = require(`${modules.participants}/errors.js`).UpdateError
 
-var reducer = require(`${modules.participants}/reducers.js`).default
+var reducer = require(`${modules.participants}/reducers.js`).participants
 
 
 describe("Participant actions", () => {

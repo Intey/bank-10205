@@ -69,7 +69,8 @@ function mapDispatchToPLProps (dispatch) {
 }
 
 var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
-var ParticipantList = connect(mapStateToPLProps, mapDispatchToPLProps)(participantList)
+var ParticipantList = connect(mapStateToPLProps,
+                              mapDispatchToPLProps)(participantList)
 
 export default function({initialStore = initialState } ) {
     const store = configureStore(initialStore)

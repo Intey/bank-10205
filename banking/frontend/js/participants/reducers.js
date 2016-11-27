@@ -8,7 +8,7 @@ export const initialState = {}
  * List of participants.
  * @param {Object} participants object, where key is idx, and value is parts
  */
-export default function participants(state = initialState, action) {
+export function participants(state = initialState, action) {
     switch (action.type) {
         case Action.ADD_PARTICIPANT:
             if (state[action.id]) return state

@@ -1,5 +1,6 @@
 import { Snackbar } from 'material-ui'
 import { connect }  from 'react-redux'
+import { closeSnack } from './actions.js'
 
 function mapStatePropsSnack(state) {
     return {

@@ -1,30 +1,46 @@
-import React                             from 'react'
+import React                 from 'react'
 
 // material ui
-import MuiThemeProvider                  from 'material-ui/styles/MuiThemeProvider'
-import injectTapEventPlugin              from 'react-tap-event-plugin'
+import MuiThemeProvider      from 'material-ui/styles/MuiThemeProvider'
+import injectTapEventPlugin  from 'react-tap-event-plugin'
 
-import { bindActionCreators }            from 'redux'
-import { connect, Provider }             from 'react-redux'
+
+import { connect, Provider } from 'react-redux'
+
+import {
+    bindActionCreators,
+    createStore,
+    combineReducers,
+    applyMiddleware
+}                            from 'redux'
+
+import thunk                 from 'redux-thunk' // for async server requests
+import { log }               from '../middlewares/log.js'
 
 // misc
-import { reshapeAccount }                from '../domain/functions.js'
-import { dateFromSimple }                from '../utils/string.js'
+import { reshapeAccount }    from '../domain/functions.js'
+import { dateFromSimple }    from '../utils/string.js'
 
 // redux
-import configureStore                    from './store.js'
-import { initialState }                  from './reducers/event.js'
-import * as eventActions                 from './actions.js'
-import { closeSnack }                    from '../snackbar/actions.js'
+import { initialState }      from './reducers/event.js'
+import * as eventActions     from './actions.js'
+import { closeSnack }        from '../snackbar/actions.js'
 
-import Event                             from './components/Item.jsx'
-import SnackbarContainer                 from '../snackbar/Item.jsx'
-import { participantList }               from '../participants/components/List.jsx'
+import Event                 from './components/Item.jsx'
+import SnackbarContainer     from '../snackbar/Item.jsx'
+
+import users                 from './reducers/users.js'
+import event                 from './reducers/event.js'
+import fetching              from './reducers/fetching.js'
+import error                 from './reducers/error.js'
+import { snackbar }          from '../snackbar/reducers.js'
+
+
+
 
 
 // clicks on material-ui components
 injectTapEventPlugin()
-
 
 function mapStateProps(state) {
     return {
@@ -40,13 +56,6 @@ function mapStateProps(state) {
 
 let { create, save, ...actions } = eventActions
 
-function removeParticipant (payload) {
-    return {
-        type: "REMOVE_PARTICIPANT",
-        payload: payload
-    }
-}
-
 function mapDispatchToProps(dispatch) {
     return {
         onSaveClick: bindActionCreators(create, dispatch),
@@ -54,24 +63,44 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-
-function mapStateToPLProps (state) {
-    return {
-        users: state.users,
-        participants: state.participants
-    }
-}
-
-function mapDispatchToPLProps (dispatch) {
-    return {
-        onRemoveClick: bindActionCreators(removeParticipant, dispatch)
-    }
-}
-
 var EventPageComponent = connect(mapStateProps, mapDispatchToProps)(Event)
-var ParticipantList = connect(mapStateToPLProps,
-                              mapDispatchToPLProps)(participantList)
 
+const rootReducer = combineReducers({
+    fetching,
+    error,
+    users,
+    event,
+    snackbar,
+})
+
+export default function configureStore(inital) {
+    const store = createStore(
+        rootReducer,
+        inital,
+        applyMiddleware(thunk, log),
+    )
+
+    //if (module.hot) {
+    //    var replaceReducers = function() {
+    //        const snackbar = require('../snackbar/reducers.js').snackbar
+    //        const users    = require('./reducers/users.js')
+    //        const event    = require('./reducers/event.js')
+    //        const fetching = require('./reducers/fetching.js')
+    //        const error    = require('./reducers/error.js')
+    //        const nextRootReducer = combineReducers({
+    //                fetching,
+    //                error,
+    //                users,
+    //                event,
+    //                snackbar,
+    //            })
+    //        store.replacereduce(nextRootReducer)
+    //    }
+    //    module.hot.accept('./reducers/',             replaceReducers)
+    //    module.hot.accept('../snackbar/reducers.js', replaceReducers)
+    //}
+    return store
+}
 export default function({initialStore = initialState } ) {
     const store = configureStore(initialStore)
     return (
@@ -80,7 +109,6 @@ export default function({initialStore = initialState } ) {
                 <div>
                     <EventPageComponent/>
                     <SnackbarContainer/>
-                    <ParticipantList/>
                 </div>
             </Provider>
         </MuiThemeProvider>

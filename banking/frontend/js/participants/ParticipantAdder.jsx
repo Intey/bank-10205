@@ -1,5 +1,6 @@
 import React              from 'react'
 
+
 import {
     TextField
   , AutoComplete
@@ -7,7 +8,10 @@ import {
   , Paper
 }                         from 'material-ui'
 
-import { addParticipant } from '../actions.js'
+import { bindActionCreators } from 'redux'
+import { connect }            from 'react-redux'
+
+import { addParticipant } from './actions.js'
 
 function adder(props) {
     return (
@@ -16,9 +20,9 @@ function adder(props) {
                 dataSource={props.users.map(u => u.username)}
                 filter={(pattern, elem) => elem.startsWith(pattern)}
                 onFocus={ e => e.target.select() }
-                onNewRequest={ (text, index) => props.addParticipant(index) }
                 openOnFocus={true}/>
             <TextField value={props.parts}/>
+            <RaisedButton onClick={props.addParticipant}/>
         </Paper>
     )
 }

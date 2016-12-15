@@ -2,13 +2,11 @@ import { Types as Action } from './action.types.js'
 import { UpdateError } from './errors.js'
 import { omit } from 'lodash/object'
 
-export const initialState = {}
-
 /**
  * List of participants.
  * @param {Object} participants object, where key is idx, and value is parts
  */
-export function participants(state = initialState, action) {
+export function participants(state = {}, action) {
     switch (action.type) {
         case Action.DEL_PARTICIPANT:
             return omit(state, action.id)
@@ -17,7 +15,7 @@ export function participants(state = initialState, action) {
     }
 }
 
-export function adder(state = { userId: 0, parts: 0}, action) {
+export function adder(state = {}, action) {
     switch (action.type) {
         case Action.ADD_PARTICIPANT:
             if (state[action.id]) return state

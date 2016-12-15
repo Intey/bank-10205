@@ -35,6 +35,11 @@ import fetching              from './reducers/fetching.js'
 import error                 from './reducers/error.js'
 import { snackbar }          from '../snackbar/reducers.js'
 
+import ParticipantsList      from '../participants/ParticipantsList.jsx'
+import ParticipantAdder      from '../participants/ParticipantAdder.jsx'
+import {participants, adder} from '../participants/reducers.js'
+
+
 
 
 
@@ -71,6 +76,8 @@ const rootReducer = combineReducers({
     users,
     event,
     snackbar,
+    participants,
+    adder
 })
 
 export default function configureStore(inital) {
@@ -109,6 +116,8 @@ export default function({initialStore = initialState } ) {
                 <div>
                     <EventPageComponent/>
                     <SnackbarContainer/>
+                    <ParticipantAdder/>
+                    <ParticipantsList/>
                 </div>
             </Provider>
         </MuiThemeProvider>

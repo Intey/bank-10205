@@ -8,6 +8,8 @@ import { omit } from 'lodash/object'
  */
 export function participants(state = {}, action) {
     switch (action.type) {
+        case Action.ADD_PARTICIPANT:
+            return { ...state, id: parts}
         case Action.DEL_PARTICIPANT:
             return omit(state, action.id)
         default:
@@ -17,10 +19,10 @@ export function participants(state = {}, action) {
 
 export function adder(state = {}, action) {
     switch (action.type) {
-        case Action.ADD_PARTICIPANT:
+        case Action.SET_PARTICIPANT:
             if (state[action.id]) return state
             return { ...state, [action.id]: action.parts }
-        case Action.UPD_PARTS:
+        case Action.SET_PARTS:
             if (!state[action.id])
                 throw new UpdateError(`participant ${action.id} doesn't exists`)
             return { ...state, [action.id]: action.parts }

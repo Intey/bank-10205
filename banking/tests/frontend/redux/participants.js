@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom'
 import modules from '../helpers/defines.js'
 
 var actions = require(`${modules.participants}/actions.js`)
-var UpdateError = require(`${modules.participants}/errors.js`).UpdateError
+var setError = require(`${modules.participants}/errors.js`).setError
 
 var reducer = require(`${modules.participants}/reducers.js`).participants
 
@@ -23,9 +23,9 @@ describe("Participant actions", () => {
         const expected = { type: 'add_participant', id: 3, parts: 5.3 }
         expect(actions.addParticipant(3,5.3)).deep.equal(expected)
     })
-    it("should create an action to update parts ", () => {
+    it("should create an action to set parts ", () => {
         const expected = { type: 'upd_parts', id: 3, parts: 2 }
-        expect(actions.updateParts(3,2)).deep.equal(expected)
+        expect(actions.setParts(3,2)).deep.equal(expected)
     })
     it("should create an action to delete particpant ", () => {
         const expected = { type: 'del_participant', id: 3 }
@@ -40,7 +40,7 @@ describe("Participant reducers", () => {
     })
 
     it("should add new participant, to participants list", () => {
-        reducer({}, actions.addParticipant(0, 2)).should.deep.equal( {0: 2} )
+        reducer({0: 2}, actions.addParticipant()).should.deep.equal( {0: 2} )
         reducer({0: 2}, actions.addParticipant(1, 3.2))
           .should.deep.equal( {0: 2, 1: 3.2} )
 
@@ -49,15 +49,15 @@ describe("Participant reducers", () => {
           .should.deep.equal( {0: 2} )
     })
 
-    it("should update parts of exist participant", () => {
-        reducer({0: 2}, actions.updateParts(0, 3)).should.deep.equal( {0: 3} )
-        reducer({0: 2, 1: 3}, actions.updateParts(1, 2.4))
+    it("should set parts of exist participant", () => {
+        reducer({0: 2}, actions.setParts(0, 3)).should.deep.equal( {0: 3} )
+        reducer({0: 2, 1: 3}, actions.setParts(1, 2.4))
           .should.deep.equal( {0: 2, 1: 2.4} )
 
-        // update unexists thow error
+        // set unexists thow error
         expect(function reduce() {
-          reducer({0: 2, 1: 3.5}, actions.updateParts(3, 8))
-        }).to.throw(UpdateError)
+          reducer({0: 2, 1: 3.5}, actions.setParts(3, 8))
+        }).to.throw(setError)
     })
 
     it("should remove participant", () => {

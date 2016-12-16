@@ -22,7 +22,7 @@ function adder(props) {
                 onFocus={ e => e.target.select() }
                 openOnFocus={true}/>
             <TextField value={props.parts}/>
-            <RaisedButton onClick={props.addParticipant}/>
+            <RaisedButton onClick={ e => props.addParticipant(props.id, props.parts) }/>
         </Paper>
     )
 }

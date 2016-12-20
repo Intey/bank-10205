@@ -25,7 +25,7 @@ export function participantList(props) {
                 return (
                     <TableRow key={id}>
                         <TableRowColumn>
-                            {props.users[id].name}
+                            {props.users[id].username}
                         </TableRowColumn>
                         <TableRowColumn>
                             {parts}

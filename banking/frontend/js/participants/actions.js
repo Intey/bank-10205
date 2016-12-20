@@ -1,8 +1,10 @@
 import { Types } from './action.types.js'
 
-export function addParticipant () {
+export function addParticipant (id, parts) {
     return {
         type: Types.ADD_PARTICIPANT,
+        id: id,
+        parts: parts
     }
 }
 
@@ -13,10 +15,9 @@ export function setParticipant(id) {
     }
 }
 
-export function setParts (id, parts) {
+export function setParts(parts) {
     return {
         type: Types.SET_PARTS,
-        id: id,
         parts: parts
     }
 }

@@ -78,8 +78,17 @@ export function create() {
         const authorId = state.users[state.event.author].id
         dispatch(saveRequest())
 
+
+        const participants = Object.getOwnPropertyNames(state.participants)
+            .map( (id) => {
+                return { account: state.users[id].id, parts: state.participants[id] }
+            })
+
         API.createEvent(
-            { ...state.event, date: dateToSimple(state.event.date), author: authorId },
+            { ...state.event,
+                date: dateToSimple(state.event.date),
+                author: authorId,
+                participants: participants },
             (event) => dispatch(saveSuccess("Event created")),
             (error) => dispatch(saveFailure(error))
         )

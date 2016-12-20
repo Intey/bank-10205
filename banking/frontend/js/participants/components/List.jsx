@@ -21,25 +21,25 @@ export function participantList(props) {
         rows =
             keys.map( (id) => {
                 const parts = parties[id]
-                var removeFn = props.removeParticipant.bind(id)
+
                 return (
-                    <TableRow>
+                    <TableRow key={id}>
                         <TableRowColumn>
-                            {users[id].name}
+                            {props.users[id].name}
                         </TableRowColumn>
                         <TableRowColumn>
                             {parts}
                         </TableRowColumn>
                         <TableRowColumn>
                             <RaisedButton label="Удалить" primary={true}
-                                          onClick={removeFn}/>
+                                onClick={ (e)=> props.onRemoveClick(id) }/>
                         </TableRowColumn>
                     </TableRow>
                 )
             })
     } else {
         rows = (
-            <TableRow><TableRowColumn>
+            <TableRow key={0}><TableRowColumn>
                 No one participate this event
             </TableRowColumn></TableRow>
         )

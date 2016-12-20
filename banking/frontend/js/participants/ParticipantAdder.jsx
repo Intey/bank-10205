@@ -11,7 +11,7 @@ import {
 import { bindActionCreators } from 'redux'
 import { connect }            from 'react-redux'
 
-import { addParticipant } from './actions.js'
+import { addParticipant, setParticipant, setParts } from './actions.js'
 
 function adder(props) {
     return (
@@ -20,8 +20,11 @@ function adder(props) {
                 dataSource={props.users.map(u => u.username)}
                 filter={(pattern, elem) => elem.startsWith(pattern)}
                 onFocus={ e => e.target.select() }
+                onNewRequest={ (text, index) => props.setParticipant(index) }
                 openOnFocus={true}/>
-            <TextField value={props.parts}/>
+            <TextField value={props.parts}
+                onChange={(event) => props.setParts(event.target.value)}
+            />
             <RaisedButton onClick={ e => props.addParticipant(props.id, props.parts) }/>
         </Paper>
     )
@@ -31,13 +34,16 @@ function adder(props) {
 function mapStateToProps (state) {
     return {
         users: state.users,
-        parts: state.parts,
+        id: state.adder.id,
+        parts: state.adder.parts,
     }
 }
 
 function mapDispatchProps (dispatch) {
     return {
-        addParticipant: bindActionCreators(addParticipant, dispatch)
+        addParticipant: bindActionCreators(addParticipant, dispatch),
+        setParticipant: bindActionCreators(setParticipant, dispatch),
+        setParts: bindActionCreators(setParts, dispatch),
     }
 }
 

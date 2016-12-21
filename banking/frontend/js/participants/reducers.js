@@ -17,7 +17,7 @@ export function participants(state = {}, action) {
     }
 }
 
-const initAdder = { id:0, parts: 0.0}
+const initAdder = { id:0, parts: 1.0}
 export function adder(state = initAdder, action) {
     switch (action.type) {
         case Action.ADD_PARTICIPANT:
@@ -25,7 +25,7 @@ export function adder(state = initAdder, action) {
         case Action.SET_PARTICIPANT:
             return { ...state, id: action.id }
         case Action.SET_PARTS:
-            return { ...state, parts: action.parts }
+            return { ...state, parts: fixFloat(action.parts, 2) }
         default:
             return state
 

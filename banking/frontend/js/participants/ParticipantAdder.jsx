@@ -13,23 +13,41 @@ import { connect }            from 'react-redux'
 
 import { addParticipant, setParticipant, setParts } from './actions.js'
 
+import {fixFloat} from '../utils/float.js'
+
 function adder(props) {
+    const error = props.parts === "0.00" ? "Количество частей должно быть больше 0" : "";
+
+    const MaybeButton =
+        ( !error ?
+            <RaisedButton label="Добавить" onClick={ e => props.addParticipant(props.id, props.parts) }/>:
+            null
+        )
+
     return (
-        <Paper>
-            <AutoComplete floatingLabelText="Имя участника"
-                dataSource={props.users.map(u => u.username)}
-                filter={(pattern, elem) => elem.startsWith(pattern)}
-                onFocus={ e => e.target.select() }
-                onNewRequest={ (text, index) => props.setParticipant(index) }
-                openOnFocus={true}/>
-            <TextField value={props.parts}
-                onChange={(event) => props.setParts(event.target.value)}
-            />
-            <RaisedButton onClick={ e => props.addParticipant(props.id, props.parts) }/>
+        <Paper className={"event-block"}>
+            <div className="inline-group">
+                <AutoComplete
+                    floatingLabelText="Имя участника"
+                    dataSource={props.users.map(u => u.username)}
+                    filter={(pattern, elem) => elem.startsWith(pattern)}
+                    onFocus={ e => e.target.select() }
+                    onNewRequest={ (text, index) => props.setParticipant(index) }
+                    errorText={error}
+                    openOnFocus={true}/>
+            </div>
+            <div className="inline-group">
+                <TextField
+                    value={fixFloat(props.parts)}
+                    floatingLabelText="Доля участия"
+                    onChange={(event) => props.setParts(event.target.value)}/>
+            </div>
+            <div className="inline-group">
+                {MaybeButton}
+            </div>
         </Paper>
     )
 }
-
 
 function mapStateToProps (state) {
     return {

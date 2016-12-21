@@ -22,14 +22,14 @@ export default function EventPage(props) {
  }
 
   return(
-    <Paper style={{padding: "20px"}}>
+    <Paper className={"event-block"}>
       <TextField floatingLabelText="Цена"
         onChange={(event) => props.eventActions.setPrice(event.target.value)}
         value={props.event.price}/>
       <TextField floatingLabelText="Название"
         onChange={(event) => props.eventActions.setName(event.target.value)}
         value={props.event.name}/>
-      {/* null_stub in DatePicker::onChange - is always undefined(no event).*/ }
+      {/* null_stub in DatePicker::onChange - is always undefined(no event).*/}
       <DatePicker floatingLabelText="Дата события"
         onChange={(null_stub, date) => props.eventActions.setDate(date)}
         value={props.event.date}/>

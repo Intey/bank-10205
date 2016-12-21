@@ -1,4 +1,6 @@
 export function fixFloat(value, size) {
+    if (typeof value === 'number') return ""+value
+    if (typeof value !== 'string') return "0.00"
     let out
     let parts = value.split('.')
 

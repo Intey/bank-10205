@@ -45,7 +45,7 @@ export function participantList(props) {
         )
     }
     return (
-        <Paper style={{padding: "0px 5px 0px 0px"}}>
+        <Paper className={"event-block"}>
         <Table>
         <TableBody displayRowCheckbox={false} >
             {rows}

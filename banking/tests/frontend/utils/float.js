@@ -66,5 +66,13 @@ describe("fixFload should convert", function() {
     it("and cut to 2 when set size = 2", function() {
         fixFloat("0.0111", 2).should.equal("0.01")
     });
+
+    it("float to float", function() {
+        fixFloat(12.22, 2).should.equal("12.22")
+    });
+    it("undefined to 0.0", function() {
+        fixFloat(undefined, 2).should.equal("0.00")
+        fixFloat(null, 2).should.equal("0.00")
+    });
 });
 

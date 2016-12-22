@@ -1,8 +1,6 @@
 export function fixFloat(value, size) {
-    if (typeof value === 'number') return ""+value
-    if (typeof value !== 'string') return "0.00"
     let out
-    let parts = value.split('.')
+    let parts = (""+value).split('.')
 
     out = parseInt(parts[0])
 
@@ -11,11 +9,17 @@ export function fixFloat(value, size) {
     out = out.match(/^\d+\.?\d*/)
     if (out) {
         out = out.toString(0)
-        if (size) {
-            let pad = out.match(/^\d+\./)[0].length
-            return out.substring(0, pad+size)
-        }
+        // append or cut to given size
+        // if (size) {
+        //     let match = out.match(/^\d+\./) // is float with dot
+        //     let pad
+        //     if (match) pad = [0].length
+        //     return out.substring(0, pad+size)
+        // }
         return out
     }
-    else return '0'
+    else {
+
+        return '0'
+    }
 }

@@ -55,8 +55,8 @@ var adderReduc = require(`${modules.participants}/reducers.js`).adder
 describe("Adder reduces", function() {
     it("should set parts", () => {
         adderReduc({id: 0, parts: 2}, actions.setParts(3))
-            .should.deep.equal( {id : 0, parts: 3} )
+            .should.deep.equal( {id : 0, parts: "3"} )
         adderReduc({id: 1, parts: 3}, actions.setParts(2.4))
-            .should.deep.equal( {id :1, parts: 2.4} )
+            .should.deep.equal( {id :1, parts: "2.4"} )
     })
 })

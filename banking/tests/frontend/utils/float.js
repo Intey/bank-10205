@@ -63,16 +63,25 @@ describe("fixFload should convert", function() {
         fixFloat("0.000123s" ).should.equal("0.000123")
     });
 
-    it("and cut to 2 when set size = 2", function() {
-        fixFloat("0.0111", 2).should.equal("0.01")
-    });
+    // it("apped or cut, when size is given", function() {
+    //     fixFloat("0.0111", 2).should.equal("0.01")
+    //     fixFloat("0.0111", 3).should.equal("0.011")
+    //     fixFloat("0.01", 3).should.equal("0.010")
+    //     fixFloat("0", 2).should.equal("0.00")
+    //     fixFloat("0.", 2).should.equal("0.00")
+    //     fixFloat("0.", 5).should.equal("0.00000")
+    // });
 
     it("float to float", function() {
-        fixFloat(12.22, 2).should.equal("12.22")
+        fixFloat(12.22).should.equal("12.22")
+        fixFloat(12.222).should.equal("12.222")
     });
-    it("undefined to 0.0", function() {
-        fixFloat(undefined, 2).should.equal("0.00")
-        fixFloat(null, 2).should.equal("0.00")
+    it("undefined to 0", function() {
+        fixFloat(undefined).should.equal("0")
+        fixFloat(undefined).should.equal("0")
+        fixFloat(null).should.equal("0")
+        fixFloat(null).should.equal("0")
+        fixFloat(null).should.equal("0")
     });
 });
 

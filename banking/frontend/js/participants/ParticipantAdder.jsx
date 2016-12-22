@@ -13,7 +13,6 @@ import { connect }            from 'react-redux'
 
 import { addParticipant, setParticipant, setParts } from './actions.js'
 
-import {fixFloat} from '../utils/float.js'
 
 function adder(props) {
     const error = props.parts === "0.00" ? "Количество частей должно быть больше 0" : "";
@@ -38,7 +37,7 @@ function adder(props) {
             </div>
             <div className="inline-group">
                 <TextField
-                    value={fixFloat(props.parts)}
+                    value={props.parts}
                     floatingLabelText="Доля участия"
                     onChange={(event) => props.setParts(event.target.value)}/>
             </div>

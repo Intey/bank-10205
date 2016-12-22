@@ -1,7 +1,7 @@
 import { Types as Action } from './action.types.js'
-import { UpdateError } from './errors.js'
-import { omit } from 'lodash/object'
-
+import { UpdateError }     from './errors.js'
+import { omit }            from 'lodash/object'
+import { fixFloat }        from '../utils/float.js'
 /**
  * List of participants.
  * @param {Object} participants object, where key is idx, and value is parts
@@ -25,7 +25,7 @@ export function adder(state = initAdder, action) {
         case Action.SET_PARTICIPANT:
             return { ...state, id: action.id }
         case Action.SET_PARTS:
-            return { ...state, parts: fixFloat(action.parts, 2) }
+            return { ...state, parts: fixFloat(action.parts) }
         default:
             return state
 

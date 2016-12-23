@@ -15,7 +15,7 @@ import { addParticipant, setParticipant, setParts } from './actions.js'
 
 
 function adder(props) {
-    const error = props.parts === "0.00" ? "Количество частей должно быть больше 0" : "";
+    const error = parseFloat(props.parts) <= 0 ? "Количество частей должно быть больше 0" : "";
 
     const MaybeButton =
         ( !error ?

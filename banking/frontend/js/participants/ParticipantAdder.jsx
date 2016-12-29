@@ -18,15 +18,15 @@ import { addParticipant, setParticipant, setParts } from './actions.js'
 
 
 function adder(props) {
-    const error = parseFloat(props.parts) <= 0 ?
-        "Количество частей должно быть больше 0" : "";
-
+    const error = (parseFloat(props.parts) <= 0)
 
     return (
         <Paper className={"event-block"}>
             <div className="inline-group">
                 <AutoComplete
                     floatingLabelText="Имя участника"
+                    floatingLabelFixed={true}
+                    searchText={props.users[props.id].username}
                     dataSource={props.users.map(u => u.username)}
                     filter={(pattern, elem) => elem.startsWith(pattern)}
                     onFocus={ e => e.target.select() }
@@ -37,17 +37,17 @@ function adder(props) {
                 <TextField
                     value={props.parts}
                     floatingLabelText="Доля участия"
-                    errorText={error}
+                    floatingLabelFixed={true}
                     onChange={(event) => props.setParts(event.target.value)}/>
             </div>
             <div className="inline-group">
-                <IconButton
-                    disabled={!!error}
-                    onClick={ e => props.addParticipant(props.id, props.parts) }
-                    tooltip="Добавить участника"
-                >
-                    <AddIcon/>
-                </IconButton>
+                    <IconButton
+                        style={{"vertical-align": "center"}}
+                        disabled={error}
+                        onClick={ e => props.addParticipant(props.id, props.parts) }
+                        tooltip="Добавить участника">
+                        <AddIcon/>
+                    </IconButton>
             </div>
         </Paper>
     )

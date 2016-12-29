@@ -4,9 +4,12 @@ import React              from 'react'
 import {
     TextField
   , AutoComplete
-  , RaisedButton
+  , IconButton
   , Paper
 }                         from 'material-ui'
+
+import AddIcon from 'material-ui/svg-icons/content/add';
+
 
 import { bindActionCreators } from 'redux'
 import { connect }            from 'react-redux'
@@ -15,13 +18,9 @@ import { addParticipant, setParticipant, setParts } from './actions.js'
 
 
 function adder(props) {
-    const error = parseFloat(props.parts) <= 0 ? "Количество частей должно быть больше 0" : "";
+    const error = parseFloat(props.parts) <= 0 ?
+        "Количество частей должно быть больше 0" : "";
 
-    const MaybeButton =
-        ( !error ?
-            <RaisedButton label="Добавить" onClick={ e => props.addParticipant(props.id, props.parts) }/>:
-            null
-        )
 
     return (
         <Paper className={"event-block"}>
@@ -32,17 +31,23 @@ function adder(props) {
                     filter={(pattern, elem) => elem.startsWith(pattern)}
                     onFocus={ e => e.target.select() }
                     onNewRequest={ (text, index) => props.setParticipant(index) }
-                    errorText={error}
                     openOnFocus={true}/>
             </div>
             <div className="inline-group">
                 <TextField
                     value={props.parts}
                     floatingLabelText="Доля участия"
+                    errorText={error}
                     onChange={(event) => props.setParts(event.target.value)}/>
             </div>
             <div className="inline-group">
-                {MaybeButton}
+                <IconButton
+                    disabled={!!error}
+                    onClick={ e => props.addParticipant(props.id, props.parts) }
+                    tooltip="Добавить участника"
+                >
+                    <AddIcon/>
+                </IconButton>
             </div>
         </Paper>
     )

@@ -17,4 +17,5 @@ html, body{
 .inline-group {
     margin: 0px 5px;
     display: inline-block;
+    height: 101px;
 }

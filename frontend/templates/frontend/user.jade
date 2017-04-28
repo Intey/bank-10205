@@ -1,0 +1,52 @@
+extends frontend/admin/index.jade
+- load render_bundle from webpack_loader
+- load staticfiles
+
+block head
+    link(rel="stylesheet", href="{% static 'css/accordion.css' %}")
+    link(rel="stylesheet", href="{% static 'css/dropdown.css' %}")
+    script(type="text/javascript").
+        window.__INITIAL__ = JSON.parse('{{transactions|safe }}')
+block content
+    form.form-horizontal
+        .col-md-2
+            button.btn.btn-submit(type='submit') Сохранить
+        .col-md-5
+            .form-group
+                label.control-label.col-md-4(for="login") Псевдоним
+                .col-md-8
+                    input#login.form-control(type="text",
+                            value="{{account.user.username}}")
+            .form-group
+                label.control-label.col-md-4(for="fname") Имя
+                .col-md-8
+                    input#fname.form-control(type="text",
+                            value="{{account.user.first_name}}")
+            .form-group
+                label.control-label.col-md-4(for="sname") Фамилия
+                .col-md-8
+                    input#sname.form-control(type="text",
+                            value="{{account.user.last_name}}")
+            .form-group
+                label.control-label.col-md-4(for="birthdate") Дата рождения
+                .col-md-8
+                    input#birthdate.form-control(type="text",
+                            value="{{account.birthdate}}")
+            .form-group
+                label.control-label.col-md-4(for="rate") Коэфициент
+                .col-md-8
+                    input#rate.form-control(type="text",
+                    value="{{account.rate}}")
+            .form-group
+                label.control-label.col-md-4(for="balance") Баланс
+                .col-md-8
+                    input#balance.form-control(type="text",
+                            value="{{account.balance | floatformat}}")
+        .col-md-5
+            img.img-responsive.img-rounded(src="{{account.avatar_url}}",
+                    alt="{{account.user.username}}'s Avatar")
+    #balance-changer.col-md-12
+    #transactions
+
+    - render_bundle 'balance_changer'
+    - render_bundle 'UserPage'

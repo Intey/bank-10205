@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'webpack_loader',
-    'banking',
+    'backend',
+    'frontend',
 ]
 apps = BANK_SETTINGS.get('apps', [])
 if len(apps) > 0:
@@ -146,14 +147,14 @@ REST_FRAMEWORK = {
 }
 
 MIGRATION_MODULES = {
-    'banking': 'banking.migrations'
+    'backend': 'backend.migrations'
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'banking/static/js',
+        'BUNDLE_DIR_NAME': 'backend/static/js',
         'STATS_FILE': os.path.join(BASE_DIR, "./webpack-stats.json"),
         'POLL_INTERVAL': 0.1,
     },

@@ -3,5 +3,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^backdoor/', include(admin.site.urls)),
-    url(r'^', include('banking.urls')),
+    url(r'^', include('backend.urls')),
 ]

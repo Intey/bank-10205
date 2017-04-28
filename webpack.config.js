@@ -15,29 +15,18 @@ else {
 }
 
 var config = {
-context: path.resolve(__dirname, './banking/'),
+context: path.resolve(__dirname, './frontend/src/'),
 
 entry: {
-    jquery: ['../node_modules/jquery/dist/jquery.min.js']
-    , bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js']
-
-    , index:  ['./frontend/js/index.js']
-    , auth:   ['./frontend/js/auth.js']
-    , balance_changer: ['./frontend/js/BalanceChanger.js']
-
-    , users:  ['./frontend/js/users.js']
-    , UserPage: ['./frontend/js/UserPage.js']
-
-    , participants: ['./frontend/js/participants.js']
-
-    , EventListPage: ['./frontend/js/events/ListPage.js']
-    , EventPage: ['./frontend/js/events/ItemPage.jsx']
+    jquery: ['../..//node_modules/jquery/dist/jquery.min.js']
+    , bootstrap_js: ['../../node_modules/bootstrap/dist/js/bootstrap.min.js']
+    , index:  ['./js/index.js']
 },
 output: {
-    path: path.resolve(__dirname, './banking/static/js'),
+    path: path.resolve(__dirname, './frontend/static/'),
     filename: '[name].js', // use entry field name.
     // for hot reload.
-    publicPath: DEFS.dev ? 'http://localhost:3000/assets/bundles/' : '/static/js/',
+    publicPath: DEFS.dev ? 'http://localhost:3000/assets/bundles/' : '/static/',
     library: '$' // for inlined JS in HTML.
 },
 

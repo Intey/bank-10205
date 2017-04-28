@@ -1,6 +1,7 @@
 var path = require("path")
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 // yo dawg i heard you like configs so we put a config in yo config so you can
 // config when you config.
@@ -25,7 +26,7 @@ output: {
     filename: '[name].js', // use entry field name.
     // for hot reload.
     publicPath: DEFS.dev ? 'http://localhost:3000/assets/bundles/' : '/static/',
-    library: ['$'], // for inlined JS in HTML.
+    // library: ['lib'], // for inlined JS in HTML.
 },
 
 
@@ -34,6 +35,7 @@ plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
     // integration with django
     new BundleTracker({filename: "./webpack-stats.json"}),
+    new ExtractTextPlugin('[name].css') // css as css bundles, not js
 ],
 
 module: {
@@ -43,31 +45,31 @@ module: {
             exclude: /node_modules/,
             loader: 'babel-loader',
             options: {
-                presets: ['es2015', 'react', 'stage-0']
+                presets: ['react'],
+                babelrc: false,
             },
             //ignore, couze we have above query and babelrc used by mocha
-            // babelrc: false,
 
         },
-        {
-            test: /\.(css|sass)$/,
-            use: [
-                "style-loader",
-                {
-                    loader: 'css-loader',
-                    options: {
-                        importLoaders: 1
-                    }
-                },
-                "postcss-loader",
-                "sass-loader"
-            ]
-        }
+        // {
+        //     test: /\.(css|sass)$/,
+        //     use: [
+        //         "style-loader",
+        //         {
+        //             loader: 'css-loader',
+        //             options: {
+        //                 importLoaders: 1
+        //             }
+        //         },
+        //         "postcss-loader",
+        //         "sass-loader"
+        //     ]
+        // }
     ]
 },
 
 resolve: {
-    modules: ['node_modules', path.join(__dirname, "frontend/src")],
+    modules: ['node_modules'],
 },
 
 }

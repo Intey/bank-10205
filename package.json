@@ -4,7 +4,7 @@
   "description": "Bank for friends",
   "main": "index.js",
   "scripts": {
-    "dev": "$(npm bin)/webpack-dev-server --inline --hot --port 3000",
+    "dev": "$(npm bin)/webpack-dev-server --inline --hot --port 3000 --config frontend/webpack.config.js",
     "test": "$(npm bin)/mocha --recursive --compilers js:babel-core/register frontend/tests"
   },
   "repository": {

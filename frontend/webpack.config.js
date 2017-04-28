@@ -15,51 +15,59 @@ else {
 }
 
 var config = {
-context: path.resolve(__dirname, './frontend/src/'),
+context: path.resolve(__dirname, './src/'),
 
 entry: {
-    jquery: ['../..//node_modules/jquery/dist/jquery.min.js']
-    , bootstrap_js: ['../../node_modules/bootstrap/dist/js/bootstrap.min.js']
-    , index:  ['./js/index.js']
+    index:  ['./js/index.js']
 },
 output: {
     path: path.resolve(__dirname, './frontend/static/'),
     filename: '[name].js', // use entry field name.
     // for hot reload.
     publicPath: DEFS.dev ? 'http://localhost:3000/assets/bundles/' : '/static/',
-    library: '$' // for inlined JS in HTML.
+    library: ['$'], // for inlined JS in HTML.
 },
 
 
 plugins: [
     // no genereta empty output, if errors occur
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     // integration with django
     new BundleTracker({filename: "./webpack-stats.json"}),
-    // for bootstrap.js in node_modules
-    new webpack.ProvidePlugin({ jQuery: 'jquery', }),
 ],
 
 module: {
-    loaders: [
-        // to transform JSX into JS
+    rules: [
         {
             test: [/\.js?$/, /\.jsx?$/],
             exclude: /node_modules/,
-            loader: 'babel',
-            query: {
+            loader: 'babel-loader',
+            options: {
                 presets: ['es2015', 'react', 'stage-0']
             },
             //ignore, couze we have above query and babelrc used by mocha
-            babelrc: false,
+            // babelrc: false,
+
         },
+        {
+            test: /\.(css|sass)$/,
+            use: [
+                "style-loader",
+                {
+                    loader: 'css-loader',
+                    options: {
+                        importLoaders: 1
+                    }
+                },
+                "postcss-loader",
+                "sass-loader"
+            ]
+        }
     ]
 },
 
 resolve: {
-    root: __dirname,
-    modulesDirectories: ['node_modules', 'bower_components'],
-    extensions: ['', '.js', '.jsx']
+    modules: ['node_modules', path.join(__dirname, "frontend/src")],
 },
 
 }
@@ -93,6 +101,4 @@ else {
 
 config.plugins = config.plugins.concat(plugins);
 // prepending, because order is affects
-config.module.loaders = loaders.concat(config.module.loaders);
-
 module.exports = config;

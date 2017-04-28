@@ -1,15 +1,15 @@
 {
-  "name": "bank-10205",
+  "name": "banking",
   "version": "1.0.0",
   "description": "Bank for friends",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --hot --port 3000",
-    "test": "$(npm bin)/mocha --recursive --compilers js:babel-core/register banking/tests/frontend/"
+    "dev": "$(npm bin)/webpack-dev-server --inline --hot --port 3000",
+    "test": "$(npm bin)/mocha --recursive --compilers js:babel-core/register banking/tests/frontend"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/morozovcookie/bank-10205.git"
+    "url": "git+https://github.com/Intey/banking.git"
   },
   "keywords": [
     "bank",
@@ -17,11 +17,11 @@
     "react"
   ],
   "author": "Intey & MorozovCookie",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/morozovcookie/bank-10205/issues"
+    "url": "https://github.com/Intey/banking/issues"
   },
-  "homepage": "https://github.com/morozovcookie/bank-10205#readme",
+  "homepage": "https://github.com/Intey/banking#readme",
   "devDependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.10.4",

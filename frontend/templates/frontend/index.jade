@@ -1,14 +1,14 @@
 - load staticfiles
 - load render_bundle from webpack_loader
-doctype html
+!!! 5
 html
     head
-        meta(charset="utf-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1")
-        title=title
-        link(rel="stylesheet", href="{% static 'dependence/bootstrap-3.3.5-dist/css/bootstrap.min.css' %}")
-        - render_bundle 'bootstrap_js'
-        block head
-
+        link(rel="stylesheet", href="{% static 'css/index.css' %}")
     body
-        block body
+        header
+        article#root
+        footer
+        .scripts
+            - render_bundle 'index'
+            - render_bundle 'jquery'
+

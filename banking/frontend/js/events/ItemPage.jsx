@@ -41,7 +41,7 @@ function mapStateProps(state) {
         error: state.error,
     }
 }
-const { ...actions, update } = eventActions
+const { update, ...actions } = eventActions
 function mapDispatchToProps(dispatch) {
     return {
         onSaveClick: bindActionCreators(update, dispatch),

@@ -84,7 +84,7 @@ export default function configureStore(inital) {
     const store = createStore(
         rootReducer,
         inital,
-        applyMiddleware(thunk, log),
+        applyMiddleware(thunk, log)
     )
 
     //if (module.hot) {
@@ -108,7 +108,8 @@ export default function configureStore(inital) {
     //}
     return store
 }
-export default function({initialStore = initialState } ) {
+
+function builder(initialStore = {}) {
     const store = configureStore(initialStore)
     return (
         <MuiThemeProvider>

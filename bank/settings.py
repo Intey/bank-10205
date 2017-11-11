@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
-    'webpack_loader',
     'backend',
     'frontend',
 ]
@@ -151,11 +150,3 @@ MIGRATION_MODULES = {
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'frontend/static/js',
-        'STATS_FILE': os.path.join(BASE_DIR, "./frontend/webpack-stats.json"),
-        'POLL_INTERVAL': 0.1,
-    },
-}

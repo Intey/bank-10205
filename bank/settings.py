@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'backend',
-    'frontend',
 ]
 apps = BANK_SETTINGS.get('apps', [])
 if len(apps) > 0:

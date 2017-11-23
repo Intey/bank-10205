@@ -48,6 +48,7 @@ ALLOWED_HOSTS = [
 
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -60,19 +61,24 @@ INSTALLED_APPS = [
     'django_filters',
     'backend',
 ]
-apps = BANK_SETTINGS.get('apps', [])
-if len(apps) > 0:
-    INSTALLED_APPS += apps
-
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+if BANK_SETTINGS['dev']: # cross-port access to api
+    INSTALLED_APPS.append('corsheaders')
+    apps = BANK_SETTINGS.get('apps', [])
+    if len(apps) > 0:
+        INSTALLED_APPS += apps
+MIDDLEWARE_CLASSES = [
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+if BANK_SETTINGS['dev']:
+    # corsheaders should be high
+    MIDDLEWARE_CLASSES = ['corsheaders.middleware.CorsMiddleware'] \
+            + MIDDLEWARE_CLASSES
 
 ROOT_URLCONF = 'bank.urls'
 
@@ -149,3 +155,6 @@ MIGRATION_MODULES = {
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+if BANK_SETTINGS['dev']:
+    CORS_ORIGIN_ALLOW_ALL = True

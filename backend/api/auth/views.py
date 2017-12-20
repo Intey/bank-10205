@@ -39,8 +39,8 @@ class auth(APIView):
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
-        token = Token.objects.get_or_create(user=user)
         acc = Account.objects.filter(user=user)[0]
+        token = Token.objects.get_or_create(user=user)
         return Response({
             'token': token[0].key,
             'account': AccountSerializer(acc).data

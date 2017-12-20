@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+# TODO: replace link to user with inheritance of AbstractUser
+# from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from backend.operations.domain.utils import sumQuery
 

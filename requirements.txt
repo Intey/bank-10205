@@ -10,4 +10,3 @@ psycopg2
 gunicorn==19.4.5
 dj-database-url==0.4.0
 whitenoise==3.0
-django-cors-headers==2.1.0

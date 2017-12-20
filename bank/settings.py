@@ -81,13 +81,11 @@ if BANK_SETTINGS['dev']:
             + MIDDLEWARE_CLASSES
 
 ROOT_URLCONF = 'bank.urls'
-
 TEMPLATES = [
     {
-        'NAME': 'jade',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        # 'APP_DIRS': True,  # 'couze set loaders
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -95,16 +93,33 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'loaders': [
-                ('pyjade.ext.django.Loader', (
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
-                ))
-            ],
-            'builtins': ['pyjade.ext.django.templatetags'],
         },
     },
 ]
+
+# TEMPLATES = [
+#     {
+#         'NAME': 'html',
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [],
+#         # 'APP_DIRS': True,  # 'couze set loaders
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#             'loaders': [
+#                 ('pyjade.ext.django.Loader', (
+#                     'django.template.loaders.filesystem.Loader',
+#                     'django.template.loaders.app_directories.Loader',
+#                 ))
+#             ],
+#             # 'builtins': ['pyjade.ext.django.templatetags'],
+#         },
+#     },
+# ]
 
 WSGI_APPLICATION = 'bank.wsgi.application'
 

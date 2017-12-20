@@ -15,6 +15,7 @@ class auth(APIView):
         try:
             data = request.data
         except ParseError as error:
+            print("invalid JSON")
             return Response(
                 'Invalid JSON - {0}'.format(error.detail),
                 status=status.HTTP_400_BAD_REQUEST
@@ -27,8 +28,10 @@ class auth(APIView):
         try:
             user = User.objects.get(username=data['username'])
         except User.DoesNotExist:
-            return Response("Wrong credentials",
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                    "Username or password is invalid",
+                    status=status.HTTP_401_UNAUTHORIZED
+            )
 
         if not user.check_password(data['password']):
             return Response(

@@ -43,7 +43,7 @@ class AuthenticationTest(TestCase):
     def wrong_credentials_test(self):
         response = self.factory.post('/api/auth/', {'username': 'SomeName',
                                                     'password': 'raw'})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED,
                          msg=response.content.decode('utf-8'))
 
     def auth_created_user_test(self):

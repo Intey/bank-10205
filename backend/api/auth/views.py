@@ -9,6 +9,7 @@ from rest_framework.exceptions import ParseError
 from backend.models import Account
 from backend.api.user.serializers import AccountSerializer
 
+import logging as log
 
 class auth(APIView):
     def post(self, request, format=None):
@@ -39,7 +40,17 @@ class auth(APIView):
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
-        acc = Account.objects.filter(user=user)[0]
+        matches = Account.objects.filter(user=user)
+
+        if len(matches) != 1:
+            log.warn(f"user {user} does not have account")
+            return Response(
+                'Username or password is invalid',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        acc = matches[0]
+
         token = Token.objects.get_or_create(user=user)
         return Response({
             'token': token[0].key,

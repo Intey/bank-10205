@@ -2,8 +2,7 @@
 
 from django.db import models
 
-import backend._models.account as account
-Account = account.Account
+from .account import Account
 
 
 # How to DRY?

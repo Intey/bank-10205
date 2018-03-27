@@ -35,6 +35,7 @@ class EventAPITest(TestCase):
                                          'date': '2016-01-22',
                                          'price': 3000,
                                          'author': self.author.id,
+                                         'investors': [self.author.id]
                                      }, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -54,7 +55,8 @@ class EventAPITest(TestCase):
                                              {"account": self.acc1.id,
                                               "parts": 1.0},
                                              {"account": self.acc2.id,
-                                              "parts": 2.0}]
+                                              "parts": 2.0}],
+                                         'investors': [self.author.id]
                                      }, format='json')
 
         event_id = response.data['id']
@@ -69,8 +71,10 @@ class EventAPITest(TestCase):
                                          'name': 'Event Particpants',
                                          'date': '2016-01-22',
                                          'price': 3000,
-                                         'author': self.author.id
-                                     }, format='json')
+                                         'author': self.author.id,
+                                         'investors': [self.author.id]
+                                     },
+                                     format='json')
         created_event = Event.objects.get(id=response.data['id'])
 
         author = created_event.author

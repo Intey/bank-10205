@@ -6,24 +6,36 @@ from backend.operations.domain.account import push_money
 
 class ParticipationPostSerializer(serializers.Serializer):
     parts = serializers.FloatField()
-    account = serializers.PrimaryKeyRelatedField(
-        required=True, many=False, queryset=Account.objects.all())
+    account = serializers.PrimaryKeyRelatedField(required=True,
+                                                 many=False,
+                                                 queryset=Account.objects.all())
 
 
 class EventPostSerializer(serializers.ModelSerializer):
     """ Used for display event in POST, and PUT requests """
-    author = serializers.PrimaryKeyRelatedField(
-        required=True, many=False, queryset=Account.objects.all())
+    author = serializers.PrimaryKeyRelatedField(required=True,
+                                                 many=False,
+                                                 queryset=Account.objects.all())
     participants = ParticipationPostSerializer(many=True, required=False)
+
+    investors = serializers.PrimaryKeyRelatedField(required=True,
+                                                   many=True,
+                                                   allow_empty=False,
+                                                   queryset=Account.objects.all())
 
     def create(self, validated_data):
         """Create event from income data. """
         # pop firstly: Event constructor don't accept 'participants' arg
         raw_participants = validated_data.pop('participants', [])
+        raw_investors = validated_data.pop('investors', [])
 
         e = Event.objects.create(**validated_data)
         author = e.author
-        push_money(author, e.price)
+        # push_money(author, e.price)
+        print("invers", raw_investors)
+
+        for investor in raw_investors:
+            push_money(investor, e.price)
 
         print("raw_participants", raw_participants)
         # convert to dict
@@ -37,7 +49,7 @@ class EventPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id', 'name', 'date', 'price', 'author', 'private',
-                  'participants')
+                  'participants', 'investors')
 
 
 class ParticipationSerializer(serializers.Serializer):
@@ -60,11 +72,13 @@ class EventFullSerializer(serializers.ModelSerializer):
                                            source='get_participants',
                                            read_only=True)
     author = serializers.StringRelatedField()
-
+    investors = serializers.PrimaryKeyRelatedField(many=True,
+                                                   allow_empty=False,
+                                                   read_only=True)
     class Meta:
         model = Event
         fields = ('id', 'name', 'date', 'price', 'author', 'private',
-                  'participants')
+                  'participants', 'investors')
 
 
 class EventSerializer(serializers.ModelSerializer):

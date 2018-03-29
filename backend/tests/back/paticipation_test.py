@@ -557,21 +557,3 @@ class EventParticipationTest(TestCase):
 
         self.assertEqual(event.price, 2000)
         self.assertGreaterEqual(abs(summary), event.price)
-
-    def test_many_authors(self):
-        """
-        Check that money splitting works when event byied by m any users
-        """
-        # create_event(name, price, author, investors, participants)
-        users = Account.objects.filter(user__username__iregex=r'^P\d$')
-        investors = users[1:4] # 3 investors
-        e = Event.objects.create(name="Target", price=3000, author=users[0])
-        e.investors=investors
-        e.save()
-
-        pp = round_up(e.price / 3.0)
-
-        self.assertEqual(debt(users[1]), -pp)
-        self.assertEqual(debt(users[2]), -pp)
-        self.assertEqual(debt(users[3]), -pp)
-

@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from backend.models import Event, Account, Transaction, Transfer, Participation
 from backend.operations.domain.event import \
-        get_participants, add_participants, remove_participants, update_event_price
+        get_participants, add_participants, remove_participants, _update_event_price
 
 from backend.operations.domain.utils import aggregateSumm, round_up, round_down
 from backend.operations.domain.account import debt
@@ -528,7 +528,7 @@ class EventParticipationTest(TestCase):
         self.assertGreaterEqual(abs(summary), event.price)
 
         #########################################
-        update_event_price(event, 4000)
+        _update_event_price(event, 4000)
         #########################################
 
         party_pay = round_down(4000 / sum(parts))
@@ -546,7 +546,7 @@ class EventParticipationTest(TestCase):
         event, _, participations = generate_participation([1, 2, 3])
 
         #########################################
-        update_event_price(event, 2000)
+        _update_event_price(event, 2000)
         #########################################
         parts = list(participations.values())
 
@@ -557,3 +557,21 @@ class EventParticipationTest(TestCase):
 
         self.assertEqual(event.price, 2000)
         self.assertGreaterEqual(abs(summary), event.price)
+
+    def test_many_authors(self):
+        """
+        Check that money splitting works when event byied by m any users
+        """
+        # create_event(name, price, author, investors, participants)
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
+        investors = users[1:4] # 3 investors
+        e = Event.objects.create(name="Target", price=3000, author=users[0])
+        e.investors=investors
+        e.save()
+
+        pp = round_up(e.price / 3.0)
+
+        self.assertEqual(debt(users[1]), -pp)
+        self.assertEqual(debt(users[2]), -pp)
+        self.assertEqual(debt(users[3]), -pp)
+

@@ -22,5 +22,6 @@ class Event(models.Model):
             .aggregate(balance=Sum(F('credit')-F('debit')))['balance']
         return self.price - (0 if payed is None else payed)
 
+
     def __str__(self):
         return self.name

@@ -79,3 +79,7 @@ class EventAPITest(TestCase):
 
         author = created_event.author
         self.assertEqual(author.balance(), 3000)
+
+    def test_many_authors(self):
+        pass
+

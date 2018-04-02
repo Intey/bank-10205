@@ -8,6 +8,7 @@ from backend.operations.domain.create_event import create_event
 from backend.operations.domain.utils import aggregateSumm, round_up, round_down
 from backend.operations.domain.account import debt
 
+
 class CreateEventTest(TestCase):
     def setUp(self):
         u1 = User.objects.create(username="Author")
@@ -43,3 +44,10 @@ class CreateEventTest(TestCase):
         self.assertEqual(self.author1.balance(), 2000)
         self.assertEqual(self.author2.balance(), 1000)
         self.assertEqual(self.author3.balance(), 3000)
+
+    def test_many_authors_participants(self):
+        create_event('cookies', 6000, self.author3,
+                     participants={self.author1: 1, self.author2: 2})
+
+        self.assertEqual(self.author1.balance(), -2000)
+        self.assertEqual(self.author2.balance(), -4000)

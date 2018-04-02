@@ -1,55 +1,62 @@
 from rest_framework import serializers
 from backend.models import Event, Account
+from backend.operations.domain.create_event import create_event
 from backend.operations.domain.event import add_participants
-from backend.operations.domain.account import push_money
+
+def dictify(list_of_dicts, key_key=None, value_key=None):
+    res = {}
+    if len(list_of_dicts) > 0:
+        for dict_ in list_of_dicts:
+            if key_key and value_key:
+                res.update({dict_[key_key]: dict_[value_key]})
+            else:
+                res.update({**dict_})
+    return res
 
 
 class ParticipationPostSerializer(serializers.Serializer):
     parts = serializers.FloatField()
     account = serializers.PrimaryKeyRelatedField(required=True,
-                                                 many=False,
                                                  queryset=Account.objects.all())
+
+
+# TODO: write down
+class InvestorPostSerializer(serializers.Serializer):
+    account = serializers.PrimaryKeyRelatedField(required=True,
+                                                 queryset=Account.objects.all())
+    summ = serializers.FloatField(required=True)
 
 
 class EventPostSerializer(serializers.ModelSerializer):
     """ Used for display event in POST, and PUT requests """
     author = serializers.PrimaryKeyRelatedField(required=True,
-                                                 many=False,
-                                                 queryset=Account.objects.all())
+                                                queryset=Account.objects.all())
     participants = ParticipationPostSerializer(many=True, required=False)
-
-    investors = serializers.PrimaryKeyRelatedField(required=True,
-                                                   many=True,
-                                                   allow_empty=False,
-                                                   queryset=Account.objects.all())
+    investors = InvestorPostSerializer(many=True, required=False)
 
     def create(self, validated_data):
         """Create event from income data. """
-        # pop firstly: Event constructor don't accept 'participants' arg
         raw_participants = validated_data.pop('participants', [])
+        participants = dictify(raw_participants,
+                               key_key='account',
+                               value_key='parts')
         raw_investors = validated_data.pop('investors', [])
+        investors = dictify(raw_investors,
+                            key_key='account',
+                            value_key='summ')
 
-        e = Event.objects.create(**validated_data)
-        author = e.author
-        # push_money(author, e.price)
-        print("invers", raw_investors)
+        print("EventPostSerializer::create", investors, participants)
 
-        for investor in raw_investors:
-            push_money(investor, e.price)
-
-        print("raw_participants", raw_participants)
-        # convert to dict
-        participants = dict()
-        if len(raw_participants) > 0:
-            for p in raw_participants:
-                participants.update({p.get('account'): p.get('parts')})
-            add_participants(e, participants)
-        return e
+        # TODO: move out from serializer
+        event = create_event(**validated_data,
+                             participants=participants,
+                             investors=investors)
+        return event
 
     class Meta:
         model = Event
         fields = ('id', 'name', 'date', 'price', 'author', 'private',
-                  'participants', 'investors')
+                  'participants')
 
 
 class ParticipationSerializer(serializers.Serializer):
@@ -65,6 +72,14 @@ class ParticipationSerializer(serializers.Serializer):
                                               many=False,
                                               view_name='account-detail')
 
+# TODO: write down
+class InvestorSerializer(serializers.Serializer):
+    summ = serializers.FloatField()
+    account = serializers.HyperlinkedRelatedField(read_only=True,
+                                                  view_name='account-detail')
+
+
+
 
 class EventFullSerializer(serializers.ModelSerializer):
     """Extended with participants list."""
@@ -72,9 +87,8 @@ class EventFullSerializer(serializers.ModelSerializer):
                                            source='get_participants',
                                            read_only=True)
     author = serializers.StringRelatedField()
-    investors = serializers.PrimaryKeyRelatedField(many=True,
-                                                   allow_empty=False,
-                                                   read_only=True)
+    investors = InvestorSerializer(many=True, read_only=True)
+
     class Meta:
         model = Event
         fields = ('id', 'name', 'date', 'price', 'author', 'private',

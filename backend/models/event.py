@@ -11,7 +11,6 @@ class Event(models.Model):
     date = models.DateField(default=date.today, blank=False)
     price = models.FloatField()
     author = models.ForeignKey(Account)
-    investors = models.ManyToManyField(Account, related_name='payded_events')
     private = models.BooleanField(default=False)
 
     def rest(self):

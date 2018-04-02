@@ -35,13 +35,11 @@ class EventAPITest(TestCase):
                                          'date': '2016-01-22',
                                          'price': 3000,
                                          'author': self.author.id,
-                                         'investors': [self.author.id]
                                      }, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         event_id = response.data['id']
         created_event = Event.objects.get(id=event_id)
-
         self.assertEqual(created_event.price, 3000)
 
     def test_event_with_participants(self):
@@ -56,9 +54,9 @@ class EventAPITest(TestCase):
                                               "parts": 1.0},
                                              {"account": self.acc2.id,
                                               "parts": 2.0}],
-                                         'investors': [self.author.id]
                                      }, format='json')
 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         event_id = response.data['id']
         created_event = Event.objects.get(id=event_id)
 
@@ -71,15 +69,56 @@ class EventAPITest(TestCase):
                                          'name': 'Event Particpants',
                                          'date': '2016-01-22',
                                          'price': 3000,
-                                         'author': self.author.id,
-                                         'investors': [self.author.id]
+                                         'author': self.author.id
                                      },
                                      format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         created_event = Event.objects.get(id=response.data['id'])
 
         author = created_event.author
         self.assertEqual(author.balance(), 3000)
 
     def test_many_authors(self):
-        pass
+        response = self.factory.post('/api/events/',
+                                     {
+                                         'name': 'Event Particpants',
+                                         'date': '2016-01-22',
+                                         'price': 3000,
+                                         'author': self.author.id,
+                                         'investors': [
+                                             {
+                                                 "account": self.acc2.id,
+                                                 "summ": 1000
+                                             },
+                                             {
+                                                 "account": self.acc3.id,
+                                                 "summ": 2000
+                                             }
+                                         ]
+                                     },
+                                     format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        created_event = Event.objects.get(id=response.data['id'])
+        investors = created_event.investors.all()
+        self.assertEqual(len(investors), 2)
+        self.assertEqual(investors[0].balance(), 1000)
+        self.assertEqual(investors[1].balance(), 2000)
 
+    def test_investor_overhead(self):
+        investor = self.acc2
+        response = self.factory.post('/api/events/',
+                                     {
+                                         'name': 'Event Particpants',
+                                         'date': '2016-01-22',
+                                         'price': 3000,
+                                         'author': self.author.id,
+                                         'investors': [
+                                             {
+                                                 "account": investor.id,
+                                                 "summ": 4000
+                                             }
+                                         ]
+                                     },
+                                     format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(investor.balance(), 0)  # no changes

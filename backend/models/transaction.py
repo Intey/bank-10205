@@ -12,11 +12,12 @@ class Transaction(models.Model):
     PARTICIPATE = 'IN'
     INIT = 'NW'
     OUT = 'OT'
+
     TYPES = (
-        ('NW', 'initial'),
-        ('DF', 'diff'),
-        ('IN', 'participation'),
-        ('OT', 'leave')
+        (INIT, 'initial'),
+        (DIFF, 'diff'),
+        (PARTICIPATE, 'participation'),
+        (OUT, 'leave')
     )
     participation = models.ForeignKey(Participation)
     date = models.DateTimeField(auto_now_add=True, blank=False)

@@ -64,6 +64,7 @@ class EventListView(generics.ListCreateAPIView):
     def post(self, request):
         """ Create new event. Accept event data and array of participation. """
         self.serializer_class = EventPostSerializer
+        # TODO: process OperationException and return bad_request
         return super(EventListView, self).post(request)
 
     def get_serializer_class(self, *args, **kwargs):

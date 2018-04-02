@@ -3,7 +3,7 @@ from backend.models import Transfer
 
 def push_money(account, count):
     """
-    Account push money to bank.
+    Account push money to bank. It's just push money without link any event
     """
     t = Transfer(account=account, debit=count)
     t.save()

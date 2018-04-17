@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from backend.models import Account, Event, Participation, Transaction
+from backend.models import Account, Event, Participation, Investation
 
 
 class EventAPITest(TestCase):
@@ -99,7 +99,9 @@ class EventAPITest(TestCase):
                                      format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         created_event = Event.objects.get(id=response.data['id'])
-        investors = created_event.investors.all()
+        # TODO: investors not exist key
+        ids = Investation.objects.filter(event=created_event).values_list('account', flat=True)
+        investors = Account.objects.filter(id__in=ids)
         self.assertEqual(len(investors), 2)
         self.assertEqual(investors[0].balance(), 1000)
         self.assertEqual(investors[1].balance(), 2000)

@@ -1,7 +1,9 @@
+from functools import reduce
 from rest_framework import serializers
+
 from backend.models import Event, Account
 from backend.operations.domain.create_event import create_event
-from backend.operations.domain.event import add_participants
+
 
 def dictify(list_of_dicts, key_key=None, value_key=None):
     res = {}
@@ -53,10 +55,20 @@ class EventPostSerializer(serializers.ModelSerializer):
                              investors=investors)
         return event
 
+    def validate(self, data):
+        invs = data.get('investors')
+        price = data.get('price')
+        if invs is not None:
+            summ = reduce(lambda a, x: a + float(x['summ']), invs, 0)
+            if summ != price:
+                raise serializers.ValidationError("investors summ should equal "
+                                                  "event price")
+        return data
+
     class Meta:
         model = Event
         fields = ('id', 'name', 'date', 'price', 'author', 'private',
-                  'participants')
+                  'participants', 'investors')
 
 
 class ParticipationSerializer(serializers.Serializer):
@@ -72,13 +84,12 @@ class ParticipationSerializer(serializers.Serializer):
                                               many=False,
                                               view_name='account-detail')
 
+
 # TODO: write down
 class InvestorSerializer(serializers.Serializer):
     summ = serializers.FloatField()
     account = serializers.HyperlinkedRelatedField(read_only=True,
                                                   view_name='account-detail')
-
-
 
 
 class EventFullSerializer(serializers.ModelSerializer):
@@ -98,6 +109,7 @@ class EventFullSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     """ Simple serializer for model. Difference from 'EventFullSerializer' that
     is author represented with his id, and has no participants array."""
+
     class Meta:
         model = Event
         fields = ('id', 'name', 'date', 'price', 'author', 'private')

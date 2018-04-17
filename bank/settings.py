@@ -42,11 +42,12 @@ SECRET_KEY = '8a16=nu((q05jgxwea*q+1-_*96fh!%0(y&x$qwptdt6x85i7m'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
+    '*',
 ]
 
 
 # Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -58,31 +59,33 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
-    'webpack_loader',
-    'banking',
+    'backend',
 ]
-apps = BANK_SETTINGS.get('apps', [])
-if len(apps) > 0:
-    INSTALLED_APPS += apps
-
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+if BANK_SETTINGS['dev']: # cross-port access to api
+    INSTALLED_APPS.append('corsheaders')
+    apps = BANK_SETTINGS.get('apps', [])
+    if len(apps) > 0:
+        INSTALLED_APPS += apps
+MIDDLEWARE_CLASSES = [
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+if BANK_SETTINGS['dev']:
+    # corsheaders should be high
+    MIDDLEWARE_CLASSES = ['corsheaders.middleware.CorsMiddleware'] \
+            + MIDDLEWARE_CLASSES
 
 ROOT_URLCONF = 'bank.urls'
-
 TEMPLATES = [
     {
-        'NAME': 'jade',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        # 'APP_DIRS': True,  # 'couze set loaders
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -90,16 +93,33 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'loaders': [
-                ('pyjade.ext.django.Loader', (
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
-                ))
-            ],
-            'builtins': ['pyjade.ext.django.templatetags'],
         },
     },
 ]
+
+# TEMPLATES = [
+#     {
+#         'NAME': 'html',
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [],
+#         # 'APP_DIRS': True,  # 'couze set loaders
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#             'loaders': [
+#                 ('pyjade.ext.django.Loader', (
+#                     'django.template.loaders.filesystem.Loader',
+#                     'django.template.loaders.app_directories.Loader',
+#                 ))
+#             ],
+#             # 'builtins': ['pyjade.ext.django.templatetags'],
+#         },
+#     },
+# ]
 
 WSGI_APPLICATION = 'bank.wsgi.application'
 
@@ -132,7 +152,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+if not BANK_SETTINGS.get('dev'):
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': [
@@ -145,15 +166,10 @@ REST_FRAMEWORK = {
 }
 
 MIGRATION_MODULES = {
-    'banking': 'banking.migrations'
+    'backend': 'backend.migrations'
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'banking/static/js',
-        'STATS_FILE': os.path.join(BASE_DIR, "./webpack-stats.json"),
-        'POLL_INTERVAL': 0.1,
-    },
-}
+if BANK_SETTINGS['dev']:
+    CORS_ORIGIN_ALLOW_ALL = True

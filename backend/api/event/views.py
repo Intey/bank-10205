@@ -126,7 +126,7 @@ class ParticipantListView(views.APIView):
 
     def post(self, req, event_pk, format=None):
         """ Add participant to event in context.
-        Expect array, like: [{"rate": 1, "account": 1}, ...]. account is pk.
+        Expect array, like: [{"parts": 1, "account": 1}, ...]. account is pk.
         """
         ser = ParticipationPostSerializer(data=req.data,
                                           context={'request': req}, many=True)

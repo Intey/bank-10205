@@ -82,7 +82,7 @@ class ParticipationSerializer(serializers.Serializer):
     url = serializers.HyperlinkedRelatedField(source='account',
                                               read_only=True,
                                               many=False,
-                                              view_name='account-detail')
+                                              view_name='api-account-detail')
 
 
 # TODO: write down
@@ -94,9 +94,8 @@ class InvestorSerializer(serializers.Serializer):
 
 class EventFullSerializer(serializers.ModelSerializer):
     """Extended with participants list."""
-    participants = ParticipationSerializer(many=True,
-                                           source='get_participants',
-                                           read_only=True)
+    # TODO: используем related_name
+    participants = ParticipationSerializer(many=True, read_only=True)
     author = serializers.StringRelatedField()
     investors = InvestorSerializer(many=True, read_only=True)
 

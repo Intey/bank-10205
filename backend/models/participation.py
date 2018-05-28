@@ -11,7 +11,7 @@ from .event import Event
 class Participation(models.Model):
     account = models.ForeignKey(Account)
     parts = models.FloatField(default=1.0)
-    event = models.ForeignKey(Event)
+    event = models.ForeignKey(Event, related_name='participants')
     date = models.DateTimeField(auto_now_add=True, blank=False)
     active = models.BooleanField()
 

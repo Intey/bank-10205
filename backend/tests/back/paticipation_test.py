@@ -357,13 +357,13 @@ class EventParticipationTest(TestCase):
 
         remove_participants(e, [users[0]])
 
-        self.assertEqual(e.participation_set.filter(active=False)[0].account,
+        self.assertEqual(e.participants.filter(active=False)[0].account,
                          users[0])
 
         add_participants(e, {users[0]: 1.0})
 
         # participation count == users in event count
-        self.assertEqual(len(e.participation_set.all()), 3)
+        self.assertEqual(len(e.participants.all()), 3)
 
     def test_update_single_participation(self):
         e = Event.objects.get(name="Target")
@@ -376,7 +376,7 @@ class EventParticipationTest(TestCase):
 
         print_list(Transaction.objects.all())
         # collect data
-        participations = e.participation_set.filter(account=users[0])
+        participations = e.participants.filter(account=users[0])
         participation_count = len(participations)
         participation_parts = participations[0].parts
         summary_debt = aggregateSumm(Transaction.objects\
@@ -398,7 +398,7 @@ class EventParticipationTest(TestCase):
 
         print_list(Transaction.objects.all())
         # collect data
-        participations = e.participation_set.filter(account=users[0])
+        participations = e.participants.filter(account=users[0])
         participation_count = len(participations)
         participation_parts = participations[0].parts
         # abs - 'couze summary debt can't be positive: debits - credits.
@@ -420,8 +420,8 @@ class EventParticipationTest(TestCase):
 
         print_list(Transaction.objects.all())
         # collect data
-        p0_participation = e.participation_set.filter(account__in=[users[0]])
-        p1_participation = e.participation_set.filter(account__in=[users[1]])
+        p0_participation = e.participants.filter(account__in=[users[0]])
+        p1_participation = e.participants.filter(account__in=[users[1]])
 
         p0_parts = p0_participation[0].parts
         p1_parts = p1_participation[0].parts

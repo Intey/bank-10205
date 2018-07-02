@@ -30,7 +30,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('rate', 'user', 'id')
+        fields = ('rate', 'user', 'id', 'balance')
 
 
 class UserSerializer(serializers.ModelSerializer):

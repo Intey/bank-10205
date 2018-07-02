@@ -3,21 +3,31 @@ from rest_framework import serializers
 
 from backend.models import Event, Account
 from backend.operations.domain.create_event import create_event
+from backend.operations.domain.event import add_participants
 
 
-def dictify(list_of_dicts, key_key=None, value_key=None):
+def set_attr(event, attr, data):
+    # assert that event has attr. If no - raise TypeError
+    _ = event.__getattribute__(attr)
+
+    tmp = data.get(attr)
+    if tmp:
+        event.__setattr__(attr, tmp)
+
+
+def dictify(list_of_dicts, key=None, value=None):
     res = {}
     if len(list_of_dicts) > 0:
         for dict_ in list_of_dicts:
-            if key_key and value_key:
-                res.update({dict_[key_key]: dict_[value_key]})
+            if key and value:
+                res.update({dict_[key]: dict_[value]})
             else:
                 res.update({**dict_})
     return res
 
 
 class ParticipationPostSerializer(serializers.Serializer):
-    parts = serializers.FloatField()
+    parts = serializers.FloatField(required=True)
     account = serializers.PrimaryKeyRelatedField(required=True,
                                                  queryset=Account.objects.all())
 
@@ -40,20 +50,32 @@ class EventPostSerializer(serializers.ModelSerializer):
         """Create event from income data. """
         raw_participants = validated_data.pop('participants', [])
         participants = dictify(raw_participants,
-                               key_key='account',
-                               value_key='parts')
+                               key='account',
+                               value='parts')
         raw_investors = validated_data.pop('investors', [])
         investors = dictify(raw_investors,
-                            key_key='account',
-                            value_key='summ')
-
-        print("EventPostSerializer::create", investors, participants)
+                            key='account',
+                            value='summ')
 
         # TODO: move out from serializer
         event = create_event(**validated_data,
                              participants=participants,
                              investors=investors)
         return event
+
+    def update(self, src_event, validated_data):
+        participants = dictify(validated_data.pop('participants', []),
+                               key='account',
+                               value='parts')
+        investors = dictify(validated_data.pop('investors', []))
+        add_participants(src_event, participants)
+        set_attr(src_event, 'name', validated_data)
+        set_attr(src_event, 'price', validated_data)
+        set_attr(src_event, 'author', validated_data)
+        set_attr(src_event, 'date', validated_data)
+        set_attr(src_event, 'private', validated_data)
+        src_event.save()
+        return src_event
 
     def validate(self, data):
         invs = data.get('investors')

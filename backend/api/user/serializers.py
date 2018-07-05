@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from django.contrib.auth.models import User
 from backend.models import Account
 
@@ -12,10 +11,15 @@ class UserDataSerializer(serializers.ModelSerializer):
 
 class AccountPostSerializer(serializers.Serializer):
     username = serializers.CharField()
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
     is_superuser = serializers.BooleanField()
     password = serializers.CharField()
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        result = Account.objects.create(user=user)
+        return result
 
 
 class AccountSerializer(serializers.ModelSerializer):

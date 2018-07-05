@@ -172,14 +172,10 @@ class UserList(generics.ListCreateAPIView):
         serializer_class = AccountPostSerializer
         serializer = AccountPostSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(
-                'Invalid JSON - {0}'.format(serializer.errors),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        user = User.objects.create_user(**serializer.validated_data)
-        result = Account.objects.create(user=user)
-
-        return Response(AccountSerializer(result).data)
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+        account = serializer.create(serializer.validated_data)
+        return Response(AccountSerializer(account).data)
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from backend.groups.models import Group, GroupParticipation
 
 
 # class ParticipantInline(admin.TabularInline):
@@ -32,5 +33,6 @@ class TransactionAdmin(admin.ModelAdmin):
 class ParticipationAdmin(admin.ModelAdmin):
     list_display = ('date', 'event', 'account', 'parts', 'active')
 
-admin.site.register(EventTemplate)
 admin.site.register(Transfer)
+admin.site.register(Group)
+admin.site.register(GroupParticipation)

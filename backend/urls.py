@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^users/',        include('backend.api.user.urls')),
     url(r'^auth/',         include('backend.api.auth.urls')),
     url(r'^balance/',      include('backend.api.balance.urls')),
+    url(r'^groups/',       include('backend.groups.urls')),
 ]
 # API docs. Uncomment 'rest_framework_swagger' in apps, and install
 # package. By the way, it's need more work, to become nice.

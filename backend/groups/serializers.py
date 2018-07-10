@@ -22,11 +22,10 @@ class GroupPostSerializer(serializers.ModelSerializer):
     participants = GroupParticipationSerializer(many=True, required=False)
 
     def create(self, validated_data):
-        participants = validated_data.get('participants', [])
+        participants = validated_data.pop('participants', [])
         group = Group.objects.create(name=validated_data['name'])
         for p in participants:
-            gp = GroupParticipation.objects.create(**p)
-            group.participants.add(gp)
+            gp = GroupParticipation.objects.create(**p, group_id=group.id)
 
         return group
 

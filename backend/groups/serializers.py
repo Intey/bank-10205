@@ -4,15 +4,35 @@ from backend.models import Group, GroupParticipation, Account
 
 
 class GroupParticipationSerializer(serializers.ModelSerializer):
-    # account = serializers.PrimaryKeyRelatedField(required=True, queryset=Account.objects.all())
+
     class Meta:
         model = GroupParticipation
         fields = ('id', 'parts', 'account')
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    participants = GroupParticipationSerializer(many=True, required=False,
-                                                read_only=True)
+    participants = GroupParticipationSerializer(many=True, required=False, read_only=True)
+
     class Meta:
         model = Group
         fields = ('id', 'name', 'participants')
+
+
+class GroupPostSerializer(serializers.ModelSerializer):
+    participants = GroupParticipationSerializer(many=True, required=False)
+
+    def create(self, validated_data):
+        participants = validated_data.get('participants', [])
+        group = Group.objects.create(name=validated_data['name'])
+        for p in participants:
+            gp = GroupParticipation.objects.create(**p)
+            group.participants.add(gp)
+
+        return group
+
+    def update(self, src_group, validated_data):
+        pass
+
+    class Meta:
+        model = Group
+        fields = ('name', 'participants')

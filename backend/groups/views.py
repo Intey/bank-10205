@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from backend.models import Group
-from .serializers import GroupSerializer, GroupPostSerializer
+from .serializers import GroupSerializer
 
 
 class GroupListView(generics.ListCreateAPIView):
@@ -12,7 +12,7 @@ class GroupListView(generics.ListCreateAPIView):
     queryset = Group.objects.prefetch_related('participants')
 
     def post(self, request, *args, **kwargs):
-        ser = GroupPostSerializer(data=request.data)
+        ser = GroupSerializer(data=request.data)
         if ser.is_valid():
             group = ser.create(ser.validated_data)
             serializer = GroupSerializer(group,
@@ -31,5 +31,5 @@ class GroupDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GroupSerializer
 
     def patch(self, request, pk):
-        self.serializer_class = GroupPostSerializer
+        self.serializer_class = GroupSerializer
         return super(GroupDetailView, self).patch(request, pk)
